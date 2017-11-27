@@ -15,7 +15,7 @@ import javax.swing.border.EmptyBorder;
 
 public class PanelCapNhatDiemSVView extends JPanel{
 	private JTextField tfIdHocPhan, tfTenHP, tfTinChi, tfIdLopHoc, tfDiemQT, tfDiemThi, tfDiemChu;
-	private JButton btnThem, btnSua, btnXoa, btnCapNhat;
+	private JButton btnThem, btnLuu, btnHuy;
 	private JComboBox<String> hocKyCB, loaiSVCB;
 	private String[] hocKyVals = {"20172", "20171", "20163", "20162", "20161", "20153", "20152", "20151"};
 	private String[] loaiSVVals = {"Sinh viên tín chỉ", "Sinh viên niên chế"};
@@ -91,9 +91,11 @@ public class PanelCapNhatDiemSVView extends JPanel{
 	}
 	
 	private JPanel createButtonPanel() {
-		JPanel panel = new JPanel(new BorderLayout());
-		panel.setBorder(new EmptyBorder(10, 215, 110, 215));
+		JPanel panel = new JPanel(new GridLayout(1, 3, 10, 10));
+		panel.setBorder(new EmptyBorder(10, 185, 110, 185));
 		panel.add(btnThem = new JButton("Thêm"));
+		panel.add(btnHuy = new JButton("Hủy"));
+		panel.add(btnLuu = new JButton("Lưu"));
 		
 		return panel;
 	}

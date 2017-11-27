@@ -17,6 +17,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 import quanlysinhvien.controller.DoiMatKhauController;
+import quanlysinhvien.model.TaiKhoan;
 import quanlysinhvien.view.PanelBangDiemCaNhanView;
 import quanlysinhvien.view.PanelBangDiemHocPhanView;
 import quanlysinhvien.view.PanelChuongTrinhDaoTaoSVView;
@@ -36,7 +37,7 @@ public class MainSinhVienTC extends JFrame implements ActionListener{
 		miDKHP, miDKLH, miDKTN;
 	private CardLayout carLayout;
 	private Container conter;
-	private JPanel mainPanel, dangXuatPanel;
+	private JPanel mainPanel;
 	private JButton btnLogout;
 	
 	
@@ -60,7 +61,7 @@ public class MainSinhVienTC extends JFrame implements ActionListener{
 	private PanelDangKiTotNghiepView dangKyTotNghiep;
 	
 	
-	public MainSinhVienTC() {
+	public MainSinhVienTC(TaiKhoan tk) {
 		conter = this.getContentPane();
 		mainPanel = new JPanel();
 		mainPanel.setLayout(carLayout = new CardLayout());
@@ -68,7 +69,7 @@ public class MainSinhVienTC extends JFrame implements ActionListener{
 		mainPanel.add(heThong = new PanelHeThongView(), "trangChu");
 		
 		mainPanel.add(doiMatKhau = new PanelDoiMatKhauView(), "doiMatKhau");
-		new DoiMatKhauController(doiMatKhau);
+		new DoiMatKhauController(doiMatKhau, tk);
 		
 		mainPanel.add(tkb = new PanelTKBView(), "tkb");
 		
@@ -208,9 +209,17 @@ public class MainSinhVienTC extends JFrame implements ActionListener{
 			
 			@Override
 			public void run() {
-				new MainSinhVienTC();
+				new MainSinhVienTC(new TaiKhoan());
 			}
 		});
+	}
+
+	public JButton getBtnLogout() {
+		return btnLogout;
+	}
+
+	public void setBtnLogout(JButton btnLogout) {
+		this.btnLogout = btnLogout;
 	}
 	
 }

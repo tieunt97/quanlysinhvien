@@ -2,6 +2,7 @@ package quanlysinhvien.view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Label;
@@ -61,6 +62,8 @@ public class PanelDangKiHocPhanView extends JPanel{
 		JPanel panel = new JPanel(new GridLayout(3, 1, 5, 5));
 		panel.setBorder(new EmptyBorder(0, 0, 0, 580));
 		JPanel panelS = new JPanel();
+		FlowLayout layoutS = (FlowLayout) panelS.getLayout();
+		layoutS.setAlignment(FlowLayout.LEFT);
 		panelS.setBorder(new EmptyBorder(0, 0, 0, 50));
 		panelS.add(createLabel("Học kỳ:", 16));
 		panelS.add(hocKy = new JComboBox<>(hkVals));
@@ -69,6 +72,8 @@ public class PanelDangKiHocPhanView extends JPanel{
 		panel.add(panelS);
 		
 		JPanel panelC = new JPanel();
+		FlowLayout layoutC = (FlowLayout) panelC.getLayout();
+		layoutC.setAlignment(FlowLayout.LEFT);
 		panelC.setBorder(new EmptyBorder(0, 0, 0, 164));
 		panelC.add(createLabel("Mã HP đăng ký:", 16));
 		panelC.add(tfDangky = new JTextField(15));

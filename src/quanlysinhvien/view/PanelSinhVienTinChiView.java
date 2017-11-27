@@ -21,7 +21,7 @@ import quanlysinhvien.model.SinhVienTinChi;
 
 public class PanelSinhVienTinChiView extends JPanel {
 	private JTable table = new JTable();
-	private JButton btnThem, btnSua, btnXoa, btnHuy, btnTimKiem, btnLuu;
+	private JButton btnThem, btnSua, btnXoa, btnHuy, btnTimKiem, btnLuu, btnCapNhatDiem;
 	private JComboBox<String> timKiemCB;
 	private JRadioButton radNam, radNu;
 	private JTextField tfIdSV, tfHoTen, tfKhoa, tfNgaySinh, tfEmail, tfSoDT, tfDiaChi, tfDiemTB, tfSoTCQua, tfSoTCNo,
@@ -147,8 +147,8 @@ public class PanelSinhVienTinChiView extends JPanel {
 	}
 
 	private JPanel createBtnOtherPanel() {
-		JPanel panel = new JPanel(new GridLayout(3, 1, 10, 10));
-		panel.setBorder(new EmptyBorder(10, 80, 95, 80));
+		JPanel panel = new JPanel(new GridLayout(4, 1, 10, 10));
+		panel.setBorder(new EmptyBorder(10, 80, 65, 80));
 		JPanel panel1 = new JPanel(new GridLayout(1, 2, 10, 10));
 		panel1.add(btnThem = new JButton("Thêm"));
 		panel1.add(btnSua = new JButton("Sửa"));
@@ -158,6 +158,7 @@ public class PanelSinhVienTinChiView extends JPanel {
 		panel.add(panel1);
 		panel.add(panel2);
 		panel.add(btnLuu = new JButton("Lưu"));
+		panel.add(btnCapNhatDiem = new JButton("Cập nhật điểm SV"));
 
 		return panel;
 	}

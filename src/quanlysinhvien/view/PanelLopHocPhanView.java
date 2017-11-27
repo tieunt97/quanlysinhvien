@@ -21,7 +21,7 @@ import quanlysinhvien.model.HocPhan;
 public class PanelLopHocPhanView extends  JPanel{
 	private JTable table;
 	private JTextField tfIdLop, tfThoiGian, tfTuanHoc, tfPhongHoc, tfTenGV, tfSoSVMax, tfSoSVHienTai, tfTimKiem;
-	private JButton btnThem, btnSua, btnXoa, btnCapNhat, btnHuy, btnTimKiem;
+	private JButton btnThem, btnSua, btnXoa, btnLuu, btnHuy, btnTimKiem, btnCapNhatSV;
 	private JComboBox<String> timKiemCB, hocKyCB;
 	private String[] titleCols = {"Học kỳ", "Mã lớp", "Thời gian", "Tuần học", "Phòng học", "Tên giảng viên", "Số SV max", "Số SV hiện tại"};
 	private String[] timKiemVals = {"Mã lớp", "Phòng học", "Tên giảng viên", "Số SV max"};
@@ -71,7 +71,7 @@ public class PanelLopHocPhanView extends  JPanel{
 	}
 	private JPanel createInputPanel() {
 		JPanel panel = new JPanel(new GridLayout(1, 2, 10, 10));
-		panel.setBorder(new EmptyBorder(0, 0, 120, 0));
+		panel.setBorder(new EmptyBorder(0, 0, 125, 0));
 		panel.add(createInputLeftPanel());
 		panel.add(createInputRightPanel());
 		
@@ -86,14 +86,12 @@ public class PanelLopHocPhanView extends  JPanel{
 		panelL.add(new JLabel("Mã lớp:"));
 		panelL.add(new JLabel("Thời gian:"));
 		panelL.add(new JLabel("Tuần học:"));
-		panelL.add(new JLabel(""));
 		
 		JPanel panelR = new JPanel(new GridLayout(5, 1, 5, 5));
 		panelR.add(createPanelCB(hocKyCB, hocKyVals));
 		panelR.add(tfIdLop = new JTextField());
 		panelR.add(tfThoiGian = new JTextField());
 		panelR.add(tfTuanHoc = new JTextField());
-		panelR.add(new JLabel(""));
 
 		panel.add(panelL, BorderLayout.WEST);
 		panel.add(panelR, BorderLayout.CENTER);
@@ -108,14 +106,12 @@ public class PanelLopHocPhanView extends  JPanel{
 		panelL.add(new JLabel("Tên giảng viên:"));
 		panelL.add(new JLabel("Số SV max:"));
 		panelL.add(new JLabel("Số SV hiện tại:"));
-		panelL.add(new JLabel(""));
 		
 		JPanel panelR = new JPanel(new GridLayout(5, 1, 5, 5));
 		panelR.add(tfPhongHoc = new JTextField());
 		panelR.add(tfTenGV = new JTextField());
 		panelR.add(tfSoSVMax = new JTextField());
 		panelR.add(tfSoSVHienTai = new JTextField());
-		panelR.add(btnCapNhat = new JButton("Cập nhật"));
 		
 		panel.add(panelL, BorderLayout.WEST);
 		panel.add(panelR, BorderLayout.CENTER);
@@ -124,37 +120,42 @@ public class PanelLopHocPhanView extends  JPanel{
 	}
 	
 	private JPanel createButtonPanel() {
-		JPanel panel = new JPanel(new GridLayout(2, 1, 10, 10));
-		panel.setBorder(new EmptyBorder(0, 45, 100, 0));
-		panel.add(createTimKiemPanel());
-		panel.add(createBtnOtherPanel());
-		
+		JPanel panel = new JPanel(new BorderLayout(10, 10));
+		panel.setBorder(new EmptyBorder(0, 25, 25, 0));
+		panel.add(createTimKiemPanel(), BorderLayout.NORTH);
+		panel.add(createBtnOtherPanel(), BorderLayout.CENTER);
+
 		return panel;
 	}
-	
+
 	private JPanel createTimKiemPanel() {
 		JPanel panel = new JPanel(new GridLayout(1, 2, 10, 10));
-		panel.setBorder(new EmptyBorder(0, 0, 58, 0));
 		JPanel panelButCB = new JPanel(new GridLayout(1, 2, 5, 5));
 		panelButCB.add(btnTimKiem = new JButton("Tìm kiếm"));
 		panelButCB.add(timKiemCB = new JComboBox<>(timKiemVals));
-		
+
 		JPanel panelTF = new JPanel(new BorderLayout());
 		panelTF.add(tfTimKiem = new JTextField());
 		panel.add(panelButCB);
 		panel.add(panelTF);
-		
+
 		return panel;
 	}
-	
+
 	private JPanel createBtnOtherPanel() {
-		JPanel panel = new JPanel(new GridLayout(2, 2, 10, 10));
-		panel.setBorder(new EmptyBorder(0, 55, 0, 55));
-		panel.add(btnThem = new JButton("Thêm"));
-		panel.add(btnSua = new JButton("Sửa"));
-		panel.add(btnXoa = new JButton("Xóa"));
-		panel.add(btnHuy = new JButton("Hủy"));
-		
+		JPanel panel = new JPanel(new GridLayout(4, 1, 10, 10));
+		panel.setBorder(new EmptyBorder(10, 80, 65, 80));
+		JPanel panel1 = new JPanel(new GridLayout(1, 2, 10, 10));
+		panel1.add(btnThem = new JButton("Thêm"));
+		panel1.add(btnSua = new JButton("Sửa"));
+		JPanel panel2 = new JPanel(new GridLayout(1, 2, 10, 10));
+		panel2.add(btnXoa = new JButton("Xóa"));
+		panel2.add(btnHuy = new JButton("Hủy"));
+		panel.add(panel1);
+		panel.add(panel2);
+		panel.add(btnLuu = new JButton("Lưu"));
+		panel.add(btnCapNhatSV = new JButton("Cập nhật DS sinh viên"));
+
 		return panel;
 	}
 	

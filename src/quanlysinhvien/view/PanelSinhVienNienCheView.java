@@ -10,6 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -19,10 +20,11 @@ import javax.swing.table.DefaultTableModel;
 import quanlysinhvien.model.SinhVienNienChe;
 
 public class PanelSinhVienNienCheView extends JPanel{
-	private JTable table = new JTable();
-	private JButton btnThem, btnSua, btnXoa, btnCapNhap, btnHuy, btnTimKiem;
+	private JTable table;
+	private JButton btnThem, btnSua, btnXoa, btnLuu, btnHuy, btnTimKiem, btnCapNhatDiem;
+	private JRadioButton radNam, radNu;
 	private JComboBox<String> timKiemCB;
-	private JTextField tfIdSV, tfHoTen, tfKhoa, tfNgaySinh, tfGioiTinh, tfEmail, tfSoDT, tfDiaChi, tfDiemTB, tfaTongSoKy, tfTimKiem;
+	private JTextField tfIdSV, tfHoTen, tfKhoa, tfNgaySinh, tfEmail, tfSoDT, tfDiaChi, tfDiemTB, tfTongSoKy, tfTimKiem;
 	private String[] titleCols = {"Mã sinh viên", "Họ tên", "Khóa", "Ngày sinh", "Giới tính", 
 			"Email", "Số ĐT", "Địa chỉ", "Điểm TB", "Tổng số kỳ"};
 	private String[] timKiemVals = {"Mã sinh viên", "Họ tên", "Khóa", "Địa chỉ", "Điểm TB", "Tổng số kỳ"};
@@ -110,15 +112,13 @@ public class PanelSinhVienNienCheView extends JPanel{
 		panelL.add(new JLabel("Số ĐT:"));
 		panelL.add(new JLabel("Địa chỉ:"));
 		panelL.add(new JLabel("Tổng số kỳ:"));
-		panelL.add(new JLabel(""));
 		
 		JPanel panelR = new JPanel(new GridLayout(6, 1, 5, 5));
-		panelR.add(tfIdSV = new JTextField());
-		panelR.add(tfHoTen = new JTextField());
-		panelR.add(tfKhoa = new JTextField());
-		panelR.add(tfNgaySinh = new JTextField());
-		panelR.add(tfaTongSoKy = new JTextField());
-		panelR.add(btnCapNhap = new JButton("Cập nhật"));
+		panelR.add(panelGioiTinh());
+		panelR.add(tfEmail = new JTextField());
+		panelR.add(tfSoDT = new JTextField());
+		panelR.add(tfDiaChi = new JTextField());
+		panelR.add(tfTongSoKy = new JTextField());
 		
 		panel.add(panelL, BorderLayout.WEST);
 		panel.add(panelR, BorderLayout.CENTER);
@@ -126,37 +126,51 @@ public class PanelSinhVienNienCheView extends JPanel{
 	}
 	
 	private JPanel createButtonPanel() {
-		JPanel panel = new JPanel(new GridLayout(2, 1, 10, 10));
-		panel.setBorder(new EmptyBorder(0, 25, 100, 0));
-		panel.add(createTimKiemPanel());
-		panel.add(createBtnOtherPanel());
-		
+		JPanel panel = new JPanel(new BorderLayout(10, 10));
+		panel.setBorder(new EmptyBorder(0, 25, 0, 0));
+		panel.add(createTimKiemPanel(), BorderLayout.NORTH);
+		panel.add(createBtnOtherPanel(), BorderLayout.CENTER);
+
 		return panel;
 	}
-	
+
 	private JPanel createTimKiemPanel() {
 		JPanel panel = new JPanel(new GridLayout(1, 2, 10, 10));
-		panel.setBorder(new EmptyBorder(0, 0, 58, 0));
 		JPanel panelButCB = new JPanel(new GridLayout(1, 2, 5, 5));
 		panelButCB.add(btnTimKiem = new JButton("Tìm kiếm"));
 		panelButCB.add(timKiemCB = new JComboBox<>(timKiemVals));
-		
+
 		JPanel panelTF = new JPanel(new BorderLayout());
 		panelTF.add(tfTimKiem = new JTextField());
 		panel.add(panelButCB);
 		panel.add(panelTF);
-		
+
+		return panel;
+	}
+
+	private JPanel createBtnOtherPanel() {
+		JPanel panel = new JPanel(new GridLayout(4, 1, 10, 10));
+		panel.setBorder(new EmptyBorder(10, 80, 65, 80));
+		JPanel panel1 = new JPanel(new GridLayout(1, 2, 10, 10));
+		panel1.add(btnThem = new JButton("Thêm"));
+		panel1.add(btnSua = new JButton("Sửa"));
+		JPanel panel2 = new JPanel(new GridLayout(1, 2, 10, 10));
+		panel2.add(btnXoa = new JButton("Xóa"));
+		panel2.add(btnHuy = new JButton("Hủy"));
+		panel.add(panel1);
+		panel.add(panel2);
+		panel.add(btnLuu = new JButton("Lưu"));
+		panel.add(btnCapNhatDiem = new JButton("Cập nhật điểm SV"));
+
 		return panel;
 	}
 	
-	private JPanel createBtnOtherPanel() {
-		JPanel panel = new JPanel(new GridLayout(2, 2, 10, 10));
-		panel.setBorder(new EmptyBorder(0, 55, 0, 55));
-		panel.add(btnThem = new JButton("Thêm"));
-		panel.add(btnSua = new JButton("Sửa"));
-		panel.add(btnXoa = new JButton("Xóa"));
-		panel.add(btnHuy = new JButton("Hủy"));
-		
+	private JPanel panelGioiTinh() {
+		JPanel panel = new JPanel(new GridLayout());
+		panel.setBorder(new EmptyBorder(0, 0, 0, 135));
+		panel.add(radNam = new JRadioButton("Nam"));
+		panel.add(radNu = new JRadioButton("Nữ"));
+
 		return panel;
 	}
 	
@@ -169,29 +183,213 @@ public class PanelSinhVienNienCheView extends JPanel{
 		return label;
 	}
 	
-	public void loadData(JTable table, ArrayList<SinhVienNienChe> dsSVNC) {
-		String[][] data = convertData(dsSVNC);
+	public void loadData(JTable table, ArrayList<SinhVienNienChe> dsSVNC, String timKiem, String giaTri) {
+		String[][] data = convertData(dsSVNC, timKiem, giaTri);
 		DefaultTableModel model = new DefaultTableModel(data, titleCols);
 		table.setModel(model);
 	}
 	
-	private String[][] convertData(ArrayList<SinhVienNienChe> list) {
+	private String[][] convertData(ArrayList<SinhVienNienChe> list, String timKiem, String giaTri) {
 		int size = list.size();
 		String data[][] = new String[size][titleCols.length];
+		int index = 0;
 		for (int i = 0; i < size; i++) {
-//			tfIdSV, tfHoTen, tfKhoa, tfNgaySinh, tfGioiTinh, tfEmail, tfSoDT, tfDiaChi, tfDiemTB, tfaTongSoKy
 			SinhVienNienChe svnc = list.get(i);
-			data[i][0] = svnc.getIdSinhVien();
-			data[i][1] = svnc.getHoTen();
-			data[i][2] = svnc.getKhoa();
-			data[i][3] = svnc.getNgaySinh();
-			data[i][4] = svnc.getGioiTinh();
-			data[i][5] = svnc.getEmail();
-			data[i][6] = svnc.getSoDT();
-			data[i][7] = svnc.getDiaChi();
-			data[i][8] = svnc.getDiemTB() + "";
-			data[i][9] = svnc.getTongSoKy();
+			switch (timKiem) {
+			case "Mã sinh viên":
+				if(svnc.getIdSinhVien().toLowerCase().indexOf(giaTri) >= 0) {
+					data[index][0] = svnc.getIdSinhVien();
+					data[index][1] = svnc.getHoTen();
+					data[index][2] = svnc.getKhoa();
+					data[index][3] = svnc.getNgaySinh();
+					data[index][4] = svnc.getGioiTinh();
+					data[index][5] = svnc.getEmail();
+					data[index][6] = svnc.getSoDT();
+					data[index][7] = svnc.getDiaChi();
+					data[index][8] = svnc.getDiemTB() + "";
+					data[index][9] = svnc.getTongSoKy() + "";
+					index++;
+				}
+				break;
+			case "Họ tên":
+				if(svnc.getHoTen().toLowerCase().indexOf(giaTri) >= 0) {
+					data[index][0] = svnc.getIdSinhVien();
+					data[index][1] = svnc.getHoTen();
+					data[index][2] = svnc.getKhoa();
+					data[index][3] = svnc.getNgaySinh();
+					data[index][4] = svnc.getGioiTinh();
+					data[index][5] = svnc.getEmail();
+					data[index][6] = svnc.getSoDT();
+					data[index][7] = svnc.getDiaChi();
+					data[index][8] = svnc.getDiemTB() + "";
+					data[index][9] = svnc.getTongSoKy() + "";
+					index++;
+				}
+				break;
+			case "Khóa":
+				if(svnc.getKhoa().toLowerCase().indexOf(giaTri) >= 0) {
+					data[index][0] = svnc.getIdSinhVien();
+					data[index][1] = svnc.getHoTen();
+					data[index][2] = svnc.getKhoa();
+					data[index][3] = svnc.getNgaySinh();
+					data[index][4] = svnc.getGioiTinh();
+					data[index][5] = svnc.getEmail();
+					data[index][6] = svnc.getSoDT();
+					data[index][7] = svnc.getDiaChi();
+					data[index][8] = svnc.getDiemTB() + "";
+					data[index][9] = svnc.getTongSoKy() + "";
+					index++;
+				}
+				break;
+			case "Địa chỉ":
+				if(svnc.getDiaChi().toLowerCase().indexOf(giaTri) >= 0) {
+					data[index][0] = svnc.getIdSinhVien();
+					data[index][1] = svnc.getHoTen();
+					data[index][2] = svnc.getKhoa();
+					data[index][3] = svnc.getNgaySinh();
+					data[index][4] = svnc.getGioiTinh();
+					data[index][5] = svnc.getEmail();
+					data[index][6] = svnc.getSoDT();
+					data[index][7] = svnc.getDiaChi();
+					data[index][8] = svnc.getDiemTB() + "";
+					data[index][9] = svnc.getTongSoKy() + "";
+					index++;
+				}
+				break;
+			case "Điểm TB":
+				if(Double.toString(svnc.getDiemTB()).equals(Double.toString(Double.parseDouble(giaTri)))) {
+					data[index][0] = svnc.getIdSinhVien();
+					data[index][1] = svnc.getHoTen();
+					data[index][2] = svnc.getKhoa();
+					data[index][3] = svnc.getNgaySinh();
+					data[index][4] = svnc.getGioiTinh();
+					data[index][5] = svnc.getEmail();
+					data[index][6] = svnc.getSoDT();
+					data[index][7] = svnc.getDiaChi();
+					data[index][8] = svnc.getDiemTB() + "";
+					data[index][9] = svnc.getTongSoKy() + "";
+					index++;
+				}
+				break;
+			case "Tổng số kỳ":
+				if(Integer.toString(svnc.getTongSoKy()).equals(Integer.toString(Integer.parseInt(giaTri)))) {
+					data[index][0] = svnc.getIdSinhVien();
+					data[index][1] = svnc.getHoTen();
+					data[index][2] = svnc.getKhoa();
+					data[index][3] = svnc.getNgaySinh();
+					data[index][4] = svnc.getGioiTinh();
+					data[index][5] = svnc.getEmail();
+					data[index][6] = svnc.getSoDT();
+					data[index][7] = svnc.getDiaChi();
+					data[index][8] = svnc.getDiemTB() + "";
+					data[index][9] = svnc.getTongSoKy() + "";
+					index++;
+				}
+				break;
+			case "":{
+				data[index][0] = svnc.getIdSinhVien();
+				data[index][1] = svnc.getHoTen();
+				data[index][2] = svnc.getKhoa();
+				data[index][3] = svnc.getNgaySinh();
+				data[index][4] = svnc.getGioiTinh();
+				data[index][5] = svnc.getEmail();
+				data[index][6] = svnc.getSoDT();
+				data[index][7] = svnc.getDiaChi();
+				data[index][8] = svnc.getDiemTB() + "";
+				data[index][9] = svnc.getTongSoKy() + "";
+				index++;
+			}
+				break;
+			}
+		}
+		if (!giaTri.equals("")) {
+			String[][] datatk = new String[index][titleCols.length];
+			for (int i = 0; i < index; i++) {
+				datatk[i] = data[i];
+			}
+			return datatk;
 		}
 		return data;
 	}
+
+	public JTable getTable() {
+		return table;
+	}
+
+	public JButton getBtnThem() {
+		return btnThem;
+	}
+
+	public JButton getBtnSua() {
+		return btnSua;
+	}
+
+	public JButton getBtnXoa() {
+		return btnXoa;
+	}
+
+	public JButton getBtnHuy() {
+		return btnHuy;
+	}
+
+	public JButton getBtnTimKiem() {
+		return btnTimKiem;
+	}
+	
+	public JButton getBtnLuu() {
+		return btnLuu;
+	}
+
+	public JComboBox<String> getTimKiemCB() {
+		return timKiemCB;
+	}
+
+	public JTextField getTfIdSV() {
+		return tfIdSV;
+	}
+
+	public JTextField getTfHoTen() {
+		return tfHoTen;
+	}
+
+	public JTextField getTfKhoa() {
+		return tfKhoa;
+	}
+
+	public JTextField getTfNgaySinh() {
+		return tfNgaySinh;
+	}
+
+	public JTextField getTfEmail() {
+		return tfEmail;
+	}
+
+	public JTextField getTfSoDT() {
+		return tfSoDT;
+	}
+
+	public JTextField getTfDiaChi() {
+		return tfDiaChi;
+	}
+
+	public JTextField getTfDiemTB() {
+		return tfDiemTB;
+	}
+
+	public JTextField getTfTongSoKy() {
+		return tfTongSoKy;
+	}
+
+	public JTextField getTfTimKiem() {
+		return tfTimKiem;
+	}
+
+	public JRadioButton getRadNam() {
+		return radNam;
+	}
+
+	public JRadioButton getRadNu() {
+		return radNu;
+	}
+	
 }

@@ -21,7 +21,7 @@ import quanlysinhvien.model.HocPhan;
 public class PanelDanhSachNganhView extends JPanel{
 	private JTable table;
 	private JTextField tfIdNganh, tfTenNganh, tfTimKiem;
-	private JButton btnThem, btnSua, btnXoa, btnTimKiem, btnCapNhat, btnHuy;
+	private JButton btnThem, btnSua, btnXoa, btnLuu, btnTimKiem, btnHuy;
 	private JComboBox<String> timKiemCB;
 	private String[] titleCols = {"Mã ngành", "Tên ngành"};
 	private String[] timKiemVals = {"Mã ngành", "Tên ngành"};
@@ -60,17 +60,16 @@ public class PanelDanhSachNganhView extends JPanel{
 	}
 	
 	private JPanel createRightPanel() {
-		JPanel panel = new JPanel(new GridLayout(2, 1, 10, 10));
-		panel.setBorder(new EmptyBorder(50, 0, 150, 0));
-		panel.add(createInputPanel());
-		panel.add(createBottomPanel());
+		JPanel panel = new JPanel(new BorderLayout(10, 10));
+		panel.setBorder(new EmptyBorder(50, 0, 35, 0));
+		panel.add(createInputPanel(), BorderLayout.NORTH);
+		panel.add(createBottomPanel(), BorderLayout.CENTER);
 		
 		return panel;
 	}
 	
 	private JPanel createInputPanel() {
 		JPanel panel = new JPanel(new GridLayout(1, 2, 10, 10));
-		panel.setBorder(new EmptyBorder(95, 0, 10, 0));
 		panel.add(createInputLeftPanel());
 		panel.add(createInputRightPanel());
 		
@@ -78,27 +77,33 @@ public class PanelDanhSachNganhView extends JPanel{
 	}
 	
 	private JPanel createBottomPanel() {
-		JPanel panel = new JPanel(new GridLayout(2, 1, 10, 10));
+		JPanel panel = new JPanel(new BorderLayout(10, 10));
 		panel.setBorder(new EmptyBorder(0, 40, 0, 40));
-		panel.add(createTimKiemPanel());
-		panel.add(createButtonPanel());
+		panel.add(createTimKiemPanel(), BorderLayout.NORTH);
+		panel.add(createButtonPanel(), BorderLayout.CENTER);
 		
 		return panel;
 	}
 	
 	private JPanel createButtonPanel() {
-		JPanel panel = new JPanel(new GridLayout(2, 2, 10, 10));
-		panel.add(btnThem = new JButton("Thêm"));
-		panel.add(btnSua = new JButton("Sửa"));
-		panel.add(btnXoa = new JButton("Xóa"));
-		panel.add(btnHuy = new JButton("Hủy"));
-		
+		JPanel panel = new JPanel(new GridLayout(3, 1, 10, 10));
+		panel.setBorder(new EmptyBorder(25, 45, 205, 45));
+		JPanel panel1 = new JPanel(new GridLayout(1, 2, 10, 10));
+		panel1.add(btnThem = new JButton("Thêm"));
+		panel1.add(btnSua = new JButton("Sửa"));
+		JPanel panel2 = new JPanel(new GridLayout(1, 2, 10, 10));
+		panel2.add(btnXoa = new JButton("Xóa"));
+		panel2.add(btnHuy = new JButton("Hủy"));
+		panel.add(panel1);
+		panel.add(panel2);
+		panel.add(btnLuu = new JButton("Lưu"));
+
 		return panel;
 	}
 	
 	private JPanel createTimKiemPanel() {
 		JPanel panel = new JPanel(new GridLayout(1, 2, 10, 10));
-		panel.setBorder(new EmptyBorder(25, 0, 25, 0));
+//		panel.setBorder(new EmptyBorder(25, 0, 75, 0));
 		JPanel panelButCB = new JPanel(new GridLayout(1, 2, 5, 5));
 		panelButCB.add(btnTimKiem = new JButton("Tìm kiếm"));
 		panelButCB.add(timKiemCB = new JComboBox<>(timKiemVals));
@@ -130,11 +135,9 @@ public class PanelDanhSachNganhView extends JPanel{
 		JPanel panel = new JPanel(new BorderLayout(5, 5));
 		JPanel panelL = new JPanel(new GridLayout(2, 1, 10, 10));
 		panelL.add(new JLabel("Tên ngành:"));
-		panelL.add(new JLabel(""));
 		JPanel panelR = new JPanel(new GridLayout(2, 1, 10, 10));
 		panelR.add(tfTenNganh = new JTextField());
 		JPanel panelCapNhat = new JPanel(new GridLayout());
-		panelCapNhat.add(btnCapNhat = new JButton("Cập nhật"));
 		panelR.add(panelCapNhat);
 		
 		panel.add(panelL, BorderLayout.WEST);

@@ -1,17 +1,23 @@
 package quanlysinhvien.main;
 
+import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Container;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
 
 import quanlysinhvien.controller.DanhSachHPController;
+import quanlysinhvien.controller.SinhVienNienCheController;
 import quanlysinhvien.controller.SinhVienTinChiController;
 import quanlysinhvien.view.PanelCapNhatDiemSVView;
 import quanlysinhvien.view.PanelDanhSachHPView;
@@ -25,14 +31,15 @@ import quanlysinhvien.view.PanelSinhVienTinChiView;
 public class MainQuanLy extends JFrame implements ActionListener{
 	private JMenuBar menuBar;
 	private JMenu menuQuanLySV, menuQuanLyMonHoc, menuQuanLyNganh;
-	private JMenuItem miSVTinChi, miSVNienChe, miCapNhatDiem, miQuanLyHocPhan, miQuanlyLopHP, miQuanLyNganh, miQuanLyLopChuyenNganh;
+	private JMenuItem miSVTinChi, miSVNienChe, miQuanLyHocPhan, miQuanlyLopHP, miQuanLyNganh, miQuanLyLopChuyenNganh;
 	private Container conter;
+	private JPanel mainPanel;
 	private CardLayout carLayout;
+	private JButton btnLogout;
 	
 	private PanelHeThongView trangChu;
 	private PanelSinhVienTinChiView SVTC;
 	private PanelSinhVienNienCheView SVNC;
-	private PanelCapNhatDiemSVView capNhatDiem;
 	
 	private PanelDanhSachHPView dsHP;
 	private PanelLopHocPhanView lopHP;
@@ -42,22 +49,26 @@ public class MainQuanLy extends JFrame implements ActionListener{
 	
 	public MainQuanLy() {
 		conter = this.getContentPane();
-		setLayout(carLayout = new CardLayout());
-		setJMenuBar(menuBar = createJMenuBar());
+		mainPanel = new JPanel();
+		mainPanel.setLayout(carLayout = new CardLayout());
 		
-		conter.add(trangChu = new PanelHeThongView());
+		mainPanel.add(trangChu = new PanelHeThongView());
 		
-		conter.add(SVTC = new PanelSinhVienTinChiView(), "SVTC");
+		mainPanel.add(SVTC = new PanelSinhVienTinChiView(), "SVTC");
 		new SinhVienTinChiController(SVTC);
-		conter.add(SVNC = new PanelSinhVienNienCheView(), "SVNC");
-		conter.add(capNhatDiem = new PanelCapNhatDiemSVView(), "capNhatDiem");
+		mainPanel.add(SVNC = new PanelSinhVienNienCheView(), "SVNC");
+		new SinhVienNienCheController(SVNC);
 		
-		conter.add(dsHP = new PanelDanhSachHPView(), "dsHP");
+		mainPanel.add(dsHP = new PanelDanhSachHPView(), "dsHP");
 		new DanhSachHPController(dsHP);
-		conter.add(lopHP = new PanelLopHocPhanView(), "lopHP");
+		mainPanel.add(lopHP = new PanelLopHocPhanView(), "lopHP");
 		
-		conter.add(dsNganh = new PanelDanhSachNganhView(), "dsNganh");
-		conter.add(lopCN = new PanelLopChuyenNganhView(), "lopCN");
+		mainPanel.add(dsNganh = new PanelDanhSachNganhView(), "dsNganh");
+		mainPanel.add(lopCN = new PanelLopChuyenNganhView(), "lopCN");
+		
+		conter.setLayout(new BorderLayout(0, 0));
+		conter.add(createHeaderPanel(), BorderLayout.NORTH);
+		conter.add(mainPanel, BorderLayout.CENTER);
 		
 		setTitle("Hệ thống quản lý sinh viên");
 		setSize(1200, 720);
@@ -72,7 +83,6 @@ public class MainQuanLy extends JFrame implements ActionListener{
 		menuBar.add(menuQuanLySV = createMenu("Quản lý sinh viên"));
 		menuQuanLySV.add(miSVTinChi = createMenuItem("Sinh viên tín chỉ"));
 		menuQuanLySV.add(miSVNienChe = createMenuItem("Sinh viên niên chế"));
-		menuQuanLySV.add(miCapNhatDiem = createMenuItem("Cập nhật điểm sinh viên"));
 		
 		menuBar.add(menuQuanLyMonHoc = createMenu("Quản lý học phần"));
 		menuQuanLyMonHoc.add(miQuanLyHocPhan = createMenuItem("Danh sách học phần"));
@@ -95,36 +105,50 @@ public class MainQuanLy extends JFrame implements ActionListener{
 		menuItem.addActionListener(this);
 		return menuItem;
 	}
+	
+
+	private JPanel createHeaderPanel() {
+		JPanel panel = new JPanel(new GridLayout(2, 1));
+		panel.add(createPanelDangXuat());
+		panel.add(menuBar = createJMenuBar());
+		
+		return panel;
+	}
+	
+	private JPanel createPanelDangXuat() {
+		JPanel panel = new JPanel(new BorderLayout());
+		panel.setBorder(new EmptyBorder(5, 1000, 0, 50));
+		btnLogout = new JButton("Đăng xuất");
+		panel.add(btnLogout);
+		
+		return panel;
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if(e.getSource() == miSVTinChi) {
-			carLayout.show(conter, "SVTC");
+			carLayout.show(mainPanel, "SVTC");
 			return;
 		}
 		if(e.getSource() == miSVNienChe) {
-			carLayout.show(conter, "SVNC");
-			return;
-		}
-		if(e.getSource() == miCapNhatDiem) {
-			carLayout.show(conter, "capNhatDiem");
+			carLayout.show(mainPanel, "SVNC");
 			return;
 		}
 		if(e.getSource() == miQuanLyHocPhan) {
-			carLayout.show(conter, "dsHP");
+			carLayout.show(mainPanel, "dsHP");
 			return;
 		}
 		if(e.getSource() == miQuanlyLopHP) {
-			carLayout.show(conter, "lopHP");
+			carLayout.show(mainPanel, "lopHP");
 			return;
 		}
 		if(e.getSource() == miQuanLyNganh) {
-			carLayout.show(conter, "dsNganh");
+			carLayout.show(mainPanel, "dsNganh");
 			return;
 		}
 		if(e.getSource() == miQuanLyLopChuyenNganh) {
-			carLayout.show(conter, "lopCN");
+			carLayout.show(mainPanel, "lopCN");
 			return;
 		}
 		
@@ -140,5 +164,14 @@ public class MainQuanLy extends JFrame implements ActionListener{
 			}
 		});
 	}
+
+	public JButton getBtnLogout() {
+		return btnLogout;
+	}
+
+	public void setBtnLogout(JButton btnLogout) {
+		this.btnLogout = btnLogout;
+	}
+	
 }
 

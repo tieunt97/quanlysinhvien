@@ -26,77 +26,88 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import quanlysinhvien.model.SinhVienNienChe;
 import quanlysinhvien.model.SinhVienTinChi;
-import quanlysinhvien.view.PanelSinhVienTinChiView;
+import quanlysinhvien.view.PanelSinhVienNienCheView;
 
-public class SinhVienTinChiController {
-	private PanelSinhVienTinChiView sinhVienTC;
+public class SinhVienNienCheController {
 	private JTable table;
-	private JButton btnThem, btnSua, btnXoa, btnHuy, btnTimKiem, btnLuu;
-	private JComboBox<String> timKiemCB;
+	private JButton btnThem, btnSua, btnXoa, btnLuu, btnHuy, btnTimKiem;
 	private JRadioButton radNam, radNu;
-	private JTextField tfIdSV, tfHoTen, tfKhoa, tfNgaySinh, tfEmail, tfSoDT, tfDiaChi, tfDiemTB, tfSoTCQua, tfSoTCNo,
-			tfTimKiem;
-	private ArrayList<SinhVienTinChi> dsSinhVien;
+	private JComboBox<String> timKiemCB;
+	private JTextField tfIdSV, tfHoTen, tfKhoa, tfNgaySinh, tfGioiTinh, tfEmail, tfSoDT, tfDiaChi, tfDiemTB, tfTongSoKy, tfTimKiem;
+	private PanelSinhVienNienCheView sinhVienNC;
+	private ArrayList<SinhVienNienChe> dsSinhVien;
 	private String fileName;
-
-	public SinhVienTinChiController(PanelSinhVienTinChiView sinhVienTC) {
-		this.sinhVienTC = sinhVienTC;
-
-		// Tao thu muc con
-//		File file = new File(
-//				"C:\\Users\\tieu_nt\\Desktop\\Lập trình hướng đối tượng\\quanlysinhvien\\sinhvientinchi\\demo");
-//		file.mkdir();
-//		System.out.println("isDiratory: " + file.isDirectory());
-		// System.out.println(deleteDir(file)); // xoa thu muc va tat ca trong no
-		fileName = "C:\\Users\\tieu_nt\\Desktop\\Lập trình hướng đối tượng\\quanlysinhvien\\sinhvientinchi\\dsSinhVienTC.xlsx";
+	
+	public SinhVienNienCheController(PanelSinhVienNienCheView sinhVienNC) {
+		this.sinhVienNC = sinhVienNC;
+//		dsSinhVien = new ArrayList<>();
+		fileName = "C:\\Users\\tieu_nt\\Desktop\\Lập trình hướng đối tượng\\quanlysinhvien\\sinhviennienche\\dsSinhVienNC.xlsx";
 		try {
-			dsSinhVien = readFile(fileName);
-			// System.out.println("Success readFile.");
+			this.dsSinhVien = readFile(fileName);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			dsSinhVien = new ArrayList<>();
-			// e.printStackTrace();
-			System.out.println("Error: " + e);
+			this.dsSinhVien = new ArrayList<>();
+			e.printStackTrace();
 		}
-		this.table = sinhVienTC.getTable();
-		this.btnThem = sinhVienTC.getBtnThem();
-		this.btnSua = sinhVienTC.getBtnSua();
-		this.btnXoa = sinhVienTC.getBtnXoa();
-		this.btnHuy = sinhVienTC.getBtnHuy();
-		this.btnTimKiem = sinhVienTC.getBtnTimKiem();
-		this.btnLuu = sinhVienTC.getBtnLuu();
-		this.timKiemCB = sinhVienTC.getTimKiemCB();
-		this.tfIdSV = sinhVienTC.getTfIdSV();
-		this.tfHoTen = sinhVienTC.getTfHoTen();
-		this.tfKhoa = sinhVienTC.getTfKhoa();
-		this.tfNgaySinh = sinhVienTC.getTfNgaySinh();
-		this.tfEmail = sinhVienTC.getTfEmail();
-		this.tfSoDT = sinhVienTC.getTfSoDT();
-		this.tfDiaChi = sinhVienTC.getTfDiaChi();
-		this.tfDiemTB = sinhVienTC.getTfDiemTB();
-		this.tfSoTCNo = sinhVienTC.getTfSoTCNo();
-		this.tfSoTCQua = sinhVienTC.getTfSoTCQua();
-		this.tfTimKiem = sinhVienTC.getTfTimKiem();
-		this.radNam = sinhVienTC.getRadNam();
-		this.radNu = sinhVienTC.getRadNu();
-		this.sinhVienTC.loadData(table, dsSinhVien, "", "");
-
+		this.table = sinhVienNC.getTable();
+		this.radNam = sinhVienNC.getRadNam();
+		this.radNu = sinhVienNC.getRadNu();
+		this.btnThem = sinhVienNC.getBtnThem();
+		this.btnSua = sinhVienNC.getBtnSua();
+		this.btnXoa = sinhVienNC.getBtnXoa();
+		this.btnLuu = sinhVienNC.getBtnLuu();
+		this.btnHuy = sinhVienNC.getBtnHuy();
+		this.btnTimKiem = sinhVienNC.getBtnTimKiem();
+		this.timKiemCB = sinhVienNC.getTimKiemCB();
+		this.tfIdSV = sinhVienNC.getTfIdSV();
+		this.tfHoTen = sinhVienNC.getTfHoTen();
+		this.tfKhoa = sinhVienNC.getTfKhoa();
+		this.tfNgaySinh = sinhVienNC.getTfNgaySinh();
+		this.tfEmail = sinhVienNC.getTfEmail();
+		this.tfSoDT = sinhVienNC.getTfSoDT();
+		this.tfDiaChi = sinhVienNC.getTfDiaChi();
+		this.tfDiemTB = sinhVienNC.getTfDiemTB();
+		this.tfTongSoKy = sinhVienNC.getTfTongSoKy();
+		this.tfTimKiem = sinhVienNC.getTfTimKiem();
+		this.sinhVienNC.loadData(table, dsSinhVien, "", "");
+		
 		setAction();
 	}
-
+	
 	private void setAction() {
 		table.addMouseListener(new MouseListener() {
-
+			
 			@Override
-			public void mouseReleased(MouseEvent e) {
+			public void mouseReleased(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
 			}
-
+			
 			@Override
-			public void mousePressed(MouseEvent e) {
+			public void mousePressed(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
 				// TODO Auto-generated method stub
 				int row = table.getSelectedRow();
-				if (row >= 0) {
+				if(row >= 0) {
 					tfIdSV.setText((String) table.getValueAt(row, 0));
 					tfIdSV.setEnabled(false);
 					tfHoTen.setText((String) table.getValueAt(row, 1));
@@ -113,23 +124,11 @@ public class SinhVienTinChiController {
 					tfSoDT.setText((String) table.getValueAt(row, 6));
 					tfDiaChi.setText((String) table.getValueAt(row, 7));
 					tfDiemTB.setText((String) table.getValueAt(row, 8));
-					tfSoTCQua.setText((String) table.getValueAt(row, 9));
-					tfSoTCNo.setText((String) table.getValueAt(row, 10));
+					tfTongSoKy.setText((String) table.getValueAt(row, 9));
 				}
 			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e) {
-			}
-
-			@Override
-			public void mouseClicked(MouseEvent e) {
-			}
 		});
+		
 		radNam.addActionListener(new ActionListener() {
 
 			@Override
@@ -148,17 +147,17 @@ public class SinhVienTinChiController {
 					radNam.setSelected(false);
 			}
 		});
-
+		
 		btnThem.addActionListener(new ActionListener() {
-
+			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				SinhVienTinChi svtc = getSinhVienTC();
-				if (svtc != null) {
-					if (checkSV(svtc.getIdSinhVien())) {
-						dsSinhVien.add(svtc);
-						sinhVienTC.loadData(table, dsSinhVien, "", "");
+				SinhVienNienChe svnc = getSinhVienNC();
+				if(svnc != null) {
+					if (checkSV(svnc.getIdSinhVien())) {
+						dsSinhVien.add(svnc);
+						sinhVienNC.loadData(table, dsSinhVien, "", "");
 						JOptionPane.showMessageDialog(null, "Thêm thành công");
 						cancel();
 					} else {
@@ -168,7 +167,7 @@ public class SinhVienTinChiController {
 				}
 			}
 		});
-
+		
 		btnSua.addActionListener(new ActionListener() {
 
 			@Override
@@ -180,31 +179,30 @@ public class SinhVienTinChiController {
 							JOptionPane.ERROR_MESSAGE);
 					return;
 				}
-				SinhVienTinChi svtc = getSinhVienTC();
-				if (svtc != null) {
+				SinhVienNienChe svnc = getSinhVienNC();
+				if (svnc != null) {
 					for (int i = 0; i < dsSinhVien.size(); i++) {
-						if (dsSinhVien.get(i).getIdSinhVien().equals(svtc.getIdSinhVien())) {
-							dsSinhVien.get(i).setHoTen(svtc.getHoTen());
-							dsSinhVien.get(i).setKhoa(svtc.getKhoa());
-							dsSinhVien.get(i).setNgaySinh(svtc.getNgaySinh());
-							dsSinhVien.get(i).setEmail(svtc.getEmail());
-							dsSinhVien.get(i).setGioiTinh(svtc.getGioiTinh());
-							dsSinhVien.get(i).setSoDT(svtc.getSoDT());
-							dsSinhVien.get(i).setDiaChi(svtc.getDiaChi());
-							dsSinhVien.get(i).setDiemTB(svtc.getDiemTB());
-							dsSinhVien.get(i).setSoTCQua(svtc.getSoTCQua());
-							dsSinhVien.get(i).setSoTCNo(svtc.getSoTCNo());
+						if (dsSinhVien.get(i).getIdSinhVien().equals(svnc.getIdSinhVien())) {
+							dsSinhVien.get(i).setHoTen(svnc.getHoTen());
+							dsSinhVien.get(i).setKhoa(svnc.getKhoa());
+							dsSinhVien.get(i).setNgaySinh(svnc.getNgaySinh());
+							dsSinhVien.get(i).setEmail(svnc.getEmail());
+							dsSinhVien.get(i).setGioiTinh(svnc.getGioiTinh());
+							dsSinhVien.get(i).setSoDT(svnc.getSoDT());
+							dsSinhVien.get(i).setDiaChi(svnc.getDiaChi());
+							dsSinhVien.get(i).setDiemTB(svnc.getDiemTB());
+							dsSinhVien.get(i).setTongSoKy(svnc.getTongSoKy());;
 							break;
 						}
 					}
-					sinhVienTC.loadData(table, dsSinhVien, "", "");
+					sinhVienNC.loadData(table, dsSinhVien, "", "");
 					JOptionPane.showMessageDialog(null, "Cập nhật thành công");
 					cancel();
 				}
 
 			}
 		});
-
+		
 		btnXoa.addActionListener(new ActionListener() {
 
 			@Override
@@ -223,7 +221,7 @@ public class SinhVienTinChiController {
 						for (int i = 0; i < dsSinhVien.size(); i++) {
 							if (dsSinhVien.get(i).getIdSinhVien().equals(id)) {
 								dsSinhVien.remove(i);
-								sinhVienTC.loadData(table, dsSinhVien, "", "");
+								sinhVienNC.loadData(table, dsSinhVien, "", "");
 								JOptionPane.showMessageDialog(null, "Xóa thành công");
 								return;
 							}
@@ -232,16 +230,17 @@ public class SinhVienTinChiController {
 				}
 			}
 		});
-
+		
 		btnHuy.addActionListener(new ActionListener() {
-
+			
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent arg0) {
 				// TODO Auto-generated method stub
 				cancel();
-				sinhVienTC.loadData(table, dsSinhVien, "", "");
+				sinhVienNC.loadData(table, dsSinhVien, "", "");
 			}
 		});
+		
 		btnTimKiem.addActionListener(new ActionListener() {
 
 			@Override
@@ -249,10 +248,10 @@ public class SinhVienTinChiController {
 				// TODO Auto-generated method stub
 				String timKiem = timKiemCB.getSelectedItem().toString();
 				String giaTri = tfTimKiem.getText().trim().toLowerCase();
-				sinhVienTC.loadData(table, dsSinhVien, timKiem, giaTri);
+				sinhVienNC.loadData(table, dsSinhVien, timKiem, giaTri);
 			}
 		});
-
+		
 		btnLuu.addActionListener(new ActionListener() {
 
 			@Override
@@ -268,25 +267,9 @@ public class SinhVienTinChiController {
 				}
 			}
 		});
+		
 	}
-
-	private void cancel() {
-		tfIdSV.setText("");
-		tfIdSV.setEnabled(true);
-		tfHoTen.setText("");
-		tfKhoa.setText("");
-		tfNgaySinh.setText("");
-		tfEmail.setText("");
-		tfSoDT.setText("");
-		tfDiaChi.setText("");
-		tfDiemTB.setText("");
-		tfSoTCQua.setText("");
-		tfSoTCNo.setText("");
-		tfTimKiem.setText("");
-		radNam.setSelected(false);
-		radNu.setSelected(false);
-	}
-
+	
 	private boolean checkSV(String id) {
 		for (int i = 0; i < dsSinhVien.size(); i++) {
 			if (dsSinhVien.get(i).getIdSinhVien().equals(id))
@@ -294,48 +277,60 @@ public class SinhVienTinChiController {
 		}
 		return true;
 	}
-
-	private SinhVienTinChi getSinhVienTC() {
-		String idSinhVien = tfIdSV.getText().trim().toUpperCase();
-		String hoTen = tfHoTen.getText().trim();
-		String khoa = tfKhoa.getText().trim();
-		String ngaySinh = tfNgaySinh.getText().trim();
+	
+	private SinhVienNienChe getSinhVienNC() {
+		String idSinhVien = tfIdSV.getText();
+		String hoTen = tfHoTen.getText();
+		String khoa = tfKhoa.getText();
+		String ngaySinh = tfNgaySinh.getText();
 		String gioiTinh = "";
 		if (radNam.isSelected())
 			gioiTinh = "Nam";
 		else if (radNu.isSelected())
 			gioiTinh = "Nữ";
-		String email = tfEmail.getText().trim();
-		String soDT = tfSoDT.getText().trim();
-		String diaChi = tfDiaChi.getText().trim();
+		String email = tfEmail.getText();
+		String soDT = tfSoDT.getText();
+		String diaChi = tfDiaChi.getText();
 		if (idSinhVien.equals("") || hoTen.equals("") || khoa.equals("") || ngaySinh.equals("") || gioiTinh.equals("")
 				|| email.equals("") || soDT.equals("") || diaChi.equals("")) {
 			JOptionPane.showMessageDialog(null, "Có trường dữ liệu trống", "Error", JOptionPane.ERROR_MESSAGE);
 			return null;
 		}
-		int soTCNo;
-		int soTCQua;
 		double diemTB;
+		int tongSoKy;
 		try {
-			soTCNo = Integer.parseInt(tfSoTCNo.getText().trim());
-			soTCQua = Integer.parseInt(tfSoTCQua.getText().trim());
 			diemTB = Double.parseDouble(tfDiemTB.getText().trim());
-		} catch (Exception e) {
-			// TODO: handle exception
-			JOptionPane.showMessageDialog(null, "Hãy kiểm tra các giá trị: Điểm TB, Số TC nợ, Số TC qua", "Error",
+			tongSoKy = Integer.parseInt(tfTongSoKy.getText().trim());
+		}catch(Exception exc) {
+			JOptionPane.showMessageDialog(null, "Hãy kiểm tra các giá trị: Điểm TB, Tổng số kỳ", "Error",
 					JOptionPane.ERROR_MESSAGE);
 			return null;
 		}
-
-		SinhVienTinChi svtc = new SinhVienTinChi(idSinhVien, hoTen, khoa, ngaySinh, gioiTinh, email, soDT, diaChi,
-				diemTB, soTCQua, soTCNo);
-		return svtc;
+		
+		SinhVienNienChe svnc = new SinhVienNienChe(idSinhVien, hoTen, khoa, ngaySinh, gioiTinh, email, soDT, diaChi, diemTB, tongSoKy);
+		return svnc;
 	}
-
 	
-	//đọc ghi file
-	private ArrayList<SinhVienTinChi> readFile(String fileName) throws IOException {
-		ArrayList<SinhVienTinChi> dsSV = new ArrayList<>();
+	private void cancel() {
+		table.getSelectionModel().clearSelection();
+		timKiemCB.setSelectedIndex(0);
+		tfIdSV.setText("");
+		tfIdSV.setEnabled(true);
+		tfHoTen.setText("");
+		tfKhoa.setText("");
+		tfNgaySinh.setText("");
+		radNam.setSelected(false);
+		radNu.setSelected(false);
+		tfEmail.setText("");
+		tfSoDT.setText("");
+		tfDiaChi.setText("");
+		tfTongSoKy.setText("");
+		tfDiemTB.setText("");
+		tfTimKiem.setText("");
+	}
+	
+	private ArrayList<SinhVienNienChe> readFile(String fileName) throws IOException {
+		ArrayList<SinhVienNienChe> dsSV = new ArrayList<>();
 		FileInputStream inputStream = new FileInputStream(new File(fileName));
 
 		Workbook workbook = new XSSFWorkbook(inputStream);
@@ -365,10 +360,10 @@ public class SinhVienTinChiController {
 				}
 				dataSV.add(data);
 			}
-			SinhVienTinChi sv = new SinhVienTinChi(dataSV.get(0), dataSV.get(1),
+			SinhVienNienChe sv = new SinhVienNienChe(dataSV.get(0), dataSV.get(1),
 					Integer.toString((int) Double.parseDouble(dataSV.get(2))), dataSV.get(3), dataSV.get(4),
 					dataSV.get(5), dataSV.get(6), dataSV.get(7), Double.parseDouble(dataSV.get(8)),
-					(int) (Double.parseDouble(dataSV.get(9))), (int) Double.parseDouble(dataSV.get(10)));
+					(int) (Double.parseDouble(dataSV.get(9))));
 			dsSV.add(sv);
 		}
 
@@ -377,13 +372,13 @@ public class SinhVienTinChiController {
 		return dsSV;
 	}
 
-	private void printFile(ArrayList<SinhVienTinChi> dsSinhVien, String fileName) throws IOException {
+	private void printFile(ArrayList<SinhVienNienChe> dsSinhVien, String fileName) throws IOException {
 		Workbook workbook = new XSSFWorkbook();
 		Sheet sheet = workbook.createSheet();
 		createHeader(sheet);
 		int count = 0;
 
-		for (SinhVienTinChi sv : dsSinhVien) {
+		for (SinhVienNienChe sv : dsSinhVien) {
 			Row row = sheet.createRow(++count);
 			writeSV(sv, row);
 		}
@@ -438,15 +433,11 @@ public class SinhVienTinChiController {
 
 		Cell cellSoTCQua = row.createCell(10);
 		cellSoTCQua.setCellStyle(cellStyle);
-		cellSoTCQua.setCellValue("Số TC qua");
-
-		Cell cellSoTCNo = row.createCell(11);
-		cellSoTCNo.setCellStyle(cellStyle);
-		cellSoTCNo.setCellValue("Số TC nợ");
+		cellSoTCQua.setCellValue("Tổng số kỳ");
 
 	}
 
-	private void writeSV(SinhVienTinChi sv, Row row) {
+	private void writeSV(SinhVienNienChe sv, Row row) {
 		Cell cell = row.createCell(1);
 		cell.setCellValue(sv.getIdSinhVien());
 		cell = row.createCell(2);
@@ -466,9 +457,7 @@ public class SinhVienTinChiController {
 		cell = row.createCell(9);
 		cell.setCellValue(sv.getDiemTB());
 		cell = row.createCell(10);
-		cell.setCellValue(sv.getSoTCQua());
-		cell = row.createCell(11);
-		cell.setCellValue(sv.getSoTCNo());
+		cell.setCellValue(sv.getTongSoKy());
 	}
 
 	private static boolean deleteDir(File dir) {
@@ -483,4 +472,5 @@ public class SinhVienTinChiController {
 		}
 		return dir.delete();
 	}
+	
 }

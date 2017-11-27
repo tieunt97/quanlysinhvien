@@ -21,11 +21,10 @@ import quanlysinhvien.model.HocPhan;
 public class PanelLopChuyenNganhView extends JPanel{
 	private JTable table;
 	private JTextField tfIdNganh, tfIdLopChuyenNganh, tfTenNganh, tfTenChuNhiem, tfTimKiem;
-	private JButton btnThem, btnSua, btnXoa, btnCapNhat, btnHuy, btnTimKiem;
+	private JButton btnThem, btnSua, btnXoa, btnLuu, btnHuy, btnTimKiem, btnCapNhatSV;
 	private JComboBox<String> timKiemCB;
 	private String[] titleCols = {"Mã lớp", "Chủ nhiệm", "Mã ngành", "Tên ngành"};
 	private String[] timKiemVals = {"Mã lớp", "Chủ nhiệm", "Mã ngành"};
-//	private String[] hocKyVals = {"20172", "20171", "20163", "20162", "20161", "20153", "20152", "20151"};
 	
 	
 	
@@ -84,12 +83,10 @@ public class PanelLopChuyenNganhView extends JPanel{
 		JPanel panelL = new JPanel(new GridLayout(3, 1, 5, 5));
 		panelL.add(new JLabel("Mã ngành:"));
 		panelL.add(new JLabel("Mã Lớp CN:"));
-		panelL.add(new JLabel(""));
 		
 		JPanel panelR = new JPanel(new GridLayout(3, 1, 5, 5));
 		panelR.add(tfIdNganh = new JTextField());
 		panelR.add(tfIdLopChuyenNganh = new JTextField());
-		panelR.add(new JLabel(""));
 
 		panel.add(panelL, BorderLayout.WEST);
 		panel.add(panelR, BorderLayout.CENTER);
@@ -102,12 +99,10 @@ public class PanelLopChuyenNganhView extends JPanel{
 		JPanel panelL = new JPanel(new GridLayout(3, 1 , 5, 5));
 		panelL.add(new JLabel("Tên ngành:"));
 		panelL.add(new JLabel("Chủ nhiệm lớp:"));
-		panelL.add(new JLabel(""));
 		
 		JPanel panelR = new JPanel(new GridLayout(3, 1, 5, 5));
 		panelR.add(tfTenNganh = new JTextField());
 		panelR.add(tfTenChuNhiem = new JTextField());
-		panelR.add(btnCapNhat = new JButton("Cập nhật"));
 		
 		panel.add(panelL, BorderLayout.WEST);
 		panel.add(panelR, BorderLayout.CENTER);
@@ -116,37 +111,42 @@ public class PanelLopChuyenNganhView extends JPanel{
 	}
 	
 	private JPanel createButtonPanel() {
-		JPanel panel = new JPanel(new GridLayout(2, 1, 10, 10));
-		panel.setBorder(new EmptyBorder(0, 45, 100, 0));
-		panel.add(createTimKiemPanel());
-		panel.add(createBtnOtherPanel());
-		
+		JPanel panel = new JPanel(new BorderLayout(10, 10));
+		panel.setBorder(new EmptyBorder(0, 25, 0, 0));
+		panel.add(createTimKiemPanel(), BorderLayout.NORTH);
+		panel.add(createBtnOtherPanel(), BorderLayout.CENTER);
+
 		return panel;
 	}
-	
+
 	private JPanel createTimKiemPanel() {
 		JPanel panel = new JPanel(new GridLayout(1, 2, 10, 10));
-		panel.setBorder(new EmptyBorder(0, 0, 58, 0));
 		JPanel panelButCB = new JPanel(new GridLayout(1, 2, 5, 5));
 		panelButCB.add(btnTimKiem = new JButton("Tìm kiếm"));
 		panelButCB.add(timKiemCB = new JComboBox<>(timKiemVals));
-		
+
 		JPanel panelTF = new JPanel(new BorderLayout());
 		panelTF.add(tfTimKiem = new JTextField());
 		panel.add(panelButCB);
 		panel.add(panelTF);
-		
+
 		return panel;
 	}
-	
+
 	private JPanel createBtnOtherPanel() {
-		JPanel panel = new JPanel(new GridLayout(2, 2, 10, 10));
-		panel.setBorder(new EmptyBorder(0, 55, 0, 55));
-		panel.add(btnThem = new JButton("Thêm"));
-		panel.add(btnSua = new JButton("Sửa"));
-		panel.add(btnXoa = new JButton("Xóa"));
-		panel.add(btnHuy = new JButton("Hủy"));
-		
+		JPanel panel = new JPanel(new GridLayout(4, 1, 10, 10));
+		panel.setBorder(new EmptyBorder(10, 80, 65, 80));
+		JPanel panel1 = new JPanel(new GridLayout(1, 2, 10, 10));
+		panel1.add(btnThem = new JButton("Thêm"));
+		panel1.add(btnSua = new JButton("Sửa"));
+		JPanel panel2 = new JPanel(new GridLayout(1, 2, 10, 10));
+		panel2.add(btnXoa = new JButton("Xóa"));
+		panel2.add(btnHuy = new JButton("Hủy"));
+		panel.add(panel1);
+		panel.add(panel2);
+		panel.add(btnLuu = new JButton("Lưu"));
+		panel.add(btnCapNhatSV = new JButton("Cập nhật DS sinh viên"));
+
 		return panel;
 	}
 	

@@ -1,7 +1,7 @@
 package quanlysinhvien.model;
 
 public class SinhVienNienChe extends SinhVien{
-	private String tongSoKy;
+	private int tongSoKy;
 	
 	
 	
@@ -10,17 +10,17 @@ public class SinhVienNienChe extends SinhVien{
 	}
 	
 	public SinhVienNienChe(String idSinhVien, String hoTen, String khoa, String ngaySinh, String gioiTinh, String email,
-			String soDT, String diaChi, double diemTB, String tongSoKy) {
+			String soDT, String diaChi, double diemTB, int tongSoKy) {
 		super(idSinhVien, hoTen, khoa, ngaySinh, gioiTinh, email, soDT, diaChi, diemTB);
 		this.tongSoKy = tongSoKy;
 	}
 
 	
-	public String getTongSoKy() {
+	public int getTongSoKy() {
 		return tongSoKy;
 	}
 
-	public void setTongSoKy(String tongSoKy) {
+	public void setTongSoKy(int tongSoKy) {
 		this.tongSoKy = tongSoKy;
 	}
 	
