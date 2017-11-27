@@ -28,11 +28,13 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import quanlysinhvien.model.SinhVienNienChe;
 import quanlysinhvien.model.SinhVienTinChi;
+import quanlysinhvien.model.TaiKhoan;
+import quanlysinhvien.view.CapNhatDiemSVView;
 import quanlysinhvien.view.PanelSinhVienNienCheView;
 
 public class SinhVienNienCheController {
 	private JTable table;
-	private JButton btnThem, btnSua, btnXoa, btnLuu, btnHuy, btnTimKiem;
+	private JButton btnThem, btnSua, btnXoa, btnHuy, btnTimKiem, btnCapNhatDiem;
 	private JRadioButton radNam, radNu;
 	private JComboBox<String> timKiemCB;
 	private JTextField tfIdSV, tfHoTen, tfKhoa, tfNgaySinh, tfGioiTinh, tfEmail, tfSoDT, tfDiaChi, tfDiemTB, tfTongSoKy, tfTimKiem;
@@ -42,8 +44,7 @@ public class SinhVienNienCheController {
 	
 	public SinhVienNienCheController(PanelSinhVienNienCheView sinhVienNC) {
 		this.sinhVienNC = sinhVienNC;
-//		dsSinhVien = new ArrayList<>();
-		fileName = "C:\\Users\\tieu_nt\\Desktop\\Lập trình hướng đối tượng\\quanlysinhvien\\sinhviennienche\\dsSinhVienNC.xlsx";
+		fileName = "quanlysinhvien\\sinhviennienche\\dsSinhVienNC.xlsx";
 		try {
 			this.dsSinhVien = readFile(fileName);
 		} catch (IOException e) {
@@ -57,8 +58,8 @@ public class SinhVienNienCheController {
 		this.btnThem = sinhVienNC.getBtnThem();
 		this.btnSua = sinhVienNC.getBtnSua();
 		this.btnXoa = sinhVienNC.getBtnXoa();
-		this.btnLuu = sinhVienNC.getBtnLuu();
 		this.btnHuy = sinhVienNC.getBtnHuy();
+		this.btnCapNhatDiem = sinhVienNC.getBtnCapNhatDiem();
 		this.btnTimKiem = sinhVienNC.getBtnTimKiem();
 		this.timKiemCB = sinhVienNC.getTimKiemCB();
 		this.tfIdSV = sinhVienNC.getTfIdSV();
@@ -155,9 +156,18 @@ public class SinhVienNienCheController {
 				// TODO Auto-generated method stub
 				SinhVienNienChe svnc = getSinhVienNC();
 				if(svnc != null) {
-					if (checkSV(svnc.getIdSinhVien())) {
+					String idSV = svnc.getIdSinhVien();
+					if (checkSV(idSV)) {
 						dsSinhVien.add(svnc);
 						sinhVienNC.loadData(table, dsSinhVien, "", "");
+						try {
+							addSV(svnc, fileName);
+							System.out.println(Directory.createDir("quanlysinhvien\\sinhviennienche\\" + idSV));
+							QuanLyTaiKhoan.addTaiKhoan(new TaiKhoan(idSV, idSV, "svnc"));
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
 						JOptionPane.showMessageDialog(null, "Thêm thành công");
 						cancel();
 					} else {
@@ -196,7 +206,17 @@ public class SinhVienNienCheController {
 						}
 					}
 					sinhVienNC.loadData(table, dsSinhVien, "", "");
-					JOptionPane.showMessageDialog(null, "Cập nhật thành công");
+					boolean ck = false;
+					try {
+						ck = updateSV(svnc, fileName);
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					if(ck) JOptionPane.showMessageDialog(null, "Cập nhật thành công");
+					else {
+						JOptionPane.showMessageDialog(null, "Lỗi cập nhật", "Error update", JOptionPane.ERROR_MESSAGE);
+					}
 					cancel();
 				}
 
@@ -219,10 +239,24 @@ public class SinhVienNienCheController {
 					if (select == 0) {
 						String id = (String) table.getValueAt(row, 0);
 						for (int i = 0; i < dsSinhVien.size(); i++) {
-							if (dsSinhVien.get(i).getIdSinhVien().equals(id)) {
+							String idSV = dsSinhVien.get(i).getIdSinhVien();
+							if (idSV.equals(id)) {
+								boolean ck = false;
+								try {
+									ck = deleteSV(dsSinhVien.get(i), fileName);
+									System.out.println(Directory.deleteDir(new File("quanlysinhvien\\sinhviennienche\\" + idSV)));
+									QuanLyTaiKhoan.deleteTaiKhoan(idSV);
+								} catch (IOException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
 								dsSinhVien.remove(i);
 								sinhVienNC.loadData(table, dsSinhVien, "", "");
-								JOptionPane.showMessageDialog(null, "Xóa thành công");
+								if(ck) JOptionPane.showMessageDialog(null, "Xóa thành công");
+								else {
+									JOptionPane.showMessageDialog(null, "Xóa lỗi", "Error delete", JOptionPane.ERROR_MESSAGE);
+								}
+								cancel();
 								return;
 							}
 						}
@@ -252,22 +286,20 @@ public class SinhVienNienCheController {
 			}
 		});
 		
-		btnLuu.addActionListener(new ActionListener() {
-
+		btnCapNhatDiem.addActionListener(new ActionListener() {
+			
 			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				// TODO Auto-generated method stub
-				try {
-					printFile(dsSinhVien, fileName);
-					JOptionPane.showMessageDialog(null, "Đã lưu");
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					JOptionPane.showMessageDialog(null, "Có lỗi xảy ra", "Error", JOptionPane.ERROR_MESSAGE);
-					e.printStackTrace();
+			public void actionPerformed(ActionEvent e) {
+				int row = table.getSelectedRow();
+				if(row < 0) {
+					JOptionPane.showMessageDialog(null, "Cần chọn sinh viên để cập nhật điểm", "Error update", JOptionPane.ERROR_MESSAGE);
+				}else {
+					String idSV = (String) table.getValueAt(row, 0);
+					CapNhatDiemSVView capNhatDiem = new CapNhatDiemSVView(idSV);
+					new CapNhatDiemSVController(capNhatDiem);
 				}
 			}
 		});
-		
 	}
 	
 	private boolean checkSV(String id) {
@@ -360,31 +392,18 @@ public class SinhVienNienCheController {
 				}
 				dataSV.add(data);
 			}
-			SinhVienNienChe sv = new SinhVienNienChe(dataSV.get(0), dataSV.get(1),
-					Integer.toString((int) Double.parseDouble(dataSV.get(2))), dataSV.get(3), dataSV.get(4),
-					dataSV.get(5), dataSV.get(6), dataSV.get(7), Double.parseDouble(dataSV.get(8)),
-					(int) (Double.parseDouble(dataSV.get(9))));
-			dsSV.add(sv);
+			if(dataSV.size() > 0) {
+				SinhVienNienChe sv = new SinhVienNienChe(dataSV.get(0), dataSV.get(1),
+						Integer.toString((int) Double.parseDouble(dataSV.get(2))), dataSV.get(3), dataSV.get(4),
+						dataSV.get(5), dataSV.get(6), dataSV.get(7), Double.parseDouble(dataSV.get(8)),
+						(int) (Double.parseDouble(dataSV.get(9))));
+				dsSV.add(sv);
+			}
 		}
 
 		workbook.close();
 		inputStream.close();
 		return dsSV;
-	}
-
-	private void printFile(ArrayList<SinhVienNienChe> dsSinhVien, String fileName) throws IOException {
-		Workbook workbook = new XSSFWorkbook();
-		Sheet sheet = workbook.createSheet();
-		createHeader(sheet);
-		int count = 0;
-
-		for (SinhVienNienChe sv : dsSinhVien) {
-			Row row = sheet.createRow(++count);
-			writeSV(sv, row);
-		}
-
-		FileOutputStream fileout = new FileOutputStream(fileName);
-		workbook.write(fileout);
 	}
 
 	private void createHeader(Sheet sheet) {
@@ -473,4 +492,123 @@ public class SinhVienNienCheController {
 		return dir.delete();
 	}
 	
+	private void addSV(SinhVienNienChe svnc, String fileName) throws IOException {
+		Workbook workbook = null;
+		Sheet sheet = null;
+		int lastRow = -1;
+		try {
+			FileInputStream inputStream = new FileInputStream(new File(fileName));
+			workbook = new XSSFWorkbook(inputStream);
+			sheet = workbook.getSheetAt(0);
+			lastRow = sheet.getLastRowNum();
+		}catch (Exception e) {
+			// TODO: handle exception
+			workbook = new XSSFWorkbook();
+			sheet = workbook.createSheet();
+			System.out.println(e);
+		}
+
+		Row row = null;
+		if(lastRow < 0) {
+			createHeader(sheet);
+			row = sheet.createRow(1);
+		}else {
+			row = sheet.createRow(lastRow + 1);
+		}
+		if(row != null) {
+			writeSV(svnc, row);
+		}
+		
+		FileOutputStream fout = new FileOutputStream(new File(fileName));
+		workbook.write(fout);
+		fout.close();
+	}
+	
+	private boolean updateSV(SinhVienNienChe svnc, String fileName) throws IOException {
+		boolean ck = false;
+		FileInputStream fin = new FileInputStream(new File(fileName));
+		Workbook workbook = new XSSFWorkbook(fin);
+		Sheet sheet = workbook.getSheetAt(0);
+		Iterator<Row> iterator = sheet.iterator();
+		
+		Row nextRow;
+		if (iterator.hasNext())
+			nextRow = iterator.next(); // loại bỏ dòng tiêu đề
+		while(iterator.hasNext()) {
+			nextRow = iterator.next();
+			Cell cell = nextRow.getCell(1);
+			String idSV = cell.getStringCellValue();
+			if(idSV.equalsIgnoreCase(svnc.getIdSinhVien())) {
+				cell = nextRow.createCell(2);
+				cell.setCellValue(svnc.getHoTen());
+				cell = nextRow.createCell(3);
+				cell.setCellValue(svnc.getKhoa());
+				cell = nextRow.createCell(4);
+				cell.setCellValue(svnc.getNgaySinh());
+				cell = nextRow.createCell(5);
+				cell.setCellValue(svnc.getGioiTinh());
+				cell = nextRow.createCell(6);
+				cell.setCellValue(svnc.getEmail());
+				cell = nextRow.createCell(7);
+				cell.setCellValue(svnc.getSoDT());
+				cell = nextRow.createCell(8);
+				cell.setCellValue(svnc.getDiaChi());
+				cell = nextRow.createCell(9);
+				cell.setCellValue(svnc.getDiemTB());
+				cell = nextRow.createCell(10);
+				cell.setCellValue(svnc.getTongSoKy());
+				ck = true;
+				break;
+			}
+		}
+		
+		fin.close();
+		
+		FileOutputStream fout = new FileOutputStream(new File(fileName));
+		workbook.write(fout);
+		fout.close();
+		return ck;
+	}
+	
+	private boolean deleteSV(SinhVienNienChe svnc, String fileName) throws IOException {
+		boolean ck = false;
+		FileInputStream fin = new FileInputStream(new File(fileName));
+		Workbook workbook = new XSSFWorkbook(fin);
+		Sheet sheet = workbook.getSheetAt(0);
+		
+		Iterator<Row> iterator = sheet.iterator();
+		
+		Row nextRow;
+		if (iterator.hasNext())
+			nextRow = iterator.next(); // loại bỏ dòng tiêu đề
+		int i = 0;
+		while(iterator.hasNext()) {
+			nextRow = iterator.next();
+			i++;
+			Cell cell = nextRow.getCell(1);
+			String idSV = cell.getStringCellValue();
+			if(idSV.equalsIgnoreCase(svnc.getIdSinhVien())) {
+				int lastRow = sheet.getLastRowNum();
+				if(i < lastRow) {
+					sheet.shiftRows(i + 1, lastRow, -1);
+					ck = true;
+				}
+				if(i == lastRow) {
+					Row removeRow = sheet.getRow(i);
+					if(removeRow != null) {
+						sheet.removeRow(removeRow);
+						ck = true;
+					}
+				}
+				break;
+			}
+		}
+		
+		fin.close();
+		
+		FileOutputStream fout = new FileOutputStream(new File(fileName));
+		workbook.write(fout);
+		fout.close();
+		return ck;
+	}
 }

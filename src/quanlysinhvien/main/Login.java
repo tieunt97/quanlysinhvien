@@ -40,7 +40,6 @@ public class Login extends JFrame {
 	private JPanel contentPane;
 	private JTextField tfTaiKhoan;
 	private JPasswordField pwMatKhau;
-//	private String taiKhoan, matKhau, loaiTK;
 	private MainQuanLy mainQL;
 	private MainSinhVienTC mainSVTC;
 	private MainSinhVienNC mainSVNC;
@@ -73,7 +72,7 @@ public class Login extends JFrame {
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 547, 370);
-		fileName = "C:\\Users\\tieu_nt\\Desktop\\Lập trình hướng đối tượng\\quanlysinhvien\\dsTaiKhoan.xlsx";
+		fileName = "quanlysinhvien\\dsTaiKhoan.xlsx";
 		this.tk = new TaiKhoan();
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -259,8 +258,10 @@ public class Login extends JFrame {
 				}
 				dataTK.add(data);
 			}
-			TaiKhoan tk = new TaiKhoan(dataTK.get(0), dataTK.get(1), dataTK.get(2));
-			dsTaiKhoan.add(tk);
+			if(dataTK.size() > 0) {
+				TaiKhoan tk = new TaiKhoan(dataTK.get(0), dataTK.get(1), dataTK.get(2));
+				dsTaiKhoan.add(tk);
+			}
 		}
 
 		workbook.close();

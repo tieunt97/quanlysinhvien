@@ -92,7 +92,7 @@ public class DoiMatKhauController {
 	}
 	
 	private boolean changePW(String taiKhoan, String matKhau) throws IOException {
-		String fileName = "C:\\Users\\tieu_nt\\Desktop\\Lập trình hướng đối tượng\\quanlysinhvien\\dsTaiKhoan.xlsx";
+		String fileName = "quanlysinhvien\\dsTaiKhoan.xlsx";
 		boolean ck = false;
 		FileInputStream fin = new FileInputStream(new File(fileName));
 		Workbook workbook = new XSSFWorkbook(fin);

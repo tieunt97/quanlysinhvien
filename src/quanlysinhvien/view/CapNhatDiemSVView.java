@@ -29,8 +29,10 @@ public class CapNhatDiemSVView extends JDialog{
 	private JComboBox<String> hocKyCB;
 	private String[] titleCols = {"Học kỳ", "Mã học phần", "Tên học phần", "Tín chỉ", "Lớp học", "Điểm QT", "Điểm thi", "Điểm chữ"};
 	private String[] hocKyVals = {"20172", "20171", "20163", "20162", "20161", "20153", "20152", "20151"};
+	private String idSV;
 	
-	public CapNhatDiemSVView() {
+	public CapNhatDiemSVView(String idSV) {
+		this.idSV = idSV;
 		setSize(950, 650);
 		setLocationRelativeTo(null);
 		add(createTitlePanel(), BorderLayout.NORTH);
@@ -125,7 +127,7 @@ public class CapNhatDiemSVView extends JDialog{
 	}
 	
 	private JLabel createLabel() {
-		JLabel label = new JLabel("Danh sách sinh viên");
+		JLabel label = new JLabel("Bảng điểm sinh viên có mã SV: " + this.idSV);
 		label.setFont(new Font("Calibri", Font.BOLD, 16));
 		label.setForeground(Color.yellow);
 		return label;
@@ -161,8 +163,49 @@ public class CapNhatDiemSVView extends JDialog{
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-				new CapNhatDiemSVView();
+				new CapNhatDiemSVView("");
 			}
 		});
 	}
+
+	public JTable getTable() {
+		return table;
+	}
+
+	public JTextField getTfIdHocPhan() {
+		return tfIdHocPhan;
+	}
+
+	public JTextField getTfIdLopHoc() {
+		return tfIdLopHoc;
+	}
+
+	public JTextField getTfDiemQT() {
+		return tfDiemQT;
+	}
+
+	public JTextField getTfDiemThi() {
+		return tfDiemThi;
+	}
+
+	public JButton getBtnThem() {
+		return btnThem;
+	}
+
+	public JButton getBtnSua() {
+		return btnSua;
+	}
+
+	public JButton getBtnXoa() {
+		return btnXoa;
+	}
+
+	public JButton getBtnHuy() {
+		return btnHuy;
+	}
+
+	public JComboBox<String> getHocKyCB() {
+		return hocKyCB;
+	}
+	
 }
