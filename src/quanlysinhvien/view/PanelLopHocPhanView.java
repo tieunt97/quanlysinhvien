@@ -20,10 +20,10 @@ import quanlysinhvien.model.HocPhan;
 
 public class PanelLopHocPhanView extends  JPanel{
 	private JTable table;
-	private JTextField tfIdLop, tfThoiGian, tfTuanHoc, tfPhongHoc, tfTenGV, tfSoSVMax, tfSoSVHienTai, tfTimKiem;
+	private JTextField tfIdLop, tfIdHocPhan, tfThoiGian, tfTuanHoc, tfPhongHoc, tfTenGV, tfSoSVMax, tfSoSVHienTai, tfTimKiem;
 	private JButton btnThem, btnSua, btnXoa, btnLuu, btnHuy, btnTimKiem, btnCapNhatSV;
 	private JComboBox<String> timKiemCB, hocKyCB;
-	private String[] titleCols = {"Học kỳ", "Mã lớp", "Thời gian", "Tuần học", "Phòng học", "Tên giảng viên", "Số SV max", "Số SV hiện tại"};
+	private String[] titleCols = {"Học kỳ", "Mã lớp", "Mã học phần", "Thời gian", "Tuần học", "Phòng học", "Tên giảng viên", "Số SV max", "Số SV hiện tại"};
 	private String[] timKiemVals = {"Mã lớp", "Phòng học", "Tên giảng viên", "Số SV max"};
 	private String[] hocKyVals = {"20172", "20171", "20163", "20162", "20161", "20153", "20152", "20151"};
 	
@@ -84,12 +84,14 @@ public class PanelLopHocPhanView extends  JPanel{
 		JPanel panelL = new JPanel(new GridLayout(5, 1 , 5, 5));
 		panelL.add(new JLabel("Học kỳ:"));
 		panelL.add(new JLabel("Mã lớp:"));
+		panelL.add(new JLabel("Mã học phần:"));
 		panelL.add(new JLabel("Thời gian:"));
 		panelL.add(new JLabel("Tuần học:"));
 		
 		JPanel panelR = new JPanel(new GridLayout(5, 1, 5, 5));
 		panelR.add(createPanelCB(hocKyCB, hocKyVals));
 		panelR.add(tfIdLop = new JTextField());
+		panelR.add(tfIdHocPhan = new JTextField());
 		panelR.add(tfThoiGian = new JTextField());
 		panelR.add(tfTuanHoc = new JTextField());
 
@@ -153,7 +155,6 @@ public class PanelLopHocPhanView extends  JPanel{
 		panel2.add(btnHuy = new JButton("Hủy"));
 		panel.add(panel1);
 		panel.add(panel2);
-		panel.add(btnLuu = new JButton("Lưu"));
 		panel.add(btnCapNhatSV = new JButton("Cập nhật DS sinh viên"));
 
 		return panel;
@@ -161,7 +162,7 @@ public class PanelLopHocPhanView extends  JPanel{
 	
 	private JPanel createPanelCB(JComboBox<String> cb, String[] vals) {
 		JPanel panel = new JPanel(new BorderLayout());
-		panel.setBorder(new EmptyBorder(0, 0, 0, 145));
+		panel.setBorder(new EmptyBorder(0, 0, 0, 135));
 		panel.add(cb = new JComboBox<>(vals));
 		
 		return panel;

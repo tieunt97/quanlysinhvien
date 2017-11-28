@@ -299,7 +299,7 @@ public class SinhVienTinChiController {
 				}else {
 					String idSV = (String) table.getValueAt(row, 0);
 					CapNhatDiemSVView capNhatDiem = new CapNhatDiemSVView(idSV);
-					new CapNhatDiemSVController(capNhatDiem);
+					new CapNhatDiemSVController(capNhatDiem, idSV, "svtc");
 				}
 			}
 		});
@@ -399,7 +399,7 @@ public class SinhVienTinChiController {
 					break;
 				}
 				dataSV.add(data);
-				if(dataSV == null) return null;
+				if(dataSV.size() < 1) return null;
 			}
 			if(dataSV.size() > 0) {
 				SinhVienTinChi sv = new SinhVienTinChi(dataSV.get(0), dataSV.get(1),

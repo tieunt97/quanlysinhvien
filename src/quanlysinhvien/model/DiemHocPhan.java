@@ -1,7 +1,7 @@
 package quanlysinhvien.model;
 
 public class DiemHocPhan {
-	private String hocKy, idHocPhan, tenHP, lopHoc, diemChu;
+	private String hocKy, idHocPhan, tenHP, idLopHoc, diemChu;
 	private int tinChi;
 	private double diemQT, diemThi;
 	
@@ -9,15 +9,26 @@ public class DiemHocPhan {
 		
 	}
 	
-	public DiemHocPhan(String hocKy,  HocPhan hocPhan, String lopHoc, double diemQT, double diemThi) {
+	public DiemHocPhan(String hocKy,  HocPhan hocPhan, String idLopHoc, double diemQT, double diemThi) {
 		this.hocKy = hocKy;
 		this.idHocPhan = hocPhan.getIdHocPhan();
 		this.tenHP = hocPhan.getTenHP();
 		this.tinChi = hocPhan.getSoTinChi();
-		this.lopHoc = lopHoc;
+		this.idLopHoc = idLopHoc;
 		this.diemQT = diemQT;
 		this.diemThi = diemThi;
 		this.diemChu = tinhDiemChu(hocPhan);
+	}
+	
+	public DiemHocPhan(String hocKy,  String idHocPhan, String tenHP, int tinChi, String idLopHoc, double diemQT, double diemThi, String diemChu) {
+		this.hocKy = hocKy;
+		this.idHocPhan = idHocPhan;
+		this.tenHP = tenHP;
+		this.tinChi = tinChi;
+		this.idLopHoc = idLopHoc;
+		this.diemQT = diemQT;
+		this.diemThi = diemThi;
+		this.diemChu = diemChu;
 	}
 	
 	private String tinhDiemChu(HocPhan hp) {
@@ -60,11 +71,11 @@ public class DiemHocPhan {
 	}
 
 	public String getLopHoc() {
-		return lopHoc;
+		return idLopHoc;
 	}
 
 	public void setLopHoc(String lopHoc) {
-		this.lopHoc = lopHoc;
+		this.idLopHoc = lopHoc;
 	}
 
 	public String getDiemChu() {

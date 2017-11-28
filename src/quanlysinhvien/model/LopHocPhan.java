@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class LopHocPhan {
 	private String hocKy;
 	private String idLop;
+	private String idHocPhan;
 	private String thoiGian;
 	private String tuanHoc;
 	private String phongHoc;
@@ -21,9 +22,10 @@ public class LopHocPhan {
 		this.soSVHienTai = dsSinhVien.size();
 	}
 	
-	public LopHocPhan(String hocKy, String idLop, String thoiGian, String tuanHoc, String phongHoc, ArrayList<SinhVien> dsSinhVien, String tenGiangVien, int soSVMax, int soSVHienTai) {
+	public LopHocPhan(String hocKy, String idLop, String idHocPhan,String thoiGian, String tuanHoc, String phongHoc, ArrayList<SinhVien> dsSinhVien, String tenGiangVien, int soSVMax, int soSVHienTai) {
 		this.hocKy = hocKy;
 		this.idLop = idLop;
+		this.idHocPhan = idHocPhan;
 		this.thoiGian = thoiGian;
 		this.tuanHoc = tuanHoc;
 		this.phongHoc = phongHoc;
@@ -116,6 +118,22 @@ public class LopHocPhan {
 
 	public void setPhongHoc(String phongHoc) {
 		this.phongHoc = phongHoc;
+	}
+
+	public String getIdHocPhan() {
+		return idHocPhan;
+	}
+
+	public void setIdHocPhan(String idHocPhan) {
+		this.idHocPhan = idHocPhan;
+	}
+
+	public String getHocKy() {
+		return hocKy;
+	}
+
+	public void setHocKy(String hocKy) {
+		this.hocKy = hocKy;
 	}
 	
 }

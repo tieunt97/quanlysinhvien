@@ -296,7 +296,7 @@ public class SinhVienNienCheController {
 				}else {
 					String idSV = (String) table.getValueAt(row, 0);
 					CapNhatDiemSVView capNhatDiem = new CapNhatDiemSVView(idSV);
-					new CapNhatDiemSVController(capNhatDiem);
+					new CapNhatDiemSVController(capNhatDiem, idSV, "svnc");
 				}
 			}
 		});

@@ -4,7 +4,7 @@ public class HocPhan {
 	private String idHocPhan;
 	private String tenHP;
 	private int soTinChi;
-	private int soTCHocPhi;
+	private double soTCHocPhi;
 	private String idNganh;
 	private double trongSo;
 	
@@ -14,7 +14,7 @@ public class HocPhan {
 		
 	}
 	
-	public HocPhan(String idHocPhan, String tenHP, int soTinChi, int soTCHocPhi, String idNganh, double trongSo) {
+	public HocPhan(String idHocPhan, String tenHP, int soTinChi, double soTCHocPhi, String idNganh, double trongSo) {
 		this.idHocPhan = idHocPhan;
 		this.tenHP = tenHP;
 		this.soTinChi = soTinChi;
@@ -48,11 +48,11 @@ public class HocPhan {
 		this.soTinChi = soTinChi;
 	}
 
-	public int getSoTCHocPhi() {
+	public double getSoTCHocPhi() {
 		return soTCHocPhi;
 	}
 
-	public void setSoTCHocPhi(int soTCHocPhi) {
+	public void setSoTCHocPhi(double soTCHocPhi) {
 		this.soTCHocPhi = soTCHocPhi;
 	}
 

@@ -21,7 +21,7 @@ import quanlysinhvien.model.HocPhan;
 public class PanelDanhSachNganhView extends JPanel{
 	private JTable table;
 	private JTextField tfIdNganh, tfTenNganh, tfTimKiem;
-	private JButton btnThem, btnSua, btnXoa, btnLuu, btnTimKiem, btnHuy;
+	private JButton btnThem, btnSua, btnXoa, btnTimKiem, btnHuy;
 	private JComboBox<String> timKiemCB;
 	private String[] titleCols = {"Mã ngành", "Tên ngành"};
 	private String[] timKiemVals = {"Mã ngành", "Tên ngành"};
@@ -96,14 +96,12 @@ public class PanelDanhSachNganhView extends JPanel{
 		panel2.add(btnHuy = new JButton("Hủy"));
 		panel.add(panel1);
 		panel.add(panel2);
-		panel.add(btnLuu = new JButton("Lưu"));
 
 		return panel;
 	}
 	
 	private JPanel createTimKiemPanel() {
 		JPanel panel = new JPanel(new GridLayout(1, 2, 10, 10));
-//		panel.setBorder(new EmptyBorder(25, 0, 75, 0));
 		JPanel panelButCB = new JPanel(new GridLayout(1, 2, 5, 5));
 		panelButCB.add(btnTimKiem = new JButton("Tìm kiếm"));
 		panelButCB.add(timKiemCB = new JComboBox<>(timKiemVals));

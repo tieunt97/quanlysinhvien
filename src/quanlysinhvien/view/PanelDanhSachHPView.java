@@ -20,7 +20,7 @@ import quanlysinhvien.model.HocPhan;
 
 public class PanelDanhSachHPView extends JPanel{
 	private JTable table;
-	private JButton btnThem, btnSua, btnXoa, btnHuy, btnTimKiem, btnLuu;
+	private JButton btnThem, btnSua, btnXoa, btnHuy, btnTimKiem;
 	private JComboBox<String> timKiemCB;
  	private JTextField tfIdHocPhan, tfTenHP, tfSoTC, tfIdNganh, tfTrongSo, tfTimKiem, tfSoTCHocPhi;
 	private String[] titleCols = {"Mã học phần", "Tên học phần", "Số tín chỉ", "Số TC học phí", "Mã ngành", "Trọng số"};
@@ -109,7 +109,6 @@ public class PanelDanhSachHPView extends JPanel{
 		panel2.add(btnHuy = new JButton("Hủy"));
 		panel.add(panel1);
 		panel.add(panel2);
-		panel.add(btnLuu = new JButton("Lưu"));
 		
 		return panel;
 	}
@@ -282,8 +281,4 @@ public class PanelDanhSachHPView extends JPanel{
 		return tfSoTCHocPhi;
 	}
 
-	public JButton getBtnLuu() {
-		return btnLuu;
-	}
-	
 }

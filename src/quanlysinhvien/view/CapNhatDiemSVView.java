@@ -86,7 +86,7 @@ public class CapNhatDiemSVView extends JDialog{
 		JPanel panel = new JPanel(new BorderLayout(5, 5));
 		JPanel panelL = new JPanel(new GridLayout(3, 1, 5, 5));
 		panelL.add(new JLabel("Học kỳ:"));
-		panelL.add(new JLabel("Mã hoc phần:"));
+		panelL.add(new JLabel("Mã học phần:"));
 		panelL.add(new JLabel("Lớp học:"));
 		JPanel panelR = new JPanel(new GridLayout(3, 1, 5, 5));
 		JPanel panelHocKy = new JPanel(new GridLayout());
