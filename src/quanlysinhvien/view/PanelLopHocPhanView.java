@@ -17,13 +17,15 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import quanlysinhvien.model.HocPhan;
+import quanlysinhvien.model.LopHocPhan;
+import quanlysinhvien.model.SinhVien;
 
 public class PanelLopHocPhanView extends  JPanel{
 	private JTable table;
-	private JTextField tfIdLop, tfIdHocPhan, tfThoiGian, tfTuanHoc, tfPhongHoc, tfTenGV, tfSoSVMax, tfSoSVHienTai, tfTimKiem;
-	private JButton btnThem, btnSua, btnXoa, btnLuu, btnHuy, btnTimKiem, btnCapNhatSV;
+	private JTextField tfIdLop, tfLoaiLop, tfIdHocPhan, tfThoiGian, tfTuanHoc, tfPhongHoc, tfTenGV, tfSoSVMax, tfSoSVHienTai, tfTimKiem;
+	private JButton btnThem, btnSua, btnXoa, btnHuy, btnTimKiem, btnCapNhatSV;
 	private JComboBox<String> timKiemCB, hocKyCB;
-	private String[] titleCols = {"Học kỳ", "Mã lớp", "Mã học phần", "Thời gian", "Tuần học", "Phòng học", "Tên giảng viên", "Số SV max", "Số SV hiện tại"};
+	private String[] titleCols = {"Học kỳ", "Mã lớp", "Loại lớp", "Mã học phần", "Tên lớp", "Thời gian", "Tuần học", "Phòng học", "Tên giảng viên", "Số SV max", "Số SV hiện tại"};
 	private String[] timKiemVals = {"Mã lớp", "Phòng học", "Tên giảng viên", "Số SV max"};
 	private String[] hocKyVals = {"20172", "20171", "20163", "20162", "20161", "20153", "20152", "20151"};
 	
@@ -57,7 +59,7 @@ public class PanelLopHocPhanView extends  JPanel{
 	private JPanel createTablePanel() {
 		JPanel panel = new JPanel(new BorderLayout());
 		JScrollPane scroll = new JScrollPane(table = new JTable());
-		loadData(table, new ArrayList<HocPhan>());
+		loadData(table, new ArrayList<LopHocPhan>(), "", "");
 		panel.add(scroll);
 		
 		return panel;
@@ -89,7 +91,10 @@ public class PanelLopHocPhanView extends  JPanel{
 		panelL.add(new JLabel("Tuần học:"));
 		
 		JPanel panelR = new JPanel(new GridLayout(5, 1, 5, 5));
-		panelR.add(createPanelCB(hocKyCB, hocKyVals));
+		JPanel panelHK = new  JPanel(new BorderLayout());
+		panelHK.add(hocKyCB = new JComboBox<>(hocKyVals));
+		panelHK.setBorder(new EmptyBorder(0, 0, 0, 135));
+		panelR.add(panelHK);
 		panelR.add(tfIdLop = new JTextField());
 		panelR.add(tfIdHocPhan = new JTextField());
 		panelR.add(tfThoiGian = new JTextField());
@@ -105,12 +110,14 @@ public class PanelLopHocPhanView extends  JPanel{
 		JPanel panel = new JPanel(new BorderLayout(10, 10));
 		JPanel panelL = new JPanel(new GridLayout(5, 1 , 5, 5));
 		panelL.add(new JLabel("Phòng học:"));
+		panelL.add(new JLabel("Loại lớp:"));
 		panelL.add(new JLabel("Tên giảng viên:"));
 		panelL.add(new JLabel("Số SV max:"));
 		panelL.add(new JLabel("Số SV hiện tại:"));
 		
 		JPanel panelR = new JPanel(new GridLayout(5, 1, 5, 5));
 		panelR.add(tfPhongHoc = new JTextField());
+		panelR.add(tfLoaiLop = new JTextField());
 		panelR.add(tfTenGV = new JTextField());
 		panelR.add(tfSoSVMax = new JTextField());
 		panelR.add(tfSoSVHienTai = new JTextField());
@@ -160,32 +167,194 @@ public class PanelLopHocPhanView extends  JPanel{
 		return panel;
 	}
 	
-	private JPanel createPanelCB(JComboBox<String> cb, String[] vals) {
-		JPanel panel = new JPanel(new BorderLayout());
-		panel.setBorder(new EmptyBorder(0, 0, 0, 135));
-		panel.add(cb = new JComboBox<>(vals));
-		
-		return panel;
-	}
+//	private JPanel createPanelCB(JComboBox<String> cb, String[] vals) {
+//		JPanel panel = new JPanel(new BorderLayout());
+//		panel.setBorder(new EmptyBorder(0, 0, 0, 135));
+//		panel.add(cb = new JComboBox<>(vals));
+//		
+//		return panel;
+//	}
 	
-	public void loadData(JTable table, ArrayList<HocPhan> dsHP) {
-		String[][] data = convertData(dsHP);
+	public void loadData(JTable table, ArrayList<LopHocPhan> dsLopHP, String timKiem, String giaTri) {
+		String[][] data = convertData(dsLopHP, timKiem, giaTri);
 		DefaultTableModel model = new DefaultTableModel(data, titleCols);
 		table.setModel(model);
 	}
 	
-	private String[][] convertData(ArrayList<HocPhan> list) {
-		int size = list.size();
+	private String[][] convertData(ArrayList<LopHocPhan> dsLopHP, String timKiem, String giaTri) {
+		int size = dsLopHP.size();
 		String data[][] = new String[size][titleCols.length];
+		int index = 0;
 		for (int i = 0; i < size; i++) {
-			HocPhan hp = list.get(i);
-			data[i][0] = hp.getIdHocPhan();
-			data[i][1] = hp.getTenHP();
-			data[i][2] = hp.getSoTinChi() + "";
-			data[i][3] = hp.getIdNganh();
-			data[i][4] = hp.getTrongSo() + "";
+			LopHocPhan lopHP = dsLopHP.get(i);
+			switch(timKiem) {
+			case "Mã lớp": 
+				if(lopHP.getIdLop().indexOf(giaTri) >= 0) {
+					data[index][0] = lopHP.getHocKy();
+					data[index][1] = lopHP.getIdLop();
+					data[index][2] = lopHP.getLoaiLop();
+					data[index][3] = lopHP.getIdHocPhan();
+					data[index][4] = lopHP.getTenLop();
+					data[index][5] = lopHP.getThoiGian();
+					data[index][6] = lopHP.getTuanHoc();
+					data[index][7] = lopHP.getPhongHoc();
+					data[index][8] = lopHP.getTenGiangVien();
+					data[index][9] = lopHP.getSoSVMax() + "";
+					data[index][10] = lopHP.getSoSVHienTai() + "";
+					index++;
+				}
+				break;
+			case "Phòng học":
+				if(lopHP.getPhongHoc().indexOf(giaTri) >= 0) {
+					data[index][0] = lopHP.getHocKy();
+					data[index][1] = lopHP.getIdLop();
+					data[index][2] = lopHP.getLoaiLop();
+					data[index][3] = lopHP.getIdHocPhan();
+					data[index][4] = lopHP.getTenLop();
+					data[index][5] = lopHP.getThoiGian();
+					data[index][6] = lopHP.getTuanHoc();
+					data[index][7] = lopHP.getPhongHoc();
+					data[index][8] = lopHP.getTenGiangVien();
+					data[index][9] = lopHP.getSoSVMax() + "";
+					data[index][10] = lopHP.getSoSVHienTai() + "";
+					index++;
+				}
+				break;
+			case "Tên giảng viên":
+				if(lopHP.getTenGiangVien().indexOf(giaTri) >= 0) {
+					data[index][0] = lopHP.getHocKy();
+					data[index][1] = lopHP.getIdLop();
+					data[index][2] = lopHP.getLoaiLop();
+					data[index][3] = lopHP.getIdHocPhan();
+					data[index][4] = lopHP.getTenLop();
+					data[index][5] = lopHP.getThoiGian();
+					data[index][6] = lopHP.getTuanHoc();
+					data[index][7] = lopHP.getPhongHoc();
+					data[index][8] = lopHP.getTenGiangVien();
+					data[index][9] = lopHP.getSoSVMax() + "";
+					data[index][10] = lopHP.getSoSVHienTai() + "";
+					index++;
+				}
+				break;
+			case "Số SV max":
+				if(lopHP.getSoSVMax() == Integer.parseInt(giaTri)) {
+					data[index][0] = lopHP.getHocKy();
+					data[index][1] = lopHP.getIdLop();
+					data[index][2] = lopHP.getLoaiLop();
+					data[index][3] = lopHP.getIdHocPhan();
+					data[index][4] = lopHP.getTenLop();
+					data[index][5] = lopHP.getThoiGian();
+					data[index][6] = lopHP.getTuanHoc();
+					data[index][7] = lopHP.getPhongHoc();
+					data[index][8] = lopHP.getTenGiangVien();
+					data[index][9] = lopHP.getSoSVMax() + "";
+					data[index][10] = lopHP.getSoSVHienTai() + "";
+					index++;
+				}
+				break;
+			case "":{
+				data[index][0] = lopHP.getHocKy();
+				data[index][1] = lopHP.getIdLop();
+				data[index][2] = lopHP.getLoaiLop();
+				data[index][3] = lopHP.getIdHocPhan();
+				data[index][4] = lopHP.getTenLop();
+				data[index][5] = lopHP.getThoiGian();
+				data[index][6] = lopHP.getTuanHoc();
+				data[index][7] = lopHP.getPhongHoc();
+				data[index][8] = lopHP.getTenGiangVien();
+				data[index][9] = lopHP.getSoSVMax() + "";
+				data[index][10] = lopHP.getSoSVHienTai() + "";
+				index++;
+				}
+				break;
+			}
+//			String hocKy, String idLop, String loaiLop, String idHocPhan,String thoiGian, String tuanHoc, String phongHoc, ArrayList<SinhVien> dsSinhVien, String tenGiangVien, int soSVMax, int soSVHienTai
 		}
+		if (!giaTri.equals("")) {
+			String[][] datatk = new String[index][titleCols.length];
+			for (int i = 0; i < index; i++) {
+				datatk[i] = data[i];
+			}
+			return datatk;
+		}
+//		Mã lớp", "Phòng học", "Tên giảng viên", "Số SV max
 		return data;
+	}
+
+	public JTable getTable() {
+		return table;
+	}
+
+	public JTextField getTfIdLop() {
+		return tfIdLop;
+	}
+
+	public JTextField getTfLoaiLop() {
+		return tfLoaiLop;
+	}
+
+	public JTextField getTfIdHocPhan() {
+		return tfIdHocPhan;
+	}
+
+	public JTextField getTfThoiGian() {
+		return tfThoiGian;
+	}
+
+	public JTextField getTfTuanHoc() {
+		return tfTuanHoc;
+	}
+
+	public JTextField getTfPhongHoc() {
+		return tfPhongHoc;
+	}
+
+	public JTextField getTfTenGV() {
+		return tfTenGV;
+	}
+
+	public JTextField getTfSoSVMax() {
+		return tfSoSVMax;
+	}
+
+	public JTextField getTfSoSVHienTai() {
+		return tfSoSVHienTai;
+	}
+
+	public JTextField getTfTimKiem() {
+		return tfTimKiem;
+	}
+
+	public JButton getBtnThem() {
+		return btnThem;
+	}
+
+	public JButton getBtnSua() {
+		return btnSua;
+	}
+
+	public JButton getBtnXoa() {
+		return btnXoa;
+	}
+
+	public JButton getBtnHuy() {
+		return btnHuy;
+	}
+
+	public JButton getBtnTimKiem() {
+		return btnTimKiem;
+	}
+
+	public JButton getBtnCapNhatSV() {
+		return btnCapNhatSV;
+	}
+
+	public JComboBox<String> getTimKiemCB() {
+		return timKiemCB;
+	}
+
+	public JComboBox<String> getHocKyCB() {
+		return hocKyCB;
 	}
 
 }

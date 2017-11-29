@@ -5,7 +5,9 @@ import java.util.ArrayList;
 public class LopHocPhan {
 	private String hocKy;
 	private String idLop;
+	private String loaiLop;
 	private String idHocPhan;
+	private String tenLop;
 	private String thoiGian;
 	private String tuanHoc;
 	private String phongHoc;
@@ -22,10 +24,12 @@ public class LopHocPhan {
 		this.soSVHienTai = dsSinhVien.size();
 	}
 	
-	public LopHocPhan(String hocKy, String idLop, String idHocPhan,String thoiGian, String tuanHoc, String phongHoc, ArrayList<SinhVien> dsSinhVien, String tenGiangVien, int soSVMax, int soSVHienTai) {
+	public LopHocPhan(String hocKy, String idLop, String loaiLop, String idHocPhan, String tenLop, String thoiGian, String tuanHoc, String phongHoc, ArrayList<SinhVien> dsSinhVien, String tenGiangVien, int soSVMax, int soSVHienTai) {
 		this.hocKy = hocKy;
 		this.idLop = idLop;
+		this.loaiLop = loaiLop;
 		this.idHocPhan = idHocPhan;
+		this.tenLop = tenLop;
 		this.thoiGian = thoiGian;
 		this.tuanHoc = tuanHoc;
 		this.phongHoc = phongHoc;
@@ -134,6 +138,22 @@ public class LopHocPhan {
 
 	public void setHocKy(String hocKy) {
 		this.hocKy = hocKy;
+	}
+
+	public String getLoaiLop() {
+		return loaiLop;
+	}
+
+	public void setLoaiLop(String loaiLop) {
+		this.loaiLop = loaiLop;
+	}
+
+	public String getTenLop() {
+		return tenLop;
+	}
+
+	public void setTenLop(String tenLop) {
+		this.tenLop = tenLop;
 	}
 	
 }

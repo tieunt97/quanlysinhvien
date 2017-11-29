@@ -28,21 +28,23 @@ public class CapNhatSinhVienLCNView extends JDialog{
 	private JComboBox<String> loaiSVCB;
 	private String[] titleCols = {"Mã sinh viên", "Họ tên", "Khóa", "Ngày sinh", "Giới tính", "Email", "Địa chỉ"};
 	private String[] loaiSV = {"Sinh viên tín chỉ", "Sinh viên niên chế"};
+	private ArrayList<SinhVien> dsSinhVien;
 	
-	public CapNhatSinhVienLCNView() {
+	public CapNhatSinhVienLCNView(ArrayList<SinhVien> dsSinhVien, String idLop) {
 //		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.dsSinhVien = dsSinhVien;
 		setSize(950, 650);
 		setLocationRelativeTo(null);
-		add(createTitlePanel(), BorderLayout.NORTH);
+		add(createTitlePanel(idLop), BorderLayout.NORTH);
 		add(createMainPanel(), BorderLayout.CENTER);
 		
 		setVisible(true);
 	}
 	
-	private JPanel createTitlePanel() {
+	private JPanel createTitlePanel(String idLop) {
 		JPanel panel = new JPanel();
 		panel.setBackground(new Color(0x0009999));
-		panel.add(createLabel());
+		panel.add(createLabel(idLop));
 		return panel;
 	}
 	
@@ -85,14 +87,14 @@ public class CapNhatSinhVienLCNView extends JDialog{
 		return panel;
 	}
 	
-	private JLabel createLabel() {
-		JLabel label = new JLabel("Danh sách sinh viên");
+	private JLabel createLabel(String idLop) {
+		JLabel label = new JLabel("Danh sách sinh viên mã lớp: " + idLop);
 		label.setFont(new Font("Calibri", Font.BOLD, 16));
 		label.setForeground(Color.yellow);
 		return label;
 	}
 	
-	private void loadData(JTable table, ArrayList<SinhVien> dsSinhVien) {
+	public void loadData(JTable table, ArrayList<SinhVien> dsSinhVien) {
 		String[][] data = convertData(dsSinhVien);
 		DefaultTableModel model = new DefaultTableModel(data, titleCols);
 		table.setModel(model);
@@ -121,8 +123,33 @@ public class CapNhatSinhVienLCNView extends JDialog{
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-				new CapNhatSinhVienLCNView();
+				new CapNhatSinhVienLCNView(new ArrayList<SinhVien>(), "1234");
 			}
 		});
 	}
+
+	public JTable getTable() {
+		return table;
+	}
+
+	public JButton getBtnThem() {
+		return btnThem;
+	}
+
+	public JButton getBtnXoa() {
+		return btnXoa;
+	}
+
+	public JTextField getTfIdSinhVien() {
+		return tfIdSinhVien;
+	}
+
+	public JComboBox<String> getLoaiSVCB() {
+		return loaiSVCB;
+	}
+
+	public ArrayList<SinhVien> getDsSinhVien() {
+		return dsSinhVien;
+	}
+	
 }
