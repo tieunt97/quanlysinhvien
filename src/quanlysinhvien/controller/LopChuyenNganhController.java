@@ -25,122 +25,107 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import quanlysinhvien.model.HocPhan;
-import quanlysinhvien.model.LopHocPhan;
+import quanlysinhvien.model.LopChuyenNganh;
 import quanlysinhvien.model.SinhVien;
-import quanlysinhvien.model.SinhVienTinChi;
 import quanlysinhvien.view.CapNhatSinhVienLCNView;
-import quanlysinhvien.view.PanelLopHocPhanView;
+import quanlysinhvien.view.PanelLopChuyenNganhView;
 
-public class LopHocPhanController {
+public class LopChuyenNganhController {
+	PanelLopChuyenNganhView lopChuyenNganh;
 	private JTable table;
-	private JTextField tfIdLop, tfLoaiLop, tfIdHocPhan, tfThoiGian, tfTuanHoc, tfPhongHoc, tfTenGV, tfSoSVMax, tfSoSVHienTai, tfTimKiem;
+	private JTextField tfIdNganh, tfIdLopChuyenNganh, tfTenLop, tfTenChuNhiem, tfTimKiem;
 	private JButton btnThem, btnSua, btnXoa, btnHuy, btnTimKiem, btnCapNhatSV;
-	private JComboBox<String> timKiemCB, hocKyCB;
-	private PanelLopHocPhanView lopHocPhan;
-	private ArrayList<LopHocPhan> dsLopHP;
+	private JComboBox<String> timKiemCB;
+	private ArrayList<LopChuyenNganh> dsLopCN;
+	private ArrayList<SinhVien> dsSinhVien;
 	private String fileName;
 	
-	public LopHocPhanController(PanelLopHocPhanView lopHocPhan) {
-		this.lopHocPhan = lopHocPhan;
-		fileName = "quanlysinhvien\\danhsachhocphan\\lophocphan\\dsLopHP.xlsx";
+	public LopChuyenNganhController(PanelLopChuyenNganhView lopChuyenNganh) {
+		this.lopChuyenNganh = lopChuyenNganh;
+		fileName = "quanlysinhvien\\danhsachchuyennganh\\lopchuyennganh\\dsLopCN.xlsx";
 		try {
-			dsLopHP = readFile(fileName);
+			dsLopCN = readFile(fileName);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			dsLopHP = new ArrayList<>();
-			e.printStackTrace();
+			dsLopCN = new ArrayList<>();
+			System.out.println("Error: " + e);
 		}
-		this.table = lopHocPhan.getTable();
-		this.btnThem = lopHocPhan.getBtnThem();
-		this.btnSua = lopHocPhan.getBtnSua();
-		this.btnXoa = lopHocPhan.getBtnXoa();
-		this.btnHuy = lopHocPhan.getBtnHuy();
-		this.btnTimKiem = lopHocPhan.getBtnTimKiem();
-		this.btnCapNhatSV = lopHocPhan.getBtnCapNhatSV();
-		this.tfIdLop = lopHocPhan.getTfIdLop();
-		this.tfLoaiLop = lopHocPhan.getTfLoaiLop();
-		this.tfIdHocPhan = lopHocPhan.getTfIdHocPhan();
-		this.tfThoiGian = lopHocPhan.getTfThoiGian();
-		this.tfTuanHoc = lopHocPhan.getTfTuanHoc();
-		this.tfPhongHoc = lopHocPhan.getTfPhongHoc();
-		this.tfTenGV = lopHocPhan.getTfTenGV();
-		this.tfSoSVMax = lopHocPhan.getTfSoSVMax();
-		this.tfSoSVHienTai = lopHocPhan.getTfSoSVHienTai();
-		this.tfTimKiem = lopHocPhan.getTfTimKiem();
-		this.timKiemCB = lopHocPhan.getTimKiemCB();
-		this.hocKyCB = lopHocPhan.getHocKyCB();
-		this.lopHocPhan.loadData(table, dsLopHP, "", "");
+		this.table = lopChuyenNganh.getTable();
+		this.btnThem = lopChuyenNganh.getBtnThem();
+		this.btnSua = lopChuyenNganh.getBtnSua();
+		this.btnXoa = lopChuyenNganh.getBtnXoa();
+		this.btnHuy = lopChuyenNganh.getBtnHuy();
+		this.btnTimKiem = lopChuyenNganh.getBtnTimKiem();
+		this.btnCapNhatSV = lopChuyenNganh.getBtnCapNhatSV();
+		this.timKiemCB = lopChuyenNganh.getTimKiemCB();
+		this.tfIdNganh = lopChuyenNganh.getTfIdNganh();
+		this.tfIdLopChuyenNganh = lopChuyenNganh.getTfIdLopChuyenNganh();
+		this.tfTenLop = lopChuyenNganh.getTfTenLop();
+		this.tfTenChuNhiem = lopChuyenNganh.getTfTenChuNhiem();
+		this.tfTimKiem = lopChuyenNganh.getTfTimKiem();
+		this.lopChuyenNganh.loadData(table, dsLopCN, "", "");
 		
 		setAction();
 	}
-	
 	private void setAction() {
 		table.addMouseListener(new MouseListener() {
 			
 			@Override
-			public void mouseReleased(MouseEvent arg0) {
+			public void mouseReleased(MouseEvent e) {
 				// TODO Auto-generated method stub
 				
 			}
 			
 			@Override
-			public void mousePressed(MouseEvent arg0) {
+			public void mousePressed(MouseEvent e) {
 				// TODO Auto-generated method stub
 				
 			}
 			
 			@Override
-			public void mouseExited(MouseEvent arg0) {
+			public void mouseExited(MouseEvent e) {
 				// TODO Auto-generated method stub
 				
 			}
 			
 			@Override
-			public void mouseEntered(MouseEvent arg0) {
+			public void mouseEntered(MouseEvent e) {
 				// TODO Auto-generated method stub
 				
 			}
 			
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
+			public void mouseClicked(MouseEvent e) {
 				// TODO Auto-generated method stub
 				int row = table.getSelectedRow();
 				if(row >= 0) {
-					hocKyCB.setSelectedItem(table.getValueAt(row, 0));
-					tfIdLop.setText((String) table.getValueAt(row, 1));
-					tfIdLop.setEnabled(false);
-					tfLoaiLop.setText((String) table.getValueAt(row, 2));
-					tfIdHocPhan.setText((String) table.getValueAt(row, 3));
-					tfThoiGian.setText((String) table.getValueAt(row, 5));
-					tfTuanHoc.setText((String) table.getValueAt(row, 6));
-					tfPhongHoc.setText((String) table.getValueAt(row, 7));
-					tfTenGV .setText((String) table.getValueAt(row, 8));
-					tfSoSVMax.setText((String) table.getValueAt(row, 9));
-					tfSoSVHienTai.setText((String) table.getValueAt(row, 10));
+					tfIdLopChuyenNganh.setText((String) table.getValueAt(row, 0));
+					tfIdLopChuyenNganh.setEnabled(false);
+					tfTenLop.setText((String) table.getValueAt(row, 1));
+					tfTenChuNhiem.setText((String) table.getValueAt(row, 2));
+					tfIdNganh.setText((String) table.getValueAt(row, 3));
 				}
 			}
 		});
 		btnThem.addActionListener(new ActionListener() {
 			
 			@Override
-			public void actionPerformed(ActionEvent arg0) {
+			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				LopHocPhan lopHP = getLopHocPhan();
-				if(lopHP != null) {
-					String idLop = lopHP.getIdLop();
+				LopChuyenNganh lopCN = getLopChuyenNganh();
+				if(lopCN != null) {
+					String idLop = lopCN.getIdLopChuyenNganh();
 					if(checkLopHP(idLop)) {
-						dsLopHP.add(lopHP);
-						lopHocPhan.loadData(table, dsLopHP, "", "");
+						dsLopCN.add(lopCN);
+						lopChuyenNganh.loadData(table, dsLopCN, "", "");
 						try {
-							addLopHP(lopHP, fileName);
+							addLopCN(lopCN, fileName);
 							JOptionPane.showMessageDialog(null, "Thêm thành công");
 							cancel();
-						} catch (IOException e) {
+						} catch (IOException e1) {
 							// TODO Auto-generated catch block
-							e.printStackTrace();
+							e1.printStackTrace();
 						}
-						JOptionPane.showMessageDialog(null, "Thêm thành công");
 					}else {
 						JOptionPane.showMessageDialog(null, "Trùng mã lớp", "Error insert", JOptionPane.ERROR_MESSAGE);
 					}
@@ -157,27 +142,21 @@ public class LopHocPhanController {
 					JOptionPane.showMessageDialog(null, "Cần chọn một hàng để sửa", "Error update", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
-				LopHocPhan lopHP = getLopHocPhan();
-				if(lopHP != null) {
-					for(int i = 0; i < dsLopHP.size(); i++) {
-						if(dsLopHP.get(i).getIdLop().equals(lopHP.getIdLop())) {
-							dsLopHP.get(i).setHocKy(lopHP.getHocKy());
-							dsLopHP.get(i).setLoaiLop(lopHP.getLoaiLop());
-							dsLopHP.get(i).setIdHocPhan(lopHP.getIdHocPhan());
-							dsLopHP.get(i).setTenLop(lopHP.getTenLop());
-							dsLopHP.get(i).setThoiGian(lopHP.getThoiGian());
-							dsLopHP.get(i).setTuanHoc(lopHP.getTuanHoc());
-							dsLopHP.get(i).setPhongHoc(lopHP.getPhongHoc());
-							dsLopHP.get(i).setTenGiangVien(lopHP.getTenGiangVien());
-							dsLopHP.get(i).setSoSVMax(lopHP.getSoSVMax());
-							dsLopHP.get(i).setSoSVHienTai(lopHP.getSoSVHienTai());
+				LopChuyenNganh lopCN = getLopChuyenNganh();
+				if(lopCN != null) {
+					for(int i = 0; i < dsLopCN.size(); i++) {
+						if(dsLopCN.get(i).getIdLopChuyenNganh().equals(lopCN.getIdLopChuyenNganh())) {
+							dsLopCN.get(i).setTenLop(lopCN.getTenLop());
+							dsLopCN.get(i).setTenChuNhiem(lopCN.getTenChuNhiem());
+							dsLopCN.get(i).setIdNganh(lopCN.getIdNganh());
+							dsLopCN.get(i).setTenNganh(lopCN.getTenNganh());
 							break;
 						}
 					}
-					lopHocPhan.loadData(table, dsLopHP, "", "");
+					lopChuyenNganh.loadData(table, dsLopCN, "", "");
 					boolean ck = false;
 					try {
-						ck = updateLopHP(lopHP, fileName);
+						ck = updateLopCN(lopCN, fileName);
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -203,18 +182,18 @@ public class LopHocPhanController {
 					int select = JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn xóa không?", "Notify",
 							JOptionPane.YES_NO_OPTION);
 					if (select == 0) {
-						String idLop = (String) table.getValueAt(row, 1);
-						for (int i = 0; i < dsLopHP.size(); i++) {
-							if (dsLopHP.get(i).getIdLop().equals(idLop)) {
+						String idLop = (String) table.getValueAt(row, 0);
+						for (int i = 0; i < dsLopCN.size(); i++) {
+							if (dsLopCN.get(i).getIdLopChuyenNganh().equals(idLop)) {
 								boolean ck = false;
 								try {
-									ck = deleteLopHP(idLop, fileName);
+									ck = deleteLopCN(idLop, fileName);
 								} catch (IOException e1) {
 									// TODO Auto-generated catch block
 									e1.printStackTrace();
 								}
-								dsLopHP.remove(i);
-								lopHocPhan.loadData(table, dsLopHP, "", "");
+								dsLopCN.remove(i);
+								lopChuyenNganh.loadData(table, dsLopCN, "", "");
 								if(ck) JOptionPane.showMessageDialog(null, "Xóa thành công");
 								else {
 									JOptionPane.showMessageDialog(null, "Xóa lỗi", "Error delete", JOptionPane.ERROR_MESSAGE);
@@ -233,7 +212,7 @@ public class LopHocPhanController {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				cancel();
-				lopHocPhan.loadData(table, dsLopHP, "", "");
+				lopChuyenNganh.loadData(table, dsLopCN, "", "");
 			}
 		});
 		btnTimKiem.addActionListener(new ActionListener() {
@@ -243,7 +222,7 @@ public class LopHocPhanController {
 				// TODO Auto-generated method stub
 				String timKiem = timKiemCB.getSelectedItem().toString();
 				String giaTri = tfTimKiem.getText().trim().toLowerCase();
-				lopHocPhan.loadData(table, dsLopHP, timKiem, giaTri);
+				lopChuyenNganh.loadData(table, dsLopCN, timKiem, giaTri);
 			}
 		});
 		btnCapNhatSV.addActionListener(new ActionListener() {
@@ -258,21 +237,20 @@ public class LopHocPhanController {
 				}
 				CapNhatSinhVienLCNView capNhatSV = new CapNhatSinhVienLCNView(new ArrayList<SinhVien>(), (String)table.getValueAt(row, 1));
 				ArrayList<SinhVien> dsSinhVien = new ArrayList<>();
-				String idLop = (String) table.getValueAt(row, 1);
-				for (int i = 0; i < dsLopHP.size(); i++) {
-					if(dsLopHP.get(i).getIdLop().equals(idLop)) {
-						dsSinhVien = dsLopHP.get(i).getDsSinhVien();
+				String idLop = (String) table.getValueAt(row, 0);
+				for (int i = 0; i < dsLopCN.size(); i++) {
+					if(dsLopCN.get(i).getIdLopChuyenNganh().equals(idLop)) {
+						dsSinhVien = dsLopCN.get(i).getDsSinhVien();
 						break;
 					}
 				}
-				new CapNhatSinhVienController(capNhatSV, dsSinhVien, "quanlysinhvien\\danhsachhocphan\\lophocphan\\" + idLop + "_dsSV.xlsx");
+				new CapNhatSinhVienController(capNhatSV, dsSinhVien, "quanlysinhvien\\danhsachchuyennganh\\lopchuyennganh\\" + idLop + "_dsSV.xlsx");
 			}
 		});
-		
 	}
 	
-	private ArrayList<LopHocPhan> readFile(String fileName) throws IOException{
-		ArrayList<LopHocPhan> dsLopHP = new ArrayList<>();
+	private ArrayList<LopChuyenNganh> readFile(String fileName) throws IOException{
+		ArrayList<LopChuyenNganh> dsLopCN = new ArrayList<>();
 		FileInputStream inputStream = new FileInputStream(new File(fileName));
 
 		Workbook workbook = new XSSFWorkbook(inputStream);
@@ -285,7 +263,7 @@ public class LopHocPhanController {
 		while (iterator.hasNext()) {
 			nextRow = iterator.next();
 			Iterator<Cell> cellIterator = nextRow.cellIterator();
-			ArrayList<String> dataLopHP = new ArrayList<>();
+			ArrayList<String> dataLopCN = new ArrayList<>();
 			while (cellIterator.hasNext()) {
 				Cell cell = cellIterator.next();
 				String data = "";
@@ -300,27 +278,26 @@ public class LopHocPhanController {
 					data = "";
 					break;
 				}
-				dataLopHP.add(data);
-				if(dataLopHP.size() < 1) return null;
+				dataLopCN.add(data);
+				if(dataLopCN.size() < 1) return null;
 			}
-			if(dataLopHP.size() > 0) {
+			if(dataLopCN.size() > 0) {
 				ArrayList<SinhVien> dsSinhVien;
 				try {
-					dsSinhVien = getDSSinhVien(dataLopHP.get(1));
+					dsSinhVien = getDSSinhVien(dataLopCN.get(0));
 					System.out.println("dssv");
 				}catch(Exception exc) {
 					dsSinhVien = new ArrayList<>();
 					System.out.println("Error: " + exc);
 				}
-				LopHocPhan lopHocPhan = new LopHocPhan(dataLopHP.get(0), dataLopHP.get(1), dataLopHP.get(2), dataLopHP.get(3), dataLopHP.get(4), 
-						dataLopHP.get(5), dataLopHP.get(6), dataLopHP.get(7), dsSinhVien, dataLopHP.get(8), (int) Double.parseDouble(dataLopHP.get(9)), (int) Double.parseDouble(dataLopHP.get(10)));
-				dsLopHP.add(lopHocPhan);
+				LopChuyenNganh lopChuyenNganh = new LopChuyenNganh(dsSinhVien, dataLopCN.get(0), dataLopCN.get(1), dataLopCN.get(2), dataLopCN.get(3), dataLopCN.get(4));
+				dsLopCN.add(lopChuyenNganh);
 			}
 		}
 
 		workbook.close();
 		inputStream.close();
-		return dsLopHP;
+		return dsLopCN;
 	}
 	
 	private void createHeader(Sheet sheet) {
@@ -333,82 +310,39 @@ public class LopHocPhanController {
 
 		Cell cellHocKy = row.createCell(1);
 		cellHocKy.setCellStyle(cellStyle);
-		cellHocKy.setCellValue("Học kỳ");
+		cellHocKy.setCellValue("Mã lớp");
 
 		Cell cellIdLop = row.createCell(2);
 		cellIdLop.setCellStyle(cellStyle);
-		cellIdLop.setCellValue("Mã lớp");
-
-		Cell cellLoaiLop = row.createCell(3);
-		cellLoaiLop.setCellStyle(cellStyle);
-		cellLoaiLop.setCellValue("Loại lớp");
-
-		Cell cellIdHocPhan = row.createCell(4);
-		cellIdHocPhan.setCellStyle(cellStyle);
-		cellIdHocPhan.setCellValue("Mã học phần");
+		cellIdLop.setCellValue("Tên lớp");
 		
-		Cell cellTenLop = row.createCell(5);
-		cellTenLop.setCellStyle(cellStyle);
-		cellTenLop.setCellValue("Tên lớp");
+		Cell cellChuNhiem = row.createCell(3);
+		cellChuNhiem.setCellStyle(cellStyle);
+		cellChuNhiem.setCellValue("Chủ nhiệm");
 
-		Cell cellThoiGian = row.createCell(6);
-		cellThoiGian.setCellStyle(cellStyle);
-		cellThoiGian.setCellValue("Thời gian");
+		Cell cellLoaiLop = row.createCell(4);
+		cellLoaiLop.setCellStyle(cellStyle);
+		cellLoaiLop.setCellValue("Mã ngành");
 
-		Cell cellTuanHoc = row.createCell(7);
-		cellTuanHoc.setCellStyle(cellStyle);
-		cellTuanHoc.setCellValue("Tuần học");
-
-		Cell cellPhongHoc = row.createCell(8);
-		cellPhongHoc.setCellStyle(cellStyle);
-		cellPhongHoc.setCellValue("Phòng học");
-
-		Cell cellTenGV = row.createCell(9);
-		cellTenGV.setCellStyle(cellStyle);
-		cellTenGV.setCellValue("Tên giảng viên");
-
-		Cell cellSoSVMax = row.createCell(10);
-		cellSoSVMax.setCellStyle(cellStyle);
-		cellSoSVMax.setCellValue("Số SV max");
-
-		Cell cellSoSVHT = row.createCell(11);
-		cellSoSVHT.setCellStyle(cellStyle);
-		cellSoSVHT.setCellValue("Số SV hiện tại");
+		Cell cellIdHocPhan = row.createCell(5);
+		cellIdHocPhan.setCellStyle(cellStyle);
+		cellIdHocPhan.setCellValue("Tên ngành");
 	}
 	
-	private void writeLopHP(LopHocPhan lopHP, Row row) {
+	private void writeLopCN(LopChuyenNganh lopCN, Row row) {
 		Cell cell = row.createCell(1);
-		cell.setCellValue(lopHP.getHocKy());
+		cell.setCellValue(lopCN.getIdLopChuyenNganh());
 		cell = row.createCell(2);
-		cell.setCellValue(lopHP.getIdLop());
+		cell.setCellValue(lopCN.getTenLop());
 		cell = row.createCell(3);
-		cell.setCellValue(lopHP.getLoaiLop());
+		cell.setCellValue(lopCN.getTenChuNhiem());
 		cell = row.createCell(4);
-		cell.setCellValue(lopHP.getIdHocPhan());
+		cell.setCellValue(lopCN.getIdNganh());
 		cell = row.createCell(5);
-		String tenLop = "";
-		try {
-			tenLop = getTenLop(lopHP.getIdHocPhan());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		cell.setCellValue(tenLop);
-		cell = row.createCell(6);
-		cell.setCellValue(lopHP.getThoiGian());
-		cell = row.createCell(7);
-		cell.setCellValue(lopHP.getTuanHoc());
-		cell = row.createCell(8);
-		cell.setCellValue(lopHP.getPhongHoc());
-		cell = row.createCell(9);
-		cell.setCellValue(lopHP.getTenGiangVien());
-		cell = row.createCell(10);
-		cell.setCellValue(lopHP.getSoSVMax());
-		cell = row.createCell(11);
-		cell.setCellValue(lopHP.getSoSVHienTai());
+		cell.setCellValue(lopCN.getTenNganh());
 	}
 	
-	private void addLopHP(LopHocPhan lopHP, String fileName) throws IOException {
+	private void addLopCN(LopChuyenNganh lopCN, String fileName) throws IOException {
 		Workbook workbook = null;
 		Sheet sheet = null;
 		int lastRow = -1;
@@ -432,7 +366,7 @@ public class LopHocPhanController {
 			row = sheet.createRow(lastRow + 1);
 		}
 		if(row != null) {
-			writeLopHP(lopHP, row);
+			writeLopCN(lopCN, row);
 		}
 		
 		FileOutputStream fout = new FileOutputStream(new File(fileName));
@@ -440,7 +374,7 @@ public class LopHocPhanController {
 		fout.close();
 	}
 	
-	private boolean updateLopHP(LopHocPhan lopHP, String fileName) throws IOException {
+	private boolean updateLopCN(LopChuyenNganh lopCN, String fileName) throws IOException {
 		boolean ck = false;
 		FileInputStream fin = new FileInputStream(new File(fileName));
 		Workbook workbook = new XSSFWorkbook(fin);
@@ -452,36 +386,24 @@ public class LopHocPhanController {
 			nextRow = iterator.next(); // loại bỏ dòng tiêu đề
 		while(iterator.hasNext()) {
 			nextRow = iterator.next();
-			Cell cell = nextRow.getCell(2);
-			String idLopHP = cell.getStringCellValue();
-			if(idLopHP.equalsIgnoreCase(lopHP.getIdLop())) {
-				cell = nextRow.createCell(1);
-				cell.setCellValue(lopHP.getHocKy());
+			Cell cell = nextRow.getCell(1);
+			String idLopCN = cell.getStringCellValue();
+			if(idLopCN.equalsIgnoreCase(lopCN.getIdLopChuyenNganh())) {
+				cell = nextRow.createCell(2);
+				cell.setCellValue(lopCN.getTenLop());
 				cell = nextRow.createCell(3);
-				cell.setCellValue(lopHP.getLoaiLop());
+				cell.setCellValue(lopCN.getTenChuNhiem());
 				cell = nextRow.createCell(4);
-				cell.setCellValue(lopHP.getIdHocPhan());
+				cell.setCellValue(lopCN.getIdNganh());
 				cell = nextRow.createCell(5);
 				String tenLop = "";
 				try {
-					tenLop = getTenLop(lopHP.getIdHocPhan());
+					tenLop = getTenNganh(lopCN.getIdNganh());
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				cell.setCellValue(tenLop);
-				cell = nextRow.createCell(6);
-				cell.setCellValue(lopHP.getThoiGian());
-				cell = nextRow.createCell(7);
-				cell.setCellValue(lopHP.getTuanHoc());
-				cell = nextRow.createCell(8);
-				cell.setCellValue(lopHP.getPhongHoc());
-				cell = nextRow.createCell(9);
-				cell.setCellValue(lopHP.getTenGiangVien());
-				cell = nextRow.createCell(10);
-				cell.setCellValue(lopHP.getSoSVMax());
-				cell = nextRow.createCell(11);
-				cell.setCellValue(lopHP.getSoSVHienTai());
 				ck = true;
 				break;
 			}
@@ -495,7 +417,7 @@ public class LopHocPhanController {
 		return ck;
 	}
 	
-	private boolean deleteLopHP(String idLopHP, String fileName) throws IOException {
+	private boolean deleteLopCN(String idLopCN, String fileName) throws IOException {
 		boolean ck = false;
 		FileInputStream fin = new FileInputStream(new File(fileName));
 		Workbook workbook = new XSSFWorkbook(fin);
@@ -510,9 +432,9 @@ public class LopHocPhanController {
 		while(iterator.hasNext()) {
 			nextRow = iterator.next();
 			i++;
-			Cell cell = nextRow.getCell(2);
+			Cell cell = nextRow.getCell(1);
 			String idLop = cell.getStringCellValue();
-			if(idLop.equalsIgnoreCase(idLopHP)) {
+			if(idLop.equalsIgnoreCase(idLopCN)) {
 				int lastRow = sheet.getLastRowNum();
 				if(i < lastRow) {
 					sheet.shiftRows(i + 1, lastRow, -1);
@@ -539,7 +461,7 @@ public class LopHocPhanController {
 	
 	private ArrayList<SinhVien> getDSSinhVien(String idLop) throws IOException {
 		ArrayList<SinhVien> dsSV = new ArrayList<>();
-		String fileName = "quanlysinhvien\\danhsachhocphan\\lophocphan\\" + idLop + "_dsSV.xlsx";
+		String fileName = "quanlysinhvien\\danhsachchuyennganh\\lopchuyennganh\\" + idLop + "_dsSV.xlsx";
 		FileInputStream inputStream = new FileInputStream(new File(fileName));
 
 		Workbook workbook = new XSSFWorkbook(inputStream);
@@ -581,47 +503,9 @@ public class LopHocPhanController {
 		return dsSV;
 	}
 	
-	private LopHocPhan getLopHocPhan() {
-		LopHocPhan lopHP;
-		String hocKy = (String) hocKyCB.getSelectedItem();
-		String idLop = tfIdLop.getText();
-		String loaiLop = tfLoaiLop.getText();
-		String idHocPhan = tfIdHocPhan.getText();
-		String tenLop = "";
-		try {
-			tenLop = getTenLop(idHocPhan);
-			if(tenLop.equals("")) {
-				JOptionPane.showMessageDialog(null, "Mã học phần không tồn tại", "Error", JOptionPane.ERROR_MESSAGE);
-				return null;
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		String thoiGian = tfThoiGian.getText();
-		String tuanHoc = tfTuanHoc.getText();
-		String phongHoc = tfPhongHoc.getText();
-		String tenGiangVien = tfTenGV.getText();
-		if(hocKy.equals("") || idLop.equals("") || loaiLop.equals("") || idHocPhan.equals("") || 
-				tenGiangVien.equals("") || thoiGian.equals("") || tuanHoc.equals("") || phongHoc.equals("")) {
-			JOptionPane.showMessageDialog(null, "Có trường dữ liệu trống", "Error", JOptionPane.ERROR_MESSAGE);
-			return null;
-		}
-		int soSVMax, soSVHienTai;
-		try {
-			soSVMax = Integer.parseInt(tfSoSVMax.getText().trim());
-			soSVHienTai = Integer.parseInt(tfSoSVHienTai.getText().trim());
-		}catch(NumberFormatException exc) {
-			JOptionPane.showMessageDialog(null, "Hãy kiểm tra các giá trị: Số SV max, Số SV hiện tại", "Error", JOptionPane.ERROR_MESSAGE);
-			return null;
-		}
-		lopHP = new LopHocPhan(hocKy, idLop, loaiLop, idHocPhan, tenLop, thoiGian, tuanHoc, phongHoc, null, tenGiangVien, soSVMax, soSVHienTai);
-		return lopHP;
-	}
-	
-	private String getTenLop(String idHocPhan) throws IOException {
-		String tenHP = "";
-		FileInputStream fin = new FileInputStream(new File("quanlysinhvien\\danhsachhocphan\\dsHocPhan.xlsx"));
+	private String getTenNganh(String idNganh) throws IOException {
+		String tenN = "";
+		FileInputStream fin = new FileInputStream(new File("quanlysinhvien\\danhsachchuyennganh\\dsNganh.xlsx"));
 		Workbook workbook = new XSSFWorkbook(fin);
 		Sheet sheet = workbook.getSheetAt(0);
 		Iterator<Row> iterator = sheet.iterator();
@@ -632,21 +516,48 @@ public class LopHocPhanController {
 		while(iterator.hasNext()) {
 			nextRow = iterator.next();
 			Cell cell = nextRow.getCell(1);
-			String idHP = cell.getStringCellValue();
-			if(idHP.equals(idHocPhan)) {
+			String idN = cell.getStringCellValue();
+			if(idN.equals(idNganh)) {
 				cell = nextRow.getCell(2);
-				tenHP = cell.getStringCellValue();
+				tenN = cell.getStringCellValue();
 				break;
 			}
 		}
 		workbook.close();
 		fin.close();
-		return tenHP;
+		return tenN;
 	}
-
-	private boolean checkLopHP(String idLopHP) {
-		for (int i = 0; i < dsLopHP.size(); i++) {
-			if (dsLopHP.get(i).getIdLop().equals(idLopHP))
+	
+	
+	private LopChuyenNganh getLopChuyenNganh() {
+		LopChuyenNganh lopCN;
+		String idLopChuyenNganh = tfIdLopChuyenNganh.getText();
+		String tenLop = tfTenLop.getText();
+		String tenChuNhiem = tfTenChuNhiem.getText();
+		String idNganh = tfIdNganh.getText();
+		String tenNganh = "";
+		try {
+			tenNganh = getTenNganh(idNganh);
+			if(tenNganh.equals("")) {
+				JOptionPane.showMessageDialog(null, "Mã ngành không tồn tại", "Error", JOptionPane.ERROR_MESSAGE);
+				return null;
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if(idLopChuyenNganh.equals("") || tenLop.equals("") || tenChuNhiem.equals("") || 
+				idNganh.equals("")) {
+			JOptionPane.showMessageDialog(null, "Có trường dữ liệu trống", "Error", JOptionPane.ERROR_MESSAGE);
+			return null;
+		}
+		lopCN = new LopChuyenNganh(null, idLopChuyenNganh, tenLop, tenChuNhiem, idNganh, tenNganh);
+		return lopCN;
+	}
+	
+	private boolean checkLopHP(String idLopCN) {
+		for (int i = 0; i < dsLopCN.size(); i++) {
+			if (dsLopCN.get(i).getIdLopChuyenNganh().equals(idLopCN))
 				return false;
 		}
 		return true;
@@ -654,16 +565,11 @@ public class LopHocPhanController {
 	
 	private void cancel() {
 		table.getSelectionModel().clearSelection();
-		tfIdLop.setText("");
-		tfIdLop.setEnabled(true);
-		tfLoaiLop.setText("");
-		tfIdHocPhan.setText("");
-		tfThoiGian.setText("");
-		tfTuanHoc.setText("");
-		tfPhongHoc.setText("");
-		tfTenGV.setText("");
-		tfSoSVMax.setText("");
-		tfSoSVHienTai.setText("");
+		tfIdNganh.setText("");
+		tfIdLopChuyenNganh.setText("");
+		tfIdLopChuyenNganh.setEnabled(true);
+		tfTenLop.setText("");
+		tfTenChuNhiem.setText("");
 		tfTimKiem.setText("");
 	}
 }

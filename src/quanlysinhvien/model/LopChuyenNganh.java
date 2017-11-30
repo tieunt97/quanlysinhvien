@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class LopChuyenNganh {
 	private ArrayList<SinhVien> dsSinhVien;
 	private String idLopChuyenNganh;
+	private String tenLop;
 	private String tenChuNhiem;
 	private String idNganh;
 	private String tenNganh;
@@ -15,10 +16,11 @@ public class LopChuyenNganh {
 		dsSinhVien = new ArrayList<>();
 	}
 	
-	public LopChuyenNganh(ArrayList<SinhVien> dsSinhVien, String idLopChuyenNganh, 
+	public LopChuyenNganh(ArrayList<SinhVien> dsSinhVien, String idLopChuyenNganh, String tenLop,
 			String tenChuNhiem, String idNganh, String tenNganh) {
 		this.dsSinhVien = dsSinhVien;
 		this.idLopChuyenNganh = idLopChuyenNganh;
+		this.tenLop = tenLop;
 		this.tenChuNhiem = tenChuNhiem;
 		this.idNganh = idNganh;
 		this.tenNganh = tenNganh;
@@ -76,6 +78,14 @@ public class LopChuyenNganh {
 
 	public void setTenNganh(String tenNganh) {
 		this.tenNganh = tenNganh;
+	}
+
+	public String getTenLop() {
+		return tenLop;
+	}
+
+	public void setTenLop(String tenLop) {
+		this.tenLop = tenLop;
 	}
 	
 }

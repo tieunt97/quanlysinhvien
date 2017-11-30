@@ -17,11 +17,12 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import quanlysinhvien.model.HocPhan;
+import quanlysinhvien.model.Nganh;
 
 public class PanelDanhSachNganhView extends JPanel{
 	private JTable table;
 	private JTextField tfIdNganh, tfTenNganh, tfTimKiem;
-	private JButton btnThem, btnSua, btnXoa, btnTimKiem, btnHuy;
+	private JButton btnThem, btnSua, btnXoa, btnTimKiem, btnHuy, btnXemDSNganh;
 	private JComboBox<String> timKiemCB;
 	private String[] titleCols = {"Mã ngành", "Tên ngành"};
 	private String[] timKiemVals = {"Mã ngành", "Tên ngành"};
@@ -53,7 +54,6 @@ public class PanelDanhSachNganhView extends JPanel{
 	private JPanel createTablePanel() {
 		JPanel panel = new JPanel(new BorderLayout());
 		JScrollPane scroll = new JScrollPane(table = new JTable());
-		loadData(table, new ArrayList<HocPhan>());
 		panel.add(scroll);
 		
 		return panel;
@@ -86,8 +86,8 @@ public class PanelDanhSachNganhView extends JPanel{
 	}
 	
 	private JPanel createButtonPanel() {
-		JPanel panel = new JPanel(new GridLayout(3, 1, 10, 10));
-		panel.setBorder(new EmptyBorder(25, 45, 205, 45));
+		JPanel panel = new JPanel(new GridLayout(4, 1, 10, 10));
+		panel.setBorder(new EmptyBorder(25, 45, 180, 45));
 		JPanel panel1 = new JPanel(new GridLayout(1, 2, 10, 10));
 		panel1.add(btnThem = new JButton("Thêm"));
 		panel1.add(btnSua = new JButton("Sửa"));
@@ -96,6 +96,7 @@ public class PanelDanhSachNganhView extends JPanel{
 		panel2.add(btnHuy = new JButton("Hủy"));
 		panel.add(panel1);
 		panel.add(panel2);
+		panel.add(btnXemDSNganh = new JButton("Xem danh sách lớp chuyên ngành"));
 
 		return panel;
 	}
@@ -153,23 +154,93 @@ public class PanelDanhSachNganhView extends JPanel{
 		return label;
 	}
 	
-	public void loadData(JTable table, ArrayList<HocPhan> dsHP) {
-		String[][] data = convertData(dsHP);
+	public void loadData(JTable table, ArrayList<Nganh> dsNganh, String timKiem, String giaTri) {
+		String[][] data = convertData(dsNganh, timKiem, giaTri);
 		DefaultTableModel model = new DefaultTableModel(data, titleCols);
 		table.setModel(model);
 	}
 	
-	private String[][] convertData(ArrayList<HocPhan> list) {
+	private String[][] convertData(ArrayList<Nganh> list, String timKiem, String giaTri) {
 		int size = list.size();
 		String data[][] = new String[size][titleCols.length];
+		int index = 0;
 		for (int i = 0; i < size; i++) {
-			HocPhan hp = list.get(i);
-			data[i][0] = hp.getIdHocPhan();
-			data[i][1] = hp.getTenHP();
-			data[i][2] = hp.getSoTinChi() + "";
-			data[i][3] = hp.getIdNganh();
-			data[i][4] = hp.getTrongSo() + "";
+			Nganh nganh = list.get(i);
+			switch(timKiem) {
+			case "Mã ngành": 
+				if(nganh.getIdNganh().toLowerCase().indexOf(giaTri) >= 0) {
+					data[index][0] = nganh.getIdNganh();
+					data[index][1] = nganh.getTenNganh();
+					index++;
+				}
+				break;
+			case "Tên ngành":
+				if(nganh.getTenNganh().toLowerCase().indexOf(giaTri) >= 0) {
+					data[index][0] = nganh.getIdNganh();
+					data[index][1] = nganh.getTenNganh();
+					index++;
+				}
+				break;
+			case "":{
+				data[index][0] = nganh.getIdNganh();
+				data[index][1] = nganh.getTenNganh();
+				index++;
+				}
+				break;
+			}
+		}
+		if(!giaTri.equals("")) {
+			String[][] datatk = new String[index][titleCols.length];
+			for(int i = 0; i < index; i++) {
+				datatk[i] = data[i];
+			}
+			return datatk;
 		}
 		return data;
 	}
+
+	public JTable getTable() {
+		return table;
+	}
+
+	public JTextField getTfIdNganh() {
+		return tfIdNganh;
+	}
+
+	public JTextField getTfTenNganh() {
+		return tfTenNganh;
+	}
+
+	public JTextField getTfTimKiem() {
+		return tfTimKiem;
+	}
+
+	public JButton getBtnThem() {
+		return btnThem;
+	}
+
+	public JButton getBtnSua() {
+		return btnSua;
+	}
+
+	public JButton getBtnXoa() {
+		return btnXoa;
+	}
+
+	public JButton getBtnTimKiem() {
+		return btnTimKiem;
+	}
+
+	public JButton getBtnHuy() {
+		return btnHuy;
+	}
+
+	public JButton getBtnXemDSNganh() {
+		return btnXemDSNganh;
+	}
+
+	public JComboBox<String> getTimKiemCB() {
+		return timKiemCB;
+	}
+	
 }

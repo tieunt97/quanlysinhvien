@@ -17,6 +17,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 import quanlysinhvien.controller.DanhSachHPController;
+import quanlysinhvien.controller.DanhSachNganhController;
+import quanlysinhvien.controller.LopChuyenNganhController;
 import quanlysinhvien.controller.LopHocPhanController;
 import quanlysinhvien.controller.SinhVienNienCheController;
 import quanlysinhvien.controller.SinhVienTinChiController;
@@ -66,8 +68,9 @@ public class MainQuanLy extends JFrame implements ActionListener{
 		new LopHocPhanController(lopHP);
 		
 		mainPanel.add(dsNganh = new PanelDanhSachNganhView(), "dsNganh");
+		new DanhSachNganhController(dsNganh);
 		mainPanel.add(lopCN = new PanelLopChuyenNganhView(), "lopCN");
-		
+		new LopChuyenNganhController(lopCN);
 		conter.setLayout(new BorderLayout(0, 0));
 		conter.add(createHeaderPanel(), BorderLayout.NORTH);
 		conter.add(mainPanel, BorderLayout.CENTER);

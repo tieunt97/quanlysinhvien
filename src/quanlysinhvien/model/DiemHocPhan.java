@@ -33,8 +33,7 @@ public class DiemHocPhan {
 	
 	private String tinhDiemChu(HocPhan hp) {
 		double trongSo = hp.getTrongSo();
-		double diem = (double)Math.round(((this.diemThi * trongSo + this.diemQT * (1 - trongSo))*100))/100;
-		System.out.println(diem);
+		double diem = (double)Math.round(((this.diemThi * trongSo + this.diemQT * (1 - trongSo))*10))/10;
 		if(diem < 4.0) return "F";
 		else if(diem >= 4.0 && diem < 5.0) return "D";
 		else if(diem >= 5.0 && diem < 5.5) return "D+";
@@ -108,10 +107,5 @@ public class DiemHocPhan {
 
 	public void setDiemThi(double diemThi) {
 		this.diemThi = diemThi;
-	}
-
-	public static void main(String[] args) {
-		DiemHocPhan diem = new DiemHocPhan("20171", new HocPhan("IT3090", "Làm việc nhóm", 3, 3, "IT", 0.7), "1232467", 8, 8.5);
-		System.out.println(diem.getDiemChu());
 	}
 }

@@ -17,13 +17,14 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import quanlysinhvien.model.HocPhan;
+import quanlysinhvien.model.LopChuyenNganh;
 
 public class PanelLopChuyenNganhView extends JPanel{
 	private JTable table;
-	private JTextField tfIdNganh, tfIdLopChuyenNganh, tfTenNganh, tfTenChuNhiem, tfTimKiem;
-	private JButton btnThem, btnSua, btnXoa, btnLuu, btnHuy, btnTimKiem, btnCapNhatSV;
+	private JTextField tfIdNganh, tfTenLop, tfIdLopChuyenNganh, tfTenChuNhiem, tfTimKiem;
+	private JButton btnThem, btnSua, btnXoa, btnHuy, btnTimKiem, btnCapNhatSV;
 	private JComboBox<String> timKiemCB;
-	private String[] titleCols = {"Mã lớp", "Chủ nhiệm", "Mã ngành", "Tên ngành"};
+	private String[] titleCols = {"Mã lớp", "Tên lớp", "Chủ nhiệm", "Mã ngành", "Tên ngành"};
 	private String[] timKiemVals = {"Mã lớp", "Chủ nhiệm", "Mã ngành"};
 	
 	
@@ -56,7 +57,7 @@ public class PanelLopChuyenNganhView extends JPanel{
 	private JPanel createTablePanel() {
 		JPanel panel = new JPanel(new BorderLayout());
 		JScrollPane scroll = new JScrollPane(table = new JTable());
-		loadData(table, new ArrayList<HocPhan>());
+		loadData(table, new ArrayList<LopChuyenNganh>(), "", "");
 		panel.add(scroll);
 		
 		return panel;
@@ -70,7 +71,7 @@ public class PanelLopChuyenNganhView extends JPanel{
 	}
 	private JPanel createInputPanel() {
 		JPanel panel = new JPanel(new GridLayout(1, 2, 10, 10));
-		panel.setBorder(new EmptyBorder(0, 0, 192, 0));
+		panel.setBorder(new EmptyBorder(0, 0, 175, 0));
 		panel.add(createInputLeftPanel());
 		panel.add(createInputRightPanel());
 		
@@ -97,11 +98,11 @@ public class PanelLopChuyenNganhView extends JPanel{
 	private JPanel createInputRightPanel() {
 		JPanel panel = new JPanel(new BorderLayout(10, 10));
 		JPanel panelL = new JPanel(new GridLayout(3, 1 , 5, 5));
-		panelL.add(new JLabel("Tên ngành:"));
+		panelL.add(new JLabel("Tên lớp CN:"));
 		panelL.add(new JLabel("Chủ nhiệm lớp:"));
 		
 		JPanel panelR = new JPanel(new GridLayout(3, 1, 5, 5));
-		panelR.add(tfTenNganh = new JTextField());
+		panelR.add(tfTenLop = new JTextField());
 		panelR.add(tfTenChuNhiem = new JTextField());
 		
 		panel.add(panelL, BorderLayout.WEST);
@@ -144,29 +145,125 @@ public class PanelLopChuyenNganhView extends JPanel{
 		panel2.add(btnHuy = new JButton("Hủy"));
 		panel.add(panel1);
 		panel.add(panel2);
-		panel.add(btnLuu = new JButton("Lưu"));
 		panel.add(btnCapNhatSV = new JButton("Cập nhật DS sinh viên"));
 
 		return panel;
 	}
 	
-	public void loadData(JTable table, ArrayList<HocPhan> dsHP) {
-		String[][] data = convertData(dsHP);
+	public void loadData(JTable table, ArrayList<LopChuyenNganh> dsLopCN, String timKiem, String giaTri) {
+		String[][] data = convertData(dsLopCN, timKiem, giaTri);
 		DefaultTableModel model = new DefaultTableModel(data, titleCols);
 		table.setModel(model);
 	}
 	
-	private String[][] convertData(ArrayList<HocPhan> list) {
+	private String[][] convertData(ArrayList<LopChuyenNganh> list, String timKiem, String giaTri) {
 		int size = list.size();
 		String data[][] = new String[size][titleCols.length];
+		int index = 0;
 		for (int i = 0; i < size; i++) {
-			HocPhan hp = list.get(i);
-			data[i][0] = hp.getIdHocPhan();
-			data[i][1] = hp.getTenHP();
-			data[i][2] = hp.getSoTinChi() + "";
-			data[i][3] = hp.getIdNganh();
-			data[i][4] = hp.getTrongSo() + "";
+			LopChuyenNganh lopCN = list.get(i);
+			switch(timKiem) {
+			case "Mã lớp": 
+				if(lopCN.getIdLopChuyenNganh().toLowerCase().indexOf(giaTri) >= 0) {
+					data[index][0] = lopCN.getIdLopChuyenNganh();
+					data[index][1] = lopCN.getTenLop();
+					data[index][2] = lopCN.getTenChuNhiem();
+					data[index][3] = lopCN.getIdNganh();
+					data[index][4] = lopCN.getTenNganh();
+					index++;
+				}
+				break;
+			case "Chủ nhiệm":
+				if(lopCN.getTenChuNhiem().toLowerCase().indexOf(giaTri) >= 0) {
+					data[index][0] = lopCN.getIdLopChuyenNganh();
+					data[index][1] = lopCN.getTenLop();
+					data[index][2] = lopCN.getTenChuNhiem();
+					data[index][3] = lopCN.getIdNganh();
+					data[index][4] = lopCN.getTenNganh();
+					index++;
+				}
+				break;
+			case "Mã ngành":
+				if(lopCN.getIdNganh().toLowerCase().indexOf(giaTri) >= 0) {
+					data[index][0] = lopCN.getIdLopChuyenNganh();
+					data[index][1] = lopCN.getTenLop();
+					data[index][2] = lopCN.getTenChuNhiem();
+					data[index][3] = lopCN.getIdNganh();
+					data[index][4] = lopCN.getTenNganh();
+					index++;
+				}
+				break;
+			case "": {
+				data[index][0] = lopCN.getIdLopChuyenNganh();
+				data[index][1] = lopCN.getTenLop();
+				data[index][2] = lopCN.getTenChuNhiem();
+				data[index][3] = lopCN.getIdNganh();
+				data[index][4] = lopCN.getTenNganh();
+				index++;
+				}
+				break;
+			}
+		}
+		if (!giaTri.equals("")) {
+			String[][] datatk = new String[index][titleCols.length];
+			for (int i = 0; i < index; i++) {
+				datatk[i] = data[i];
+			}
+			return datatk;
 		}
 		return data;
 	}
+
+	public JTable getTable() {
+		return table;
+	}
+
+	public JTextField getTfIdNganh() {
+		return tfIdNganh;
+	}
+
+	public JTextField getTfTenLop() {
+		return tfTenLop;
+	}
+
+	public JTextField getTfIdLopChuyenNganh() {
+		return tfIdLopChuyenNganh;
+	}
+
+	public JTextField getTfTenChuNhiem() {
+		return tfTenChuNhiem;
+	}
+
+	public JTextField getTfTimKiem() {
+		return tfTimKiem;
+	}
+
+	public JButton getBtnThem() {
+		return btnThem;
+	}
+
+	public JButton getBtnSua() {
+		return btnSua;
+	}
+
+	public JButton getBtnXoa() {
+		return btnXoa;
+	}
+
+	public JButton getBtnHuy() {
+		return btnHuy;
+	}
+
+	public JButton getBtnTimKiem() {
+		return btnTimKiem;
+	}
+
+	public JButton getBtnCapNhatSV() {
+		return btnCapNhatSV;
+	}
+
+	public JComboBox<String> getTimKiemCB() {
+		return timKiemCB;
+	}
+	
 }

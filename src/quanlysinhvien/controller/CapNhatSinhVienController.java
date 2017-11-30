@@ -37,9 +37,9 @@ public class CapNhatSinhVienController {
 	private ArrayList<SinhVien> dsSinhVien;
 	private String fileName;
 	
-	public CapNhatSinhVienController(CapNhatSinhVienLCNView capNhatSV, ArrayList<SinhVien> dsSinhVien, String idLop) {
+	public CapNhatSinhVienController(CapNhatSinhVienLCNView capNhatSV, ArrayList<SinhVien> dsSinhVien, String fileName) {
 		this.capNhatSV = capNhatSV;
-		this.fileName = "quanlysinhvien\\danhsachhocphan\\lophocphan\\" + idLop + "_dsSV.xlsx";
+		this.fileName = fileName;
 		this.dsSinhVien = dsSinhVien;
 		this.table = capNhatSV.getTable();
 		this.btnThem = capNhatSV.getBtnThem();
@@ -57,7 +57,6 @@ public class CapNhatSinhVienController {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-//				JOptionPane.showMessageDialog(null, "Thêm");
 				String idSV = tfIdSinhVien.getText();
 				String loaiSinhVien = (String) loaiSVCB.getSelectedItem();
 				if(idSV.equals("")) {
@@ -80,10 +79,13 @@ public class CapNhatSinhVienController {
 						capNhatSV.loadData(table, dsSinhVien);
 						try {
 							addSV(sv, fileName);
+							JOptionPane.showMessageDialog(null, "Thêm thành công");
 						} catch (IOException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}
+					}else {
+						JOptionPane.showMessageDialog(null, "Trùng mã sinh viên", "Error", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			}
@@ -93,7 +95,6 @@ public class CapNhatSinhVienController {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-//				JOptionPane.showMessageDialog(null, "Xóa");
 				int row = table.getSelectedRow();
 				if (row < 0) {
 					JOptionPane.showMessageDialog(null, "Cần chọn một hàng để xóa", "Error delete",
@@ -130,7 +131,6 @@ public class CapNhatSinhVienController {
 	}
 	
 	private void cancel() {
-		table.getSelectionModel().clearSelection();
 		tfIdSinhVien.setText("");
 	}
 	

@@ -189,7 +189,7 @@ public class PanelLopHocPhanView extends  JPanel{
 			LopHocPhan lopHP = dsLopHP.get(i);
 			switch(timKiem) {
 			case "Mã lớp": 
-				if(lopHP.getIdLop().indexOf(giaTri) >= 0) {
+				if(lopHP.getIdLop().toLowerCase().indexOf(giaTri) >= 0) {
 					data[index][0] = lopHP.getHocKy();
 					data[index][1] = lopHP.getIdLop();
 					data[index][2] = lopHP.getLoaiLop();
@@ -205,7 +205,7 @@ public class PanelLopHocPhanView extends  JPanel{
 				}
 				break;
 			case "Phòng học":
-				if(lopHP.getPhongHoc().indexOf(giaTri) >= 0) {
+				if(lopHP.getPhongHoc().toLowerCase().indexOf(giaTri) >= 0) {
 					data[index][0] = lopHP.getHocKy();
 					data[index][1] = lopHP.getIdLop();
 					data[index][2] = lopHP.getLoaiLop();
@@ -221,7 +221,7 @@ public class PanelLopHocPhanView extends  JPanel{
 				}
 				break;
 			case "Tên giảng viên":
-				if(lopHP.getTenGiangVien().indexOf(giaTri) >= 0) {
+				if(lopHP.getTenGiangVien().toLowerCase().indexOf(giaTri) >= 0) {
 					data[index][0] = lopHP.getHocKy();
 					data[index][1] = lopHP.getIdLop();
 					data[index][2] = lopHP.getLoaiLop();
@@ -268,7 +268,6 @@ public class PanelLopHocPhanView extends  JPanel{
 				}
 				break;
 			}
-//			String hocKy, String idLop, String loaiLop, String idHocPhan,String thoiGian, String tuanHoc, String phongHoc, ArrayList<SinhVien> dsSinhVien, String tenGiangVien, int soSVMax, int soSVHienTai
 		}
 		if (!giaTri.equals("")) {
 			String[][] datatk = new String[index][titleCols.length];
@@ -277,7 +276,6 @@ public class PanelLopHocPhanView extends  JPanel{
 			}
 			return datatk;
 		}
-//		Mã lớp", "Phòng học", "Tên giảng viên", "Số SV max
 		return data;
 	}
 
