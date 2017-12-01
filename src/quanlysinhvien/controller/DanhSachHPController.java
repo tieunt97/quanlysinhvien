@@ -1,5 +1,6 @@
 package quanlysinhvien.controller;
 
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -26,7 +27,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import quanlysinhvien.model.HocPhan;
-import quanlysinhvien.model.SinhVienTinChi;
 import quanlysinhvien.view.PanelDanhSachHPView;
 
 public class DanhSachHPController {
@@ -257,6 +257,18 @@ public class DanhSachHPController {
 			return null;
 		}
 		try {
+			if(!checkNganh(idNganh)) {
+				JOptionPane.showMessageDialog(null, "Mã ngành không tồn tại", "Error", JOptionPane.ERROR_MESSAGE);
+				return null;
+			}
+		} catch (HeadlessException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		try {
 			soTinChi = Integer.parseInt(tfSoTC.getText().trim());
 			soTCHocPhi = Double.parseDouble(tfSoTCHocPhi.getText().trim());
 			trongSo = Double.parseDouble(tfTrongSo.getText().trim());
@@ -268,6 +280,25 @@ public class DanhSachHPController {
 
 		HocPhan hp = new HocPhan(idHocPhan, tenHP, soTinChi, soTCHocPhi, idNganh, trongSo);
 		return hp;
+	}
+	
+	private boolean checkNganh(String idNganh) throws IOException {
+		boolean ck = false;
+		FileInputStream fin = new FileInputStream(new File("quanlysinhvien\\danhsachchuyennganh\\dsNganh.xlsx"));
+		Workbook workbook = new XSSFWorkbook(fin);
+		Sheet sheet = workbook.getSheetAt(0);
+		Iterator<Row> iterator = sheet.iterator();
+		Row nextRow;
+		if(iterator.hasNext()) nextRow = iterator.next();
+		while(iterator.hasNext()) {
+			nextRow = iterator.next();
+			Cell cell = nextRow.getCell(1);
+			String idN = cell.getStringCellValue();
+			if(idN.equals(idNganh))
+				ck = true;
+		}
+		
+		return ck;
 	}
 	
 	private ArrayList<HocPhan> readFile(String fileName) throws IOException {

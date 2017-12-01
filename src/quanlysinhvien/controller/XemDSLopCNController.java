@@ -15,7 +15,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import quanlysinhvien.model.LopChuyenNganh;
-import quanlysinhvien.model.SinhVien;
 import quanlysinhvien.view.XemDanhSachLopCNView;
 
 public class XemDSLopCNController {

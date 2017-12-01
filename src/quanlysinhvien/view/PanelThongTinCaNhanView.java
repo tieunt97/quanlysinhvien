@@ -38,7 +38,7 @@ public class PanelThongTinCaNhanView extends JPanel{
 	
 	private JPanel createMainPanel() {
 		JPanel panel = new JPanel(new GridLayout(2, 1, 15, 15));
-		panel.setBorder(new EmptyBorder(10, 40, 145, 300));
+		panel.setBorder(new EmptyBorder(10, 40, 100, 300));
 		panel.add(createInfoPanel());
 		panel.add(createVarPanel());
 		return panel;
@@ -88,11 +88,11 @@ public class PanelThongTinCaNhanView extends JPanel{
 	
 	private JPanel createInput() {
 		JPanel panel = new JPanel(new BorderLayout(5, 5));
-		JPanel panelL = new JPanel(new GridLayout(3, 1, 15, 15));
+		JPanel panelL = new JPanel(new GridLayout(3, 1, 15, 5));
 		panelL.add(new JLabel("Email*:"));
 		panelL.add(new JLabel("Số điện thoại*:"));
 		panelL.add(new JLabel("Địa chỉ*:"));
-		JPanel panelR = new JPanel(new GridLayout(3, 1, 15, 15));
+		JPanel panelR = new JPanel(new GridLayout(3, 1, 15, 5));
 		panelR.add(tfEmail = new JTextField());
 		panelR.add(tfSoDT = new JTextField());
 		panelR.add(tfDiaChi = new JTextField());
@@ -117,7 +117,7 @@ public class PanelThongTinCaNhanView extends JPanel{
 		}else {
 			giatri = Font.PLAIN;
 		}
-		lab.setFont(new Font("Caribli", giatri, 18));
+		lab.setFont(new Font("Caribli", giatri, 16));
 		
 		return lab;
 	}

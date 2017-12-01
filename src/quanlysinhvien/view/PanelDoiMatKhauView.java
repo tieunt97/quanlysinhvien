@@ -20,7 +20,7 @@ public class PanelDoiMatKhauView extends JPanel {
 	
 	public PanelDoiMatKhauView() {
 		setLayout(new BorderLayout(10, 10));
-		setBorder(new EmptyBorder(20, 20, 325, 780));
+		setBorder(new EmptyBorder(20, 20, 300, 780));
 		add(createTitlePanel(), BorderLayout.PAGE_START);
 		add(createMainPanel(), BorderLayout.CENTER);
 	}
@@ -53,12 +53,6 @@ public class PanelDoiMatKhauView extends JPanel {
 	private JPanel createMain() {
 		JPanel panel = new JPanel(new BorderLayout(10, 10));
 		panel.setBorder(new TitledBorder(null, "Thông tin tài khoản", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.TOP, new Font("Caribli", Font.BOLD, 18)));
-//		panel.setBorder(new TitledBorder(new EmptyBorder(10, 40, 0, 0), "Thông tin tài khoản", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.TOP, new Font("Caribli", Font.BOLD, 18)));
-//		panel.setBorder(new TitledBorder(new EmptyBorder(10, 40, 0, 0), "Thông tin tài khoản"));
-//		panel.setBorder(new EmptyBorder(10, 40, 0, 0));
-//		JLabel lab = new JLabel("Thông tin tài khoản");
-//		lab.setFont(new Font("Caribli", Font.BOLD, 18));
-//		panel.add(lab, BorderLayout.PAGE_START);
 		JPanel panelLab = new JPanel(new GridLayout(4, 1, 15, 15));
 		panelLab.add(new JLabel("Tài khoản:"));
 		panelLab.add(new JLabel("Mật khẩu cũ:"));

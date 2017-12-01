@@ -16,7 +16,6 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-import quanlysinhvien.model.HocPhan;
 import quanlysinhvien.model.Nganh;
 
 public class PanelDanhSachNganhView extends JPanel{
@@ -87,7 +86,7 @@ public class PanelDanhSachNganhView extends JPanel{
 	
 	private JPanel createButtonPanel() {
 		JPanel panel = new JPanel(new GridLayout(4, 1, 10, 10));
-		panel.setBorder(new EmptyBorder(25, 45, 180, 45));
+		panel.setBorder(new EmptyBorder(25, 45, 145, 45));
 		JPanel panel1 = new JPanel(new GridLayout(1, 2, 10, 10));
 		panel1.add(btnThem = new JButton("Thêm"));
 		panel1.add(btnSua = new JButton("Sửa"));

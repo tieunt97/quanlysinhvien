@@ -13,7 +13,6 @@ import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-import quanlysinhvien.model.DiemHocPhan;
 import quanlysinhvien.model.LopChuyenNganh;
 
 public class XemDanhSachLopCNView extends JDialog{

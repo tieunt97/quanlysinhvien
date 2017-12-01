@@ -14,13 +14,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import quanlysinhvien.model.DiemHocPhan;
-import quanlysinhvien.model.SinhVien;
-import quanlysinhvien.model.SinhVienTinChi;
 
 public class CapNhatDiemSVView extends JDialog{
 	private JTable table;
@@ -66,16 +63,16 @@ public class CapNhatDiemSVView extends JDialog{
 	}
 	
 	private JPanel createBottomPanel() {
-		JPanel panel = new JPanel(new BorderLayout(5, 5));
-		panel.setBorder(new EmptyBorder(10, 160, 100, 160));
-		panel.add(createInputPanel(), BorderLayout.CENTER);
-		panel.add(createButtonPanel(), BorderLayout.SOUTH);
+		JPanel panel = new JPanel(new GridLayout(2, 1, 10, 10));
+		panel.setBorder(new EmptyBorder(10, 160, 65, 160));
+		panel.add(createInputPanel());
+		panel.add(createButtonPanel());
 		
 		return panel;
 	}
 	
 	private JPanel createInputPanel() {
-		JPanel panel = new JPanel(new GridLayout(1, 2, 25, 15));
+		JPanel panel = new JPanel(new GridLayout(1, 2, 15, 15));
 		panel.add(createInputLeft());
 		panel.add(createInputRight());
 		
@@ -155,17 +152,6 @@ public class CapNhatDiemSVView extends JDialog{
 		}
 		
 		return data;
-	}
-	
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new Runnable() {
-			
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				new CapNhatDiemSVView("");
-			}
-		});
 	}
 
 	public JTable getTable() {

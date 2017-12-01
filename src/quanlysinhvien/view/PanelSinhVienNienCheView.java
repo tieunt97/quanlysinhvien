@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.util.ArrayList;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -22,6 +23,7 @@ import quanlysinhvien.model.SinhVienNienChe;
 public class PanelSinhVienNienCheView extends JPanel{
 	private JTable table;
 	private JButton btnThem, btnSua, btnXoa, btnHuy, btnTimKiem, btnCapNhatDiem;
+	private ButtonGroup bg;
 	private JRadioButton radNam, radNu;
 	private JComboBox<String> timKiemCB;
 	private JTextField tfIdSV, tfHoTen, tfKhoa, tfNgaySinh, tfEmail, tfSoDT, tfDiaChi, tfDiemTB, tfTongSoKy, tfTimKiem;
@@ -73,7 +75,7 @@ public class PanelSinhVienNienCheView extends JPanel{
 	
 	private JPanel createInputPanel() {
 		JPanel panel = new JPanel(new GridLayout(1, 2, 15, 15));
-		panel.setBorder(new EmptyBorder(0, 0, 80, 0));
+		panel.setBorder(new EmptyBorder(0, 0, 60, 0));
 		panel.add(createInputLeftPanel());
 		panel.add(createInputRightPanel());
 		
@@ -169,6 +171,9 @@ public class PanelSinhVienNienCheView extends JPanel{
 		panel.setBorder(new EmptyBorder(0, 0, 0, 135));
 		panel.add(radNam = new JRadioButton("Nam"));
 		panel.add(radNu = new JRadioButton("Nữ"));
+		bg = new ButtonGroup();
+		bg.add(radNam);
+		bg.add(radNu);
 
 		return panel;
 	}
@@ -390,5 +395,8 @@ public class PanelSinhVienNienCheView extends JPanel{
 	public JButton getBtnCapNhatDiem() {
 		return btnCapNhatDiem;
 	}
-	
+
+	public ButtonGroup getBg() {
+		return bg;
+	}
 }

@@ -25,11 +25,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import quanlysinhvien.model.HocPhan;
 import quanlysinhvien.model.LopChuyenNganh;
-import quanlysinhvien.model.LopHocPhan;
 import quanlysinhvien.model.Nganh;
-import quanlysinhvien.model.SinhVien;
 import quanlysinhvien.view.PanelDanhSachNganhView;
 import quanlysinhvien.view.XemDanhSachLopCNView;
 
@@ -81,7 +78,12 @@ public class DanhSachNganhController {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				// TODO Auto-generated method stub
-				
+				int row = table.getSelectedRow();
+				if(row >= 0) {
+					tfIdNganh.setText((String) table.getValueAt(row, 0));
+					tfIdNganh.setEnabled(false);
+					tfTenNganh.setText((String) table.getValueAt(row, 1));
+				}
 			}
 			
 			@Override
@@ -99,12 +101,6 @@ public class DanhSachNganhController {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				// TODO Auto-generated method stub
-				int row = table.getSelectedRow();
-				if(row >= 0) {
-					tfIdNganh.setText((String) table.getValueAt(row, 0));
-					tfIdNganh.setEnabled(false);
-					tfTenNganh.setText((String) table.getValueAt(row, 1));
-				}
 			}
 		});
 		btnThem.addActionListener(new ActionListener() {

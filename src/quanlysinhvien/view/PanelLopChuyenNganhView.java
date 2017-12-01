@@ -16,7 +16,6 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-import quanlysinhvien.model.HocPhan;
 import quanlysinhvien.model.LopChuyenNganh;
 
 public class PanelLopChuyenNganhView extends JPanel{
@@ -71,7 +70,7 @@ public class PanelLopChuyenNganhView extends JPanel{
 	}
 	private JPanel createInputPanel() {
 		JPanel panel = new JPanel(new GridLayout(1, 2, 10, 10));
-		panel.setBorder(new EmptyBorder(0, 0, 175, 0));
+		panel.setBorder(new EmptyBorder(0, 0, 170, 0));
 		panel.add(createInputLeftPanel());
 		panel.add(createInputRightPanel());
 		
@@ -136,7 +135,7 @@ public class PanelLopChuyenNganhView extends JPanel{
 
 	private JPanel createBtnOtherPanel() {
 		JPanel panel = new JPanel(new GridLayout(4, 1, 10, 10));
-		panel.setBorder(new EmptyBorder(10, 80, 65, 80));
+		panel.setBorder(new EmptyBorder(10, 80, 45, 80));
 		JPanel panel1 = new JPanel(new GridLayout(1, 2, 10, 10));
 		panel1.add(btnThem = new JButton("Thêm"));
 		panel1.add(btnSua = new JButton("Sửa"));

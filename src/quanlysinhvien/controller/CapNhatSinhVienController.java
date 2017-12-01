@@ -23,9 +23,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import quanlysinhvien.model.HocPhan;
 import quanlysinhvien.model.SinhVien;
-import quanlysinhvien.model.SinhVienTinChi;
 import quanlysinhvien.view.CapNhatSinhVienLCNView;
 
 public class CapNhatSinhVienController {

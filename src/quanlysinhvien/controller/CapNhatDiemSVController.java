@@ -78,7 +78,15 @@ public class CapNhatDiemSVController {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				// TODO Auto-generated method stub
-				
+				int row = table.getSelectedRow();
+				if(row >= 0) {
+					hocKyCB.setSelectedItem(table.getValueAt(row, 0));
+					tfIdHocPhan.setText((String) table.getValueAt(row, 1));
+					tfIdHocPhan.setEnabled(false);
+					tfIdLopHoc.setText((String) table.getValueAt(row, 4));
+					tfDiemQT.setText((String) table.getValueAt(row, 5));
+					tfDiemThi.setText((String) table.getValueAt(row, 6));
+				}
 			}
 			
 			@Override
@@ -96,15 +104,6 @@ public class CapNhatDiemSVController {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				// TODO Auto-generated method stub
-				int row = table.getSelectedRow();
-				if(row >= 0) {
-					hocKyCB.setSelectedItem(table.getValueAt(row, 0));
-					tfIdHocPhan.setText((String) table.getValueAt(row, 1));
-					tfIdHocPhan.setEnabled(false);
-					tfIdLopHoc.setText((String) table.getValueAt(row, 4));
-					tfDiemQT.setText((String) table.getValueAt(row, 5));
-					tfDiemThi.setText((String) table.getValueAt(row, 6));
-				}
 			}
 		});
 		

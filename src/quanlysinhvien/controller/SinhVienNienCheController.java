@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
@@ -27,7 +28,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import quanlysinhvien.model.SinhVienNienChe;
-import quanlysinhvien.model.SinhVienTinChi;
 import quanlysinhvien.model.TaiKhoan;
 import quanlysinhvien.view.CapNhatDiemSVView;
 import quanlysinhvien.view.PanelSinhVienNienCheView;
@@ -35,6 +35,7 @@ import quanlysinhvien.view.PanelSinhVienNienCheView;
 public class SinhVienNienCheController {
 	private JTable table;
 	private JButton btnThem, btnSua, btnXoa, btnHuy, btnTimKiem, btnCapNhatDiem;
+	private ButtonGroup bg;
 	private JRadioButton radNam, radNu;
 	private JComboBox<String> timKiemCB;
 	private JTextField tfIdSV, tfHoTen, tfKhoa, tfNgaySinh, tfGioiTinh, tfEmail, tfSoDT, tfDiaChi, tfDiemTB, tfTongSoKy, tfTimKiem;
@@ -53,6 +54,7 @@ public class SinhVienNienCheController {
 			e.printStackTrace();
 		}
 		this.table = sinhVienNC.getTable();
+		this.bg = sinhVienNC.getBg();
 		this.radNam = sinhVienNC.getRadNam();
 		this.radNu = sinhVienNC.getRadNu();
 		this.btnThem = sinhVienNC.getBtnThem();
@@ -89,7 +91,24 @@ public class SinhVienNienCheController {
 			@Override
 			public void mousePressed(MouseEvent arg0) {
 				// TODO Auto-generated method stub
-				
+				int row = table.getSelectedRow();
+				if(row >= 0) {
+					tfIdSV.setText((String) table.getValueAt(row, 0));
+					tfIdSV.setEnabled(false);
+					tfHoTen.setText((String) table.getValueAt(row, 1));
+					tfKhoa.setText((String) table.getValueAt(row, 2));
+					tfNgaySinh.setText((String) table.getValueAt(row, 3));
+					if (table.getValueAt(row, 4).equals("Nam")) {
+						radNam.setSelected(true);
+					} else {
+						radNu.setSelected(true);
+					}
+					tfEmail.setText((String) table.getValueAt(row, 5));
+					tfSoDT.setText((String) table.getValueAt(row, 6));
+					tfDiaChi.setText((String) table.getValueAt(row, 7));
+					tfDiemTB.setText((String) table.getValueAt(row, 8));
+					tfTongSoKy.setText((String) table.getValueAt(row, 9));
+				}
 			}
 			
 			@Override
@@ -107,45 +126,6 @@ public class SinhVienNienCheController {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				// TODO Auto-generated method stub
-				int row = table.getSelectedRow();
-				if(row >= 0) {
-					tfIdSV.setText((String) table.getValueAt(row, 0));
-					tfIdSV.setEnabled(false);
-					tfHoTen.setText((String) table.getValueAt(row, 1));
-					tfKhoa.setText((String) table.getValueAt(row, 2));
-					tfNgaySinh.setText((String) table.getValueAt(row, 3));
-					if (table.getValueAt(row, 4).equals("Nam")) {
-						radNu.setSelected(false);
-						radNam.setSelected(true);
-					} else {
-						radNam.setSelected(false);
-						radNu.setSelected(true);
-					}
-					tfEmail.setText((String) table.getValueAt(row, 5));
-					tfSoDT.setText((String) table.getValueAt(row, 6));
-					tfDiaChi.setText((String) table.getValueAt(row, 7));
-					tfDiemTB.setText((String) table.getValueAt(row, 8));
-					tfTongSoKy.setText((String) table.getValueAt(row, 9));
-				}
-			}
-		});
-		
-		radNam.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				if (radNu.isSelected())
-					radNu.setSelected(false);
-			}
-		});
-		radNu.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				if (radNam.isSelected())
-					radNam.setSelected(false);
 			}
 		});
 		
@@ -344,15 +324,13 @@ public class SinhVienNienCheController {
 	}
 	
 	private void cancel() {
-		table.getSelectionModel().clearSelection();
 		timKiemCB.setSelectedIndex(0);
 		tfIdSV.setText("");
 		tfIdSV.setEnabled(true);
 		tfHoTen.setText("");
 		tfKhoa.setText("");
 		tfNgaySinh.setText("");
-		radNam.setSelected(false);
-		radNu.setSelected(false);
+		bg.clearSelection();
 		tfEmail.setText("");
 		tfSoDT.setText("");
 		tfDiaChi.setText("");

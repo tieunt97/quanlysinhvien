@@ -68,7 +68,7 @@ public class PanelDanhSachHPView extends JPanel{
 	
 	private JPanel createInputPanel() {
 		JPanel panel = new JPanel(new GridLayout(1, 2, 15, 15));
-		panel.setBorder(new EmptyBorder(0, 0, 145, 0));
+		panel.setBorder(new EmptyBorder(0, 0, 125, 0));
 		panel.add(createInputLeftPanel());
 		panel.add(createInputRightPanel());
 		

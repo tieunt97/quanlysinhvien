@@ -25,10 +25,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import quanlysinhvien.model.HocPhan;
 import quanlysinhvien.model.LopHocPhan;
 import quanlysinhvien.model.SinhVien;
-import quanlysinhvien.model.SinhVienTinChi;
 import quanlysinhvien.view.CapNhatSinhVienLCNView;
 import quanlysinhvien.view.PanelLopHocPhanView;
 
@@ -87,7 +85,20 @@ public class LopHocPhanController {
 			@Override
 			public void mousePressed(MouseEvent arg0) {
 				// TODO Auto-generated method stub
-				
+				int row = table.getSelectedRow();
+				if(row >= 0) {
+					hocKyCB.setSelectedItem(table.getValueAt(row, 0));
+					tfIdLop.setText((String) table.getValueAt(row, 1));
+					tfIdLop.setEnabled(false);
+					tfLoaiLop.setText((String) table.getValueAt(row, 2));
+					tfIdHocPhan.setText((String) table.getValueAt(row, 3));
+					tfThoiGian.setText((String) table.getValueAt(row, 5));
+					tfTuanHoc.setText((String) table.getValueAt(row, 6));
+					tfPhongHoc.setText((String) table.getValueAt(row, 7));
+					tfTenGV .setText((String) table.getValueAt(row, 8));
+					tfSoSVMax.setText((String) table.getValueAt(row, 9));
+					tfSoSVHienTai.setText((String) table.getValueAt(row, 10));
+				}
 			}
 			
 			@Override
@@ -105,20 +116,6 @@ public class LopHocPhanController {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				// TODO Auto-generated method stub
-				int row = table.getSelectedRow();
-				if(row >= 0) {
-					hocKyCB.setSelectedItem(table.getValueAt(row, 0));
-					tfIdLop.setText((String) table.getValueAt(row, 1));
-					tfIdLop.setEnabled(false);
-					tfLoaiLop.setText((String) table.getValueAt(row, 2));
-					tfIdHocPhan.setText((String) table.getValueAt(row, 3));
-					tfThoiGian.setText((String) table.getValueAt(row, 5));
-					tfTuanHoc.setText((String) table.getValueAt(row, 6));
-					tfPhongHoc.setText((String) table.getValueAt(row, 7));
-					tfTenGV .setText((String) table.getValueAt(row, 8));
-					tfSoSVMax.setText((String) table.getValueAt(row, 9));
-					tfSoSVHienTai.setText((String) table.getValueAt(row, 10));
-				}
 			}
 		});
 		btnThem.addActionListener(new ActionListener() {

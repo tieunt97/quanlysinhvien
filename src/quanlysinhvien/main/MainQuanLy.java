@@ -14,6 +14,8 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 
 import quanlysinhvien.controller.DanhSachHPController;
@@ -22,7 +24,6 @@ import quanlysinhvien.controller.LopChuyenNganhController;
 import quanlysinhvien.controller.LopHocPhanController;
 import quanlysinhvien.controller.SinhVienNienCheController;
 import quanlysinhvien.controller.SinhVienTinChiController;
-import quanlysinhvien.view.PanelCapNhatDiemSVView;
 import quanlysinhvien.view.PanelDanhSachHPView;
 import quanlysinhvien.view.PanelDanhSachNganhView;
 import quanlysinhvien.view.PanelHeThongView;
@@ -51,6 +52,13 @@ public class MainQuanLy extends JFrame implements ActionListener{
 	private PanelLopChuyenNganhView lopCN;
 	
 	public MainQuanLy() {
+		try {
+			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+				| UnsupportedLookAndFeelException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		conter = this.getContentPane();
 		mainPanel = new JPanel();
 		mainPanel.setLayout(carLayout = new CardLayout());

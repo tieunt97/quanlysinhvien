@@ -6,12 +6,12 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
@@ -37,6 +37,7 @@ public class SinhVienTinChiController {
 	private JTable table;
 	private JButton btnThem, btnSua, btnXoa, btnHuy, btnTimKiem, btnCapNhatDiem;
 	private JComboBox<String> timKiemCB;
+	private ButtonGroup bg;
 	private JRadioButton radNam, radNu;
 	private JTextField tfIdSV, tfHoTen, tfKhoa, tfNgaySinh, tfEmail, tfSoDT, tfDiaChi, tfDiemTB, tfSoTCQua, tfSoTCNo,
 			tfTimKiem;
@@ -81,6 +82,7 @@ public class SinhVienTinChiController {
 		this.tfSoTCNo = sinhVienTC.getTfSoTCNo();
 		this.tfSoTCQua = sinhVienTC.getTfSoTCQua();
 		this.tfTimKiem = sinhVienTC.getTfTimKiem();
+		this.bg = sinhVienTC.getBg();
 		this.radNam = sinhVienTC.getRadNam();
 		this.radNu = sinhVienTC.getRadNu();
 		this.sinhVienTC.loadData(table, dsSinhVien, "", "");
@@ -106,10 +108,8 @@ public class SinhVienTinChiController {
 					tfKhoa.setText((String) table.getValueAt(row, 2));
 					tfNgaySinh.setText((String) table.getValueAt(row, 3));
 					if (table.getValueAt(row, 4).equals("Nam")) {
-						radNu.setSelected(false);
 						radNam.setSelected(true);
 					} else {
-						radNam.setSelected(false);
 						radNu.setSelected(true);
 					}
 					tfEmail.setText((String) table.getValueAt(row, 5));
@@ -131,24 +131,6 @@ public class SinhVienTinChiController {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-			}
-		});
-		radNam.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				if (radNu.isSelected())
-					radNu.setSelected(false);
-			}
-		});
-		radNu.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				if (radNam.isSelected())
-					radNam.setSelected(false);
 			}
 		});
 
@@ -318,8 +300,7 @@ public class SinhVienTinChiController {
 		tfSoTCQua.setText("");
 		tfSoTCNo.setText("");
 		tfTimKiem.setText("");
-		radNam.setSelected(false);
-		radNu.setSelected(false);
+		bg.clearSelection();
 	}
 
 	private boolean checkSV(String id) {

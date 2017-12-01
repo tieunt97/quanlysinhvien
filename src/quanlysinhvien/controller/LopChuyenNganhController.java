@@ -79,7 +79,14 @@ public class LopChuyenNganhController {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				// TODO Auto-generated method stub
-				
+				int row = table.getSelectedRow();
+				if(row >= 0) {
+					tfIdLopChuyenNganh.setText((String) table.getValueAt(row, 0));
+					tfIdLopChuyenNganh.setEnabled(false);
+					tfTenLop.setText((String) table.getValueAt(row, 1));
+					tfTenChuNhiem.setText((String) table.getValueAt(row, 2));
+					tfIdNganh.setText((String) table.getValueAt(row, 3));
+				}
 			}
 			
 			@Override
@@ -97,14 +104,6 @@ public class LopChuyenNganhController {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				// TODO Auto-generated method stub
-				int row = table.getSelectedRow();
-				if(row >= 0) {
-					tfIdLopChuyenNganh.setText((String) table.getValueAt(row, 0));
-					tfIdLopChuyenNganh.setEnabled(false);
-					tfTenLop.setText((String) table.getValueAt(row, 1));
-					tfTenChuNhiem.setText((String) table.getValueAt(row, 2));
-					tfIdNganh.setText((String) table.getValueAt(row, 3));
-				}
 			}
 		});
 		btnThem.addActionListener(new ActionListener() {

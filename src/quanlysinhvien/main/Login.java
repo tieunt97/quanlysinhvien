@@ -1,10 +1,28 @@
 package quanlysinhvien.main;
 
-import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -13,27 +31,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import quanlysinhvien.model.SinhVienTinChi;
 import quanlysinhvien.model.TaiKhoan;
-
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.ImageIcon;
-import javax.swing.JTextField;
-import javax.swing.JPasswordField;
-import javax.swing.JButton;
-import java.awt.Font;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.Color;
 
 public class Login extends JFrame {
 
@@ -69,6 +67,13 @@ public class Login extends JFrame {
 	 * Create the frame.
 	 */
 	public Login() {
+		try {
+			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+				| UnsupportedLookAndFeelException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 547, 370);
@@ -81,16 +86,16 @@ public class Login extends JFrame {
 		
 		JLabel lblUsername = new JLabel("Tài khoản:");
 		lblUsername.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblUsername.setBounds(117, 97, 88, 27);
+		lblUsername.setBounds(117, 97, 88, 30);
 		contentPane.add(lblUsername);
 		
 		JLabel lblPassword = new JLabel("Mật khẩu:");
 		lblPassword.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblPassword.setBounds(117, 148, 88, 27);
+		lblPassword.setBounds(117, 148, 88, 30);
 		contentPane.add(lblPassword);
 		
 		tfTaiKhoan = new JTextField();
-		tfTaiKhoan.setBounds(211, 97, 212, 27);
+		tfTaiKhoan.setBounds(211, 97, 212, 30);
 		contentPane.add(tfTaiKhoan);
 		tfTaiKhoan.setColumns(10);
 		
@@ -109,7 +114,7 @@ public class Login extends JFrame {
 				}
 			}
 		});
-		pwMatKhau.setBounds(211, 148, 212, 27);
+		pwMatKhau.setBounds(211, 148, 212, 30);
 		contentPane.add(pwMatKhau);
 		
 		JButton btnDangNhap = new JButton("Đăng nhập");
