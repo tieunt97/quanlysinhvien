@@ -10,9 +10,9 @@ public class SinhVienTinChi extends SinhVien{
 		super();
 	}
 	
-	public SinhVienTinChi(String idSinhVien, String hoTen, String khoa, String ngaySinh, String gioiTinh, String email,
+	public SinhVienTinChi(String idSinhVien, String hoTen, String khoa, String tenLop, String ngaySinh, String gioiTinh, String email,
 			String soDT, String diaChi, double diemTB, int soTCQua, int soTCNo) {
-		super(idSinhVien, hoTen, khoa, ngaySinh, gioiTinh, email, soDT, diaChi, diemTB);
+		super(idSinhVien, hoTen, khoa, tenLop, ngaySinh, gioiTinh, email, soDT, diaChi, diemTB);
 		this.soTCQua = soTCQua;
 		this.soTCNo = soTCNo;
 	}

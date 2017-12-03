@@ -28,6 +28,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import quanlysinhvien.model.DiemHocPhan;
 import quanlysinhvien.model.HocPhan;
+import quanlysinhvien.model.LopHocPhan;
 import quanlysinhvien.view.CapNhatDiemSVView;
 
 public class CapNhatDiemSVController {
@@ -48,7 +49,6 @@ public class CapNhatDiemSVController {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			dsDiemHP = new ArrayList<>();
-//			e.printStackTrace();
 			System.out.println("Error diemHP: " + e);
 		}
 		this.table = capNhatDiemSV.getTable();
@@ -148,14 +148,14 @@ public class CapNhatDiemSVController {
 				if (diemHP != null) {
 					for (int i = 0; i < dsDiemHP.size(); i++) {
 						if (dsDiemHP.get(i).getIdHocPhan().equals(diemHP.getIdHocPhan())) {
-//		hocKy; IdHocPhan; TenHP() ;SoTinChi; idLopHoc; diemQT; diemThi; DiemChu(hocPhan);
 							dsDiemHP.get(i).setHocKy(diemHP.getHocKy());
 							dsDiemHP.get(i).setTenHP(diemHP.getTenHP());
 							dsDiemHP.get(i).setTinChi(diemHP.getTinChi());
-							dsDiemHP.get(i).setLopHoc(diemHP.getLopHoc());
+							dsDiemHP.get(i).setIdLopHoc(diemHP.getIdLopHoc());
 							dsDiemHP.get(i).setDiemQT(diemHP.getDiemQT());
 							dsDiemHP.get(i).setDiemThi(diemHP.getDiemThi());
 							dsDiemHP.get(i).setDiemChu(diemHP.getDiemChu());
+							dsDiemHP.get(i).setDiemThang4(diemHP.getDiemThang4());
 							break;
 						}
 					}
@@ -225,8 +225,8 @@ public class CapNhatDiemSVController {
 	}
 	
 	private boolean checkDiemHP(String idHocPhan) {
-		for (int i = 0; i < dsDiemHP.size(); i++) {
-			if (dsDiemHP.get(i).getIdHocPhan().equals(idHocPhan))
+		for (DiemHocPhan diemHP: dsDiemHP) {
+			if (diemHP.getIdHocPhan().equals(idHocPhan))
 				return false;
 		}
 		return true;
@@ -243,7 +243,7 @@ public class CapNhatDiemSVController {
 	
 	private DiemHocPhan getDiemHP() {
 		String hocKy = (String) hocKyCB.getSelectedItem();
-		String idLopHoc = tfIdLopHoc.getText().trim();
+		String idLopHoc = tfIdLopHoc.getText().trim().toUpperCase();
 		if(hocKy.equals("") || idLopHoc.equals("")) {
 			JOptionPane.showMessageDialog(null, "Có trường dữ liệu trống", "Error", JOptionPane.ERROR_MESSAGE);
 			return null;
@@ -257,12 +257,15 @@ public class CapNhatDiemSVController {
 			return null;
 		}
 		HocPhan hocPhan = null;
+		LopHocPhan lopHocPhan = null;
 		try {
-			hocPhan = getHocPhan(tfIdHocPhan.getText().trim());
-			if(hocPhan == null) {
-				JOptionPane.showMessageDialog(null, "Học phần không tồn tại", "Error", JOptionPane.ERROR_MESSAGE);
+			hocPhan = getHocPhan(tfIdHocPhan.getText().trim().toUpperCase());
+			lopHocPhan = getLopHP(idLopHoc);
+			if(hocPhan == null || lopHocPhan == null || !hocPhan.getIdHocPhan().equals(lopHocPhan.getIdHocPhan())) {
+				JOptionPane.showMessageDialog(null, "Lớp học không tồn tại", "Error", JOptionPane.ERROR_MESSAGE);
 				return null;
 			}
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -306,6 +309,49 @@ public class CapNhatDiemSVController {
 		return hp;
 	}
 	
+	private LopHocPhan getLopHP(String idLop) throws IOException {
+		LopHocPhan lopHP = null;
+		FileInputStream fin = new FileInputStream(new File("quanlysinhvien\\danhsachhocphan\\lophocphan\\dsLopHP.xlsx"));
+		Workbook workbook = new XSSFWorkbook(fin);
+		Sheet sheet = workbook.getSheetAt(0);
+		Iterator<Row> iterator = sheet.iterator();
+		Row nextRow;
+		if(iterator.hasNext()) {
+			nextRow = iterator.next();
+		}
+		while(iterator.hasNext()) {
+			nextRow = iterator.next();
+			Cell cell = nextRow.getCell(2);
+			String idL = cell.getStringCellValue();
+			if(idL.equals(idLop)) {
+				cell = nextRow.getCell(1);
+				String hocKy = cell.getStringCellValue();
+				cell = nextRow.getCell(3);
+				String loaiLop = cell.getStringCellValue();
+				cell = nextRow.getCell(4);
+				String idHocPhan = cell.getStringCellValue();
+				cell = nextRow.getCell(5);
+				String tenLop = cell.getStringCellValue();
+				cell = nextRow.getCell(6);
+				String thoiGian = cell.getStringCellValue();
+				cell = nextRow.getCell(7);
+				String tuanHoc = cell.getStringCellValue();
+				cell = nextRow.getCell(8);
+				String phongHoc = cell.getStringCellValue();
+				cell = nextRow.getCell(9);
+				String tenGiangVien = cell.getStringCellValue();
+				cell = nextRow.getCell(10);
+				int soSVMax = (int) Double.parseDouble(Double.toString(cell.getNumericCellValue()));
+				cell = nextRow.getCell(11);
+				int soSVHienTai = (int) Double.parseDouble(Double.toString(cell.getNumericCellValue()));
+				
+				lopHP = new LopHocPhan(hocKy, idLop, loaiLop, idHocPhan, tenLop, thoiGian, tuanHoc, phongHoc, null, tenGiangVien, soSVMax, soSVHienTai);
+			}
+		}
+		
+		return lopHP;
+	}
+	
 	private ArrayList<DiemHocPhan> readFile() throws IOException {
 		ArrayList<DiemHocPhan> dsDiemHP = new ArrayList<>();
 		String fileName = "";
@@ -344,7 +390,7 @@ public class CapNhatDiemSVController {
 				if(dataDiemHP.size() < 1) return null;
 			}
 			if(dataDiemHP.size() > 0) {
-				DiemHocPhan diemHP = new DiemHocPhan(dataDiemHP.get(0), dataDiemHP.get(1), dataDiemHP.get(2), (int) Double.parseDouble(dataDiemHP.get(3)), dataDiemHP.get(4), Double.parseDouble(dataDiemHP.get(5)), Double.parseDouble(dataDiemHP.get(6)), dataDiemHP.get(7));
+				DiemHocPhan diemHP = new DiemHocPhan(dataDiemHP.get(0), dataDiemHP.get(1), dataDiemHP.get(2), (int) Double.parseDouble(dataDiemHP.get(3)), dataDiemHP.get(4), Double.parseDouble(dataDiemHP.get(5)), Double.parseDouble(dataDiemHP.get(6)), dataDiemHP.get(7), Double.parseDouble(dataDiemHP.get(8)));
 				dsDiemHP.add(diemHP);
 			}
 		}
@@ -399,37 +445,41 @@ public class CapNhatDiemSVController {
 
 		Row row = sheet.createRow(0);
 
-		Cell cellIdSV = row.createCell(1);
-		cellIdSV.setCellStyle(cellStyle);
-		cellIdSV.setCellValue("Học kỳ");
+		Cell cellHocKy = row.createCell(1);
+		cellHocKy.setCellStyle(cellStyle);
+		cellHocKy.setCellValue("Học kỳ");
 
-		Cell cellHoTen = row.createCell(2);
-		cellHoTen.setCellStyle(cellStyle);
-		cellHoTen.setCellValue("Mã học phần");
+		Cell cellIdHP = row.createCell(2);
+		cellIdHP.setCellStyle(cellStyle);
+		cellIdHP.setCellValue("Mã học phần");
 
-		Cell cellKhoa = row.createCell(3);
-		cellKhoa.setCellStyle(cellStyle);
-		cellKhoa.setCellValue("Tên học phần");
+		Cell cellTenHP = row.createCell(3);
+		cellTenHP.setCellStyle(cellStyle);
+		cellTenHP.setCellValue("Tên học phần");
 
-		Cell cellNgaySinh = row.createCell(4);
-		cellNgaySinh.setCellStyle(cellStyle);
-		cellNgaySinh.setCellValue("Số TC");
+		Cell cellSoTC = row.createCell(4);
+		cellSoTC.setCellStyle(cellStyle);
+		cellSoTC.setCellValue("Số TC");
 
-		Cell cellGioiTinh = row.createCell(5);
-		cellGioiTinh.setCellStyle(cellStyle);
-		cellGioiTinh.setCellValue("Mã lớp");
+		Cell cellIdLop = row.createCell(5);
+		cellIdLop.setCellStyle(cellStyle);
+		cellIdLop.setCellValue("Mã lớp");
 
-		Cell cellEmail = row.createCell(6);
-		cellEmail.setCellStyle(cellStyle);
-		cellEmail.setCellValue("Điểm QT");
+		Cell cellDiemQT = row.createCell(6);
+		cellDiemQT.setCellStyle(cellStyle);
+		cellDiemQT.setCellValue("Điểm QT");
 
-		Cell cellSoDT = row.createCell(7);
-		cellSoDT.setCellStyle(cellStyle);
-		cellSoDT.setCellValue("Điểm thi");
+		Cell cellDiemThi = row.createCell(7);
+		cellDiemThi.setCellStyle(cellStyle);
+		cellDiemThi.setCellValue("Điểm thi");
 
-		Cell cellDiaChi = row.createCell(8);
-		cellDiaChi.setCellStyle(cellStyle);
-		cellDiaChi.setCellValue("Điểm chữ");
+		Cell cellDiemChu = row.createCell(8);
+		cellDiemChu.setCellStyle(cellStyle);
+		cellDiemChu.setCellValue("Điểm chữ");
+		
+		Cell cellDiem4 = row.createCell(9);
+		cellDiem4.setCellStyle(cellStyle);
+		cellDiem4.setCellValue("Điểm thang 4");
 	}
 	
 	private boolean updateDiemHP(DiemHocPhan diemHP) throws FileNotFoundException, IOException {
@@ -459,13 +509,15 @@ public class CapNhatDiemSVController {
 				cell = nextRow.createCell(4);
 				cell.setCellValue(diemHP.getTinChi());
 				cell = nextRow.createCell(5);
-				cell.setCellValue(diemHP.getLopHoc());
+				cell.setCellValue(diemHP.getIdLopHoc());
 				cell = nextRow.createCell(6);
 				cell.setCellValue(diemHP.getDiemQT());
 				cell = nextRow.createCell(7);
 				cell.setCellValue(diemHP.getDiemThi());
 				cell = nextRow.createCell(8);
 				cell.setCellValue(diemHP.getDiemChu());
+				cell = nextRow.createCell(9);
+				cell.setCellValue(diemHP.getDiemThang4());
 				ck = true;
 				break;
 			}
@@ -515,7 +567,6 @@ public class CapNhatDiemSVController {
 						ck = true;
 					}
 				}
-				//hate you 
 				break;
 			}
 		}
@@ -538,12 +589,14 @@ public class CapNhatDiemSVController {
 		cell = row.createCell(4);
 		cell.setCellValue(diemHP.getTinChi());
 		cell = row.createCell(5);
-		cell.setCellValue(diemHP.getLopHoc());
+		cell.setCellValue(diemHP.getIdLopHoc());
 		cell = row.createCell(6);
 		cell.setCellValue(diemHP.getDiemQT());
 		cell = row.createCell(7);
 		cell.setCellValue(diemHP.getDiemThi());
 		cell = row.createCell(8);
 		cell.setCellValue(diemHP.getDiemChu());
+		cell = row.createCell(9);
+		cell.setCellValue(diemHP.getDiemThang4());
 	}
 }

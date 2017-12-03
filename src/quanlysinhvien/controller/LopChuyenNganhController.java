@@ -37,7 +37,6 @@ public class LopChuyenNganhController {
 	private JButton btnThem, btnSua, btnXoa, btnHuy, btnTimKiem, btnCapNhatSV;
 	private JComboBox<String> timKiemCB;
 	private ArrayList<LopChuyenNganh> dsLopCN;
-	private ArrayList<SinhVien> dsSinhVien;
 	private String fileName;
 	
 	public LopChuyenNganhController(PanelLopChuyenNganhView lopChuyenNganh) {
@@ -147,8 +146,8 @@ public class LopChuyenNganhController {
 						if(dsLopCN.get(i).getIdLopChuyenNganh().equals(lopCN.getIdLopChuyenNganh())) {
 							dsLopCN.get(i).setTenLop(lopCN.getTenLop());
 							dsLopCN.get(i).setTenChuNhiem(lopCN.getTenChuNhiem());
-							dsLopCN.get(i).setIdNganh(lopCN.getIdNganh());
-							dsLopCN.get(i).setTenNganh(lopCN.getTenNganh());
+							dsLopCN.get(i).setIdKhoaVien(lopCN.getIdKhoaVien());
+							dsLopCN.get(i).setTenKhoaVien(lopCN.getTenKhoaVien());
 							break;
 						}
 					}
@@ -187,6 +186,8 @@ public class LopChuyenNganhController {
 								boolean ck = false;
 								try {
 									ck = deleteLopCN(idLop, fileName);
+									boolean ck1 = (new File("quanlysinhvien\\danhsachchuyennganh\\lopchuyennganh\\" + idLop + "_dsSV.xlsx")).delete();
+									System.out.println(ck1);
 								} catch (IOException e1) {
 									// TODO Auto-generated catch block
 									e1.printStackTrace();
@@ -235,15 +236,23 @@ public class LopChuyenNganhController {
 					return;
 				}
 				CapNhatSinhVienLCNView capNhatSV = new CapNhatSinhVienLCNView(new ArrayList<SinhVien>(), (String)table.getValueAt(row, 1));
-				ArrayList<SinhVien> dsSinhVien = new ArrayList<>();
+				ArrayList<SinhVien> dsSinhVien = null;
 				String idLop = (String) table.getValueAt(row, 0);
+				String tenLop = (String) table.getValueAt(row, 1);
 				for (int i = 0; i < dsLopCN.size(); i++) {
 					if(dsLopCN.get(i).getIdLopChuyenNganh().equals(idLop)) {
-						dsSinhVien = dsLopCN.get(i).getDsSinhVien();
-						break;
+						try {
+							dsSinhVien = dsLopCN.get(i).getDsSinhVien();
+							break;
+						}catch (Exception e1) {
+							// TODO: handle exception
+							System.out.println("Error lopCN: " + e1);
+							dsSinhVien = new ArrayList<>();
+							break;
+						}
 					}
 				}
-				new CapNhatSinhVienController(capNhatSV, dsSinhVien, "quanlysinhvien\\danhsachchuyennganh\\lopchuyennganh\\" + idLop + "_dsSV.xlsx");
+				new CapNhatSinhVienController(capNhatSV, dsSinhVien, "quanlysinhvien\\danhsachchuyennganh\\lopchuyennganh\\" + idLop + "_dsSV.xlsx", tenLop);
 			}
 		});
 	}
@@ -336,9 +345,9 @@ public class LopChuyenNganhController {
 		cell = row.createCell(3);
 		cell.setCellValue(lopCN.getTenChuNhiem());
 		cell = row.createCell(4);
-		cell.setCellValue(lopCN.getIdNganh());
+		cell.setCellValue(lopCN.getIdKhoaVien());
 		cell = row.createCell(5);
-		cell.setCellValue(lopCN.getTenNganh());
+		cell.setCellValue(lopCN.getTenKhoaVien());
 	}
 	
 	private void addLopCN(LopChuyenNganh lopCN, String fileName) throws IOException {
@@ -393,11 +402,11 @@ public class LopChuyenNganhController {
 				cell = nextRow.createCell(3);
 				cell.setCellValue(lopCN.getTenChuNhiem());
 				cell = nextRow.createCell(4);
-				cell.setCellValue(lopCN.getIdNganh());
+				cell.setCellValue(lopCN.getIdKhoaVien());
 				cell = nextRow.createCell(5);
 				String tenLop = "";
 				try {
-					tenLop = getTenNganh(lopCN.getIdNganh());
+					tenLop = getTenNganh(lopCN.getIdKhoaVien());
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -492,7 +501,7 @@ public class LopChuyenNganhController {
 				if(dataSV.size() < 1) return null;
 			}
 			if(dataSV.size() > 0) {
-				SinhVien sv = new SinhVien(dataSV.get(0), dataSV.get(1), dataSV.get(2), dataSV.get(3), dataSV.get(4), dataSV.get(5), dataSV.get(6), dataSV.get(7), Double.parseDouble(dataSV.get(8)));
+				SinhVien sv = new SinhVien(dataSV.get(0), dataSV.get(1), dataSV.get(2), dataSV.get(3), dataSV.get(4), dataSV.get(5), dataSV.get(6), dataSV.get(7), dataSV.get(8), Double.parseDouble(dataSV.get(9)));
 				dsSV.add(sv);
 			}
 		}
@@ -530,10 +539,10 @@ public class LopChuyenNganhController {
 	
 	private LopChuyenNganh getLopChuyenNganh() {
 		LopChuyenNganh lopCN;
-		String idLopChuyenNganh = tfIdLopChuyenNganh.getText();
-		String tenLop = tfTenLop.getText();
-		String tenChuNhiem = tfTenChuNhiem.getText();
-		String idNganh = tfIdNganh.getText();
+		String idLopChuyenNganh = tfIdLopChuyenNganh.getText().toUpperCase().trim();
+		String tenLop = tfTenLop.getText().trim();
+		String tenChuNhiem = tfTenChuNhiem.getText().trim();
+		String idNganh = tfIdNganh.getText().toUpperCase().trim();
 		String tenNganh = "";
 		try {
 			tenNganh = getTenNganh(idNganh);
@@ -550,13 +559,13 @@ public class LopChuyenNganhController {
 			JOptionPane.showMessageDialog(null, "Có trường dữ liệu trống", "Error", JOptionPane.ERROR_MESSAGE);
 			return null;
 		}
-		lopCN = new LopChuyenNganh(null, idLopChuyenNganh, tenLop, tenChuNhiem, idNganh, tenNganh);
+		lopCN = new LopChuyenNganh(new ArrayList<SinhVien>(), idLopChuyenNganh, tenLop, tenChuNhiem, idNganh, tenNganh);
 		return lopCN;
 	}
 	
 	private boolean checkLopHP(String idLopCN) {
-		for (int i = 0; i < dsLopCN.size(); i++) {
-			if (dsLopCN.get(i).getIdLopChuyenNganh().equals(idLopCN))
+		for (LopChuyenNganh lopCN: dsLopCN) {
+			if (lopCN.getIdLopChuyenNganh().equals(idLopCN))
 				return false;
 		}
 		return true;

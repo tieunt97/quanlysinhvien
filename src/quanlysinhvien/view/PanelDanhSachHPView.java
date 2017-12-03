@@ -14,6 +14,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
 import quanlysinhvien.model.HocPhan;
@@ -51,8 +52,8 @@ public class PanelDanhSachHPView extends JPanel{
 	
 	private JPanel createTablePanel() {
 		JPanel panel = new JPanel(new BorderLayout());
+		panel.setBorder(new TitledBorder(null, ""));
 		JScrollPane scroll = new JScrollPane(table = new JTable());
-		loadData(table, new ArrayList<HocPhan>(), "", "");
 		panel.add(scroll);
 		
 		return panel;

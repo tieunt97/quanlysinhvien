@@ -16,6 +16,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
 import quanlysinhvien.model.SinhVienNienChe;
@@ -56,10 +57,8 @@ public class PanelSinhVienNienCheView extends JPanel{
 	
 	private JPanel createTablePanel() {
 		JPanel panel = new JPanel(new BorderLayout());
+		panel.setBorder(new TitledBorder(null, ""));
 		JScrollPane scroll = new JScrollPane(table = new JTable());
-		DefaultTableModel model = new DefaultTableModel();
-		model.setColumnIdentifiers(titleCols);
-		table.setModel(model);
 		panel.add(scroll, BorderLayout.CENTER);
 		
 		return panel;
@@ -191,6 +190,10 @@ public class PanelSinhVienNienCheView extends JPanel{
 		String[][] data = convertData(dsSVNC, timKiem, giaTri);
 		DefaultTableModel model = new DefaultTableModel(data, titleCols);
 		table.setModel(model);
+		table.getColumnModel().getColumn(1).setPreferredWidth(140);
+		table.getColumnModel().getColumn(5).setPreferredWidth(140);
+		table.getColumnModel().getColumn(6).setPreferredWidth(140);
+		table.getColumnModel().getColumn(7).setPreferredWidth(145);
 	}
 	
 	private String[][] convertData(ArrayList<SinhVienNienChe> list, String timKiem, String giaTri) {

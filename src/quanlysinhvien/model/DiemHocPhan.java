@@ -3,7 +3,7 @@ package quanlysinhvien.model;
 public class DiemHocPhan {
 	private String hocKy, idHocPhan, tenHP, idLopHoc, diemChu;
 	private int tinChi;
-	private double diemQT, diemThi;
+	private double diemQT, diemThi, diemThang4;
 	
 	public DiemHocPhan() {
 		
@@ -18,9 +18,10 @@ public class DiemHocPhan {
 		this.diemQT = diemQT;
 		this.diemThi = diemThi;
 		this.diemChu = tinhDiemChu(hocPhan);
+		this.diemThang4 = tinhDiemThang4(this.diemChu);
 	}
 	
-	public DiemHocPhan(String hocKy,  String idHocPhan, String tenHP, int tinChi, String idLopHoc, double diemQT, double diemThi, String diemChu) {
+	public DiemHocPhan(String hocKy,  String idHocPhan, String tenHP, int tinChi, String idLopHoc, double diemQT, double diemThi, String diemChu, double diemThang4) {
 		this.hocKy = hocKy;
 		this.idHocPhan = idHocPhan;
 		this.tenHP = tenHP;
@@ -29,6 +30,7 @@ public class DiemHocPhan {
 		this.diemQT = diemQT;
 		this.diemThi = diemThi;
 		this.diemChu = diemChu;
+		this.diemThang4 = diemThang4;
 	}
 	
 	private String tinhDiemChu(HocPhan hp) {
@@ -43,6 +45,17 @@ public class DiemHocPhan {
 		else if(diem >= 8.0 && diem < 8.5) return "B+";
 		else if(diem >= 8.5 && diem < 9.5) return "A";
 		else return "A+";
+	}
+	
+	private double tinhDiemThang4(String diemChu) {
+		if(diemChu.equals("F")) return 0;
+		else if(diemChu.equals("D")) return 1.0;
+		else if(diemChu.equals("D+")) return 1.5;
+		else if(diemChu.equals("C")) return 2.0;
+		else if(diemChu.equals("C+")) return 2.5;
+		else if(diemChu.equals("B")) return 3.0;
+		else if(diemChu.equals("B+")) return 3.5;
+		else return 4.0;
 	}
 	
 	public String getHocKy() {
@@ -69,11 +82,11 @@ public class DiemHocPhan {
 		this.tenHP = tenHP;
 	}
 
-	public String getLopHoc() {
+	public String getIdLopHoc() {
 		return idLopHoc;
 	}
 
-	public void setLopHoc(String lopHoc) {
+	public void setIdLopHoc(String lopHoc) {
 		this.idLopHoc = lopHoc;
 	}
 
@@ -108,4 +121,13 @@ public class DiemHocPhan {
 	public void setDiemThi(double diemThi) {
 		this.diemThi = diemThi;
 	}
+
+	public double getDiemThang4() {
+		return diemThang4;
+	}
+
+	public void setDiemThang4(double diemThang4) {
+		this.diemThang4 = diemThang4;
+	}
+	
 }

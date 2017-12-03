@@ -7,8 +7,8 @@ public class LopChuyenNganh {
 	private String idLopChuyenNganh;
 	private String tenLop;
 	private String tenChuNhiem;
-	private String idNganh;
-	private String tenNganh;
+	private String idKhoaVien;
+	private String tenKhoaVien;
 	
 
 	
@@ -17,20 +17,20 @@ public class LopChuyenNganh {
 	}
 	
 	public LopChuyenNganh(ArrayList<SinhVien> dsSinhVien, String idLopChuyenNganh, String tenLop,
-			String tenChuNhiem, String idNganh, String tenNganh) {
+			String tenChuNhiem, String idKhoaVien, String tenKhoaVien) {
 		this.dsSinhVien = dsSinhVien;
 		this.idLopChuyenNganh = idLopChuyenNganh;
 		this.tenLop = tenLop;
 		this.tenChuNhiem = tenChuNhiem;
-		this.idNganh = idNganh;
-		this.tenNganh = tenNganh;
+		this.idKhoaVien = idKhoaVien;
+		this.tenKhoaVien = tenKhoaVien;
 	}
 
 	public void themSinhVien(SinhVien sv) {
 		this.dsSinhVien.add(sv);
 	}
 	
-	public boolean xoaSinhVien(String idSinhVien, SinhVien sv) {
+	public boolean xoaSinhVien(String idSinhVien) {
 		for(int i = 0; i < dsSinhVien.size(); i++) {
 			if(dsSinhVien.get(i).getIdSinhVien().equals(idSinhVien)) {
 				dsSinhVien.remove(i);
@@ -64,20 +64,20 @@ public class LopChuyenNganh {
 		this.tenChuNhiem = tenChuNhiem;
 	}
 
-	public String getIdNganh() {
-		return idNganh;
+	public String getIdKhoaVien() {
+		return idKhoaVien;
 	}
 
-	public void setIdNganh(String idNganh) {
-		this.idNganh = idNganh;
+	public void setIdKhoaVien(String idKhoaVien) {
+		this.idKhoaVien = idKhoaVien;
 	}
 
-	public String getTenNganh() {
-		return tenNganh;
+	public String getTenKhoaVien() {
+		return tenKhoaVien;
 	}
 
-	public void setTenNganh(String tenNganh) {
-		this.tenNganh = tenNganh;
+	public void setTenKhoaVien(String tenNganh) {
+		this.tenKhoaVien = tenNganh;
 	}
 
 	public String getTenLop() {

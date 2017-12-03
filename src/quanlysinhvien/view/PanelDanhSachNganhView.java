@@ -14,17 +14,18 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
-import quanlysinhvien.model.Nganh;
+import quanlysinhvien.model.Khoa_Vien;
 
 public class PanelDanhSachNganhView extends JPanel{
 	private JTable table;
-	private JTextField tfIdNganh, tfTenNganh, tfTimKiem;
+	private JTextField tfIdKhoa_Vien, tfTenKhoa_Vien, tfTimKiem;
 	private JButton btnThem, btnSua, btnXoa, btnTimKiem, btnHuy, btnXemDSNganh;
 	private JComboBox<String> timKiemCB;
-	private String[] titleCols = {"Mã ngành", "Tên ngành"};
-	private String[] timKiemVals = {"Mã ngành", "Tên ngành"};
+	private String[] titleCols = {"Mã Khoa/Viện", "Tên Khoa/Viện"};
+	private String[] timKiemVals = {"Mã Khoa/Viện", "Tên Khoa/Viện"};
 	
 	
 	public PanelDanhSachNganhView() {
@@ -35,7 +36,7 @@ public class PanelDanhSachNganhView extends JPanel{
 	
 	private JPanel createTitlePanel() {
 		JPanel panel = new JPanel();
-		panel.add(createLabel("Danh sách ngành", Font.BOLD, 18, 0xFFFF00));
+		panel.add(createLabel("Danh sách Khoa/Viện", Font.BOLD, 18, 0xFFFF00));
 		panel.setBackground(new Color(0x009999));
 		
 		return panel;
@@ -52,6 +53,7 @@ public class PanelDanhSachNganhView extends JPanel{
 	
 	private JPanel createTablePanel() {
 		JPanel panel = new JPanel(new BorderLayout());
+		panel.setBorder(new TitledBorder(null, ""));
 		JScrollPane scroll = new JScrollPane(table = new JTable());
 		panel.add(scroll);
 		
@@ -117,10 +119,10 @@ public class PanelDanhSachNganhView extends JPanel{
 	private JPanel createInputLeftPanel() {
 		JPanel panel = new JPanel(new BorderLayout(5, 5));
 		JPanel panelL = new JPanel(new GridLayout(2, 1, 10, 10));
-		panelL.add(new JLabel("Mã ngành:"));
+		panelL.add(new JLabel("Mã Khoa/Viện:"));
 		panelL.add(new JLabel(""));
 		JPanel panelR = new JPanel(new GridLayout(2, 1, 10, 10));
-		panelR.add(tfIdNganh = new JTextField());
+		panelR.add(tfIdKhoa_Vien = new JTextField());
 		panelR.add(new JLabel(""));
 		
 		panel.add(panelL, BorderLayout.WEST);
@@ -132,9 +134,9 @@ public class PanelDanhSachNganhView extends JPanel{
 	private JPanel createInputRightPanel() {
 		JPanel panel = new JPanel(new BorderLayout(5, 5));
 		JPanel panelL = new JPanel(new GridLayout(2, 1, 10, 10));
-		panelL.add(new JLabel("Tên ngành:"));
+		panelL.add(new JLabel("Tên Khoa/Viện:"));
 		JPanel panelR = new JPanel(new GridLayout(2, 1, 10, 10));
-		panelR.add(tfTenNganh = new JTextField());
+		panelR.add(tfTenKhoa_Vien = new JTextField());
 		JPanel panelCapNhat = new JPanel(new GridLayout());
 		panelR.add(panelCapNhat);
 		
@@ -153,36 +155,37 @@ public class PanelDanhSachNganhView extends JPanel{
 		return label;
 	}
 	
-	public void loadData(JTable table, ArrayList<Nganh> dsNganh, String timKiem, String giaTri) {
-		String[][] data = convertData(dsNganh, timKiem, giaTri);
+	public void loadData(JTable table, ArrayList<Khoa_Vien> dsKhoa_Vien, String timKiem, String giaTri) {
+		String[][] data = convertData(dsKhoa_Vien, timKiem, giaTri);
 		DefaultTableModel model = new DefaultTableModel(data, titleCols);
 		table.setModel(model);
+		table.getColumnModel().getColumn(1).setPreferredWidth(250);
 	}
 	
-	private String[][] convertData(ArrayList<Nganh> list, String timKiem, String giaTri) {
+	private String[][] convertData(ArrayList<Khoa_Vien> list, String timKiem, String giaTri) {
 		int size = list.size();
 		String data[][] = new String[size][titleCols.length];
 		int index = 0;
 		for (int i = 0; i < size; i++) {
-			Nganh nganh = list.get(i);
+			Khoa_Vien khoa_vien = list.get(i);
 			switch(timKiem) {
-			case "Mã ngành": 
-				if(nganh.getIdNganh().toLowerCase().indexOf(giaTri) >= 0) {
-					data[index][0] = nganh.getIdNganh();
-					data[index][1] = nganh.getTenNganh();
+			case "Mã Khoa/Viện": 
+				if(khoa_vien.getIdKhoa_Vien().toLowerCase().indexOf(giaTri) >= 0) {
+					data[index][0] = khoa_vien.getIdKhoa_Vien();
+					data[index][1] = khoa_vien.getTenKhoa_Vien();
 					index++;
 				}
 				break;
-			case "Tên ngành":
-				if(nganh.getTenNganh().toLowerCase().indexOf(giaTri) >= 0) {
-					data[index][0] = nganh.getIdNganh();
-					data[index][1] = nganh.getTenNganh();
+			case "Tên Khoa/Viện":
+				if(khoa_vien.getTenKhoa_Vien().toLowerCase().indexOf(giaTri) >= 0) {
+					data[index][0] = khoa_vien.getIdKhoa_Vien();
+					data[index][1] = khoa_vien.getTenKhoa_Vien();
 					index++;
 				}
 				break;
 			case "":{
-				data[index][0] = nganh.getIdNganh();
-				data[index][1] = nganh.getTenNganh();
+				data[index][0] = khoa_vien.getIdKhoa_Vien();
+				data[index][1] = khoa_vien.getTenKhoa_Vien();
 				index++;
 				}
 				break;
@@ -202,12 +205,12 @@ public class PanelDanhSachNganhView extends JPanel{
 		return table;
 	}
 
-	public JTextField getTfIdNganh() {
-		return tfIdNganh;
+	public JTextField getTfIdKhoa_Vien() {
+		return tfIdKhoa_Vien;
 	}
 
-	public JTextField getTfTenNganh() {
-		return tfTenNganh;
+	public JTextField getTfTenKhoa_Vien() {
+		return tfTenKhoa_Vien;
 	}
 
 	public JTextField getTfTimKiem() {

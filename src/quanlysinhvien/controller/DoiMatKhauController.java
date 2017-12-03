@@ -28,8 +28,6 @@ public class DoiMatKhauController {
 	private JPasswordField pwMatKhauCu, pwMatKhauMoi, pwXacNhan;
 	private JButton btnThayDoi;
 	private TaiKhoan tk;
-//	private String tenTaiKhoan;
-//	private String matKhau;
 	
 	public DoiMatKhauController(PanelDoiMatKhauView doiMatKhau, TaiKhoan tk) {
 		this.doiMatKhau = doiMatKhau;
@@ -41,8 +39,6 @@ public class DoiMatKhauController {
 		this.pwXacNhan = doiMatKhau.getPwXacNhan();
 		this.btnThayDoi = doiMatKhau.getBtnThayDoi();
 		this.tk = tk;
-//		this.tenTaiKhoan = tenTaiKhoan;
-//		this.matKhau = matKhau;
 		
 		setAction(tk);
 	}

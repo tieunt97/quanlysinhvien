@@ -52,13 +52,6 @@ public class MainQuanLy extends JFrame implements ActionListener{
 	private PanelLopChuyenNganhView lopCN;
 	
 	public MainQuanLy() {
-		try {
-			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
-				| UnsupportedLookAndFeelException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		conter = this.getContentPane();
 		mainPanel = new JPanel();
 		mainPanel.setLayout(carLayout = new CardLayout());
@@ -101,8 +94,8 @@ public class MainQuanLy extends JFrame implements ActionListener{
 		menuQuanLyMonHoc.add(miQuanLyHocPhan = createMenuItem("Danh sách học phần"));
 		menuQuanLyMonHoc.add(miQuanlyLopHP = createMenuItem("Quản lý lớp học phần"));
 		
-		menuBar.add(menuQuanLyNganh = createMenu("Quản lý ngành đào tạo"));
-		menuQuanLyNganh.add(miQuanLyNganh = createMenuItem("Danh sách ngành đào tạo"));
+		menuBar.add(menuQuanLyNganh = createMenu("Quản lý khoa/viện đào tạo"));
+		menuQuanLyNganh.add(miQuanLyNganh = createMenuItem("Danh sách khoa/viện đào tạo"));
 		menuQuanLyNganh.add(miQuanLyLopChuyenNganh = createMenuItem("Quản lý lớp chuyên ngành"));
 		
 		return menuBar;

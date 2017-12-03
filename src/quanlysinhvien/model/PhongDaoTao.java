@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class PhongDaoTao {
 	private ArrayList<HocPhan> dsHocPhan;
 	private ArrayList<LopHocPhan> dsLopHocPhan;
-	private ArrayList<Nganh> dsNganh;
+	private ArrayList<Khoa_Vien> dsKhoa_Vien;
 	private ArrayList<LopChuyenNganh> dsLopChuyenNganh;
 	
 	
@@ -13,14 +13,14 @@ public class PhongDaoTao {
 	public PhongDaoTao() {
 		this.dsHocPhan = new ArrayList<>();
 		this.dsLopHocPhan = new ArrayList<>();
-		this.dsNganh = new ArrayList<>();
+		this.dsKhoa_Vien = new ArrayList<>();
 	}
 	
 	public PhongDaoTao(ArrayList<HocPhan> dsHocPhan, ArrayList<LopHocPhan> dsLopHocPhan, 
-			ArrayList<Nganh> dsNganh, ArrayList<LopChuyenNganh> dsLopChuyenNganh) {
+			ArrayList<Khoa_Vien> dsKhoa_Vien, ArrayList<LopChuyenNganh> dsLopChuyenNganh) {
 		this.dsHocPhan = dsHocPhan;
 		this.dsLopHocPhan = dsLopHocPhan;
-		this.dsNganh = dsNganh;
+		this.dsKhoa_Vien = dsKhoa_Vien;
 		this.dsLopChuyenNganh = dsLopChuyenNganh;
 	}
 
@@ -41,12 +41,12 @@ public class PhongDaoTao {
 		this.dsLopHocPhan = dsLopHocPhan;
 	}
 
-	public ArrayList<Nganh> getDsNganh() {
-		return dsNganh;
+	public ArrayList<Khoa_Vien> getDsKhoa_Vien() {
+		return dsKhoa_Vien;
 	}
 
-	public void setDsNganh(ArrayList<Nganh> dsNganh) {
-		this.dsNganh = dsNganh;
+	public void setDsKhoa_Vien(ArrayList<Khoa_Vien> dsKhoa_Vien) {
+		this.dsKhoa_Vien = dsKhoa_Vien;
 	}
 
 	public ArrayList<LopChuyenNganh> getDsLopChuyenNganh() {

@@ -4,6 +4,7 @@ public class SinhVien {
 	protected String idSinhVien;
 	protected String hoTen;
 	protected String khoa;
+	protected String tenLop;
 	protected String ngaySinh;
 	protected String gioiTinh;
 	protected String email;
@@ -17,11 +18,12 @@ public class SinhVien {
 		
 	}
 	
-	public SinhVien(String idSinhVien, String hoTen, String khoa, String ngaySinh, String gioiTinh, String email,
+	public SinhVien(String idSinhVien, String hoTen, String khoa, String tenLop, String ngaySinh, String gioiTinh, String email,
 			String soDT, String diaChi, double diemTB) {
 		this.idSinhVien = idSinhVien;
 		this.hoTen = hoTen;
 		this.khoa = khoa;
+		this.tenLop = tenLop;
 		this.ngaySinh = ngaySinh;
 		this.gioiTinh = gioiTinh;
 		this.email = email;
@@ -93,6 +95,14 @@ public class SinhVien {
 
 	public void setKhoa(String khoa) {
 		this.khoa = khoa;
+	}
+
+	public String getTenLop() {
+		return tenLop;
+	}
+
+	public void setTenLop(String tenLop) {
+		this.tenLop = tenLop;
 	}
 
 	public double getDiemTB() {

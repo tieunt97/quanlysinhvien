@@ -25,28 +25,28 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import quanlysinhvien.model.Khoa_Vien;
 import quanlysinhvien.model.LopChuyenNganh;
-import quanlysinhvien.model.Nganh;
 import quanlysinhvien.view.PanelDanhSachNganhView;
 import quanlysinhvien.view.XemDanhSachLopCNView;
 
 public class DanhSachNganhController {
 	private PanelDanhSachNganhView danhSachNganh;
 	private JTable table;
-	private JTextField tfIdNganh, tfTenNganh, tfTimKiem;
+	private JTextField tfIdKhoa_Vien, tfTenKhoa_Vien, tfTimKiem;
 	private JButton btnThem, btnSua, btnXoa, btnTimKiem, btnHuy, btnXemDSNganh;
 	private JComboBox<String> timKiemCB;
-	private ArrayList<Nganh> dsNganh;
+	private ArrayList<Khoa_Vien> dsKhoa_Vien;
 	private String fileName;
 	
 	public DanhSachNganhController(PanelDanhSachNganhView danhSachNganh) {
 		this.danhSachNganh = danhSachNganh;
 		this.fileName = "quanlysinhvien\\danhsachchuyennganh\\dsNganh.xlsx";
 		try {
-			this.dsNganh = readFile(fileName);
+			this.dsKhoa_Vien = readFile(fileName);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			this.dsNganh = new ArrayList<>();
+			this.dsKhoa_Vien = new ArrayList<>();
 //			e.printStackTrace();
 			System.out.println("Error DanhSachNganh: " + e);
 		}
@@ -58,10 +58,10 @@ public class DanhSachNganhController {
 		this.btnHuy = danhSachNganh.getBtnHuy();
 		this.btnXemDSNganh = danhSachNganh.getBtnXemDSNganh();
 		this.timKiemCB = danhSachNganh.getTimKiemCB();
-		this.tfIdNganh = danhSachNganh.getTfIdNganh();
-		this.tfTenNganh = danhSachNganh.getTfTenNganh();
+		this.tfIdKhoa_Vien = danhSachNganh.getTfIdKhoa_Vien();
+		this.tfTenKhoa_Vien = danhSachNganh.getTfTenKhoa_Vien();
 		this.tfTimKiem = danhSachNganh.getTfTimKiem();
-		danhSachNganh.loadData(table, dsNganh, "", "");
+		danhSachNganh.loadData(table, dsKhoa_Vien, "", "");
 		
 		setAction();
 	}
@@ -80,9 +80,9 @@ public class DanhSachNganhController {
 				// TODO Auto-generated method stub
 				int row = table.getSelectedRow();
 				if(row >= 0) {
-					tfIdNganh.setText((String) table.getValueAt(row, 0));
-					tfIdNganh.setEnabled(false);
-					tfTenNganh.setText((String) table.getValueAt(row, 1));
+					tfIdKhoa_Vien.setText((String) table.getValueAt(row, 0));
+					tfIdKhoa_Vien.setEnabled(false);
+					tfTenKhoa_Vien.setText((String) table.getValueAt(row, 1));
 				}
 			}
 			
@@ -108,13 +108,13 @@ public class DanhSachNganhController {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				Nganh nganh = getNganh();
-				if (nganh != null) {
-					if (checkNganh(nganh.getIdNganh())) {
-						dsNganh.add(nganh);
-						danhSachNganh.loadData(table, dsNganh, "", "");
+				Khoa_Vien khoa_vien = getKhoa_Vien();
+				if (khoa_vien != null) {
+					if (checkNganh(khoa_vien.getIdKhoa_Vien())) {
+						dsKhoa_Vien.add(khoa_vien);
+						danhSachNganh.loadData(table, dsKhoa_Vien, "", "");
 						try {
-							addNganh(nganh, fileName);
+							addKhoa_Vien(khoa_vien, fileName);
 						} catch (IOException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
@@ -138,18 +138,18 @@ public class DanhSachNganhController {
 							JOptionPane.ERROR_MESSAGE);
 					return;
 				}
-				Nganh nganh = getNganh();
-				if (nganh != null) {
-					for (int i = 0; i < dsNganh.size(); i++) {
-						String idNganh = dsNganh.get(i).getIdNganh();
-						if (idNganh.equals(nganh.getIdNganh())) {
-							dsNganh.get(i).setTenNganh(nganh.getTenNganh());;
+				Khoa_Vien khoa_vien = getKhoa_Vien();
+				if (khoa_vien != null) {
+					for (int i = 0; i < dsKhoa_Vien.size(); i++) {
+						String idNganh = dsKhoa_Vien.get(i).getIdKhoa_Vien();
+						if (idNganh.equals(khoa_vien.getIdKhoa_Vien())) {
+							dsKhoa_Vien.get(i).setTenKhoa_Vien(khoa_vien.getTenKhoa_Vien());;
 							break;
 						}
 					}
 					boolean ck = false;
 					try {
-						ck = updateNganh(nganh, fileName);
+						ck = updateKhoa_Vien(khoa_vien, fileName);
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -158,7 +158,7 @@ public class DanhSachNganhController {
 					else {
 						JOptionPane.showMessageDialog(null, "Lỗi cập nhật", "Error update", JOptionPane.ERROR_MESSAGE);
 					}
-					danhSachNganh.loadData(table, dsNganh, "", "");
+					danhSachNganh.loadData(table, dsKhoa_Vien, "", "");
 					cancel();
 				}
 			}
@@ -177,17 +177,17 @@ public class DanhSachNganhController {
 							JOptionPane.YES_NO_OPTION);
 					if (select == 0) {
 						String id = (String) table.getValueAt(row, 0);
-						for (int i = 0; i < dsNganh.size(); i++) {
-							if (dsNganh.get(i).getIdNganh().equals(id)) {
+						for (int i = 0; i < dsKhoa_Vien.size(); i++) {
+							if (dsKhoa_Vien.get(i).getIdKhoa_Vien().equals(id)) {
 								boolean ck = false;
 								try {
-									ck = deleteNganh(dsNganh.get(i).getIdNganh(), fileName);
+									ck = deleteKhoa_Vien(dsKhoa_Vien.get(i).getIdKhoa_Vien(), fileName);
 								} catch (IOException e1) {
 									// TODO Auto-generated catch block
 									e1.printStackTrace();
 								}
-								dsNganh.remove(i);
-								danhSachNganh.loadData(table, dsNganh, "", "");
+								dsKhoa_Vien.remove(i);
+								danhSachNganh.loadData(table, dsKhoa_Vien, "", "");
 								if(ck) JOptionPane.showMessageDialog(null, "Xóa thành công");
 								else {
 									JOptionPane.showMessageDialog(null, "Xóa lỗi", "Error delete", JOptionPane.ERROR_MESSAGE);
@@ -206,7 +206,7 @@ public class DanhSachNganhController {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				cancel();
-				danhSachNganh.loadData(table, dsNganh, "", "");
+				danhSachNganh.loadData(table, dsKhoa_Vien, "", "");
 			}
 		});
 		btnTimKiem.addActionListener(new ActionListener() {
@@ -216,7 +216,7 @@ public class DanhSachNganhController {
 				// TODO Auto-generated method stub
 				String timKiem = timKiemCB.getSelectedItem().toString();
 				String giaTri = tfTimKiem.getText().trim().toLowerCase();
-				danhSachNganh.loadData(table, dsNganh, timKiem, giaTri);
+				danhSachNganh.loadData(table, dsKhoa_Vien, timKiem, giaTri);
 			}
 		});
 		btnXemDSNganh.addActionListener(new ActionListener() {
@@ -236,8 +236,8 @@ public class DanhSachNganhController {
 		});
 	}
 	
-	private ArrayList<Nganh> readFile(String fileName) throws IOException{
-		ArrayList<Nganh> dsNganh = new ArrayList<>();
+	private ArrayList<Khoa_Vien> readFile(String fileName) throws IOException{
+		ArrayList<Khoa_Vien> dsKhoa_Vien = new ArrayList<>();
 		FileInputStream inputStream = new FileInputStream(new File(fileName));
 
 		Workbook workbook = new XSSFWorkbook(inputStream);
@@ -276,14 +276,14 @@ public class DanhSachNganhController {
 					dsLopChuyenNganh = new ArrayList<>();
 					System.out.println("Error DanhSachNganhController:" + exc);
 				}
-				Nganh nganh = new Nganh(null, dataNganh.get(0), dataNganh.get(1));
-				dsNganh.add(nganh);
+				Khoa_Vien khoa_vien = new Khoa_Vien(null, dataNganh.get(0), dataNganh.get(1));
+				dsKhoa_Vien.add(khoa_vien);
 			}
 		}
 
 		workbook.close();
 		inputStream.close();
-		return dsNganh;
+		return dsKhoa_Vien;
 	}
 	
 	private void createHeader(Sheet sheet) {
@@ -296,21 +296,21 @@ public class DanhSachNganhController {
 
 		Cell cellHocKy = row.createCell(1);
 		cellHocKy.setCellStyle(cellStyle);
-		cellHocKy.setCellValue("Mã ngành");
+		cellHocKy.setCellValue("Mã Khoa/Viện");
 
 		Cell cellIdLop = row.createCell(2);
 		cellIdLop.setCellStyle(cellStyle);
-		cellIdLop.setCellValue("Tên ngành");
+		cellIdLop.setCellValue("Tên Khoa/Viện");
 	}
 	
-	private void writeNganh(Nganh nganh, Row row) {
+	private void writeKhoaVien(Khoa_Vien khoa_vien, Row row) {
 		Cell cell = row.createCell(1);
-		cell.setCellValue(nganh.getIdNganh());
+		cell.setCellValue(khoa_vien.getIdKhoa_Vien());
 		cell = row.createCell(2);
-		cell.setCellValue(nganh.getTenNganh());
+		cell.setCellValue(khoa_vien.getTenKhoa_Vien());
 	}
 	
-	private void addNganh(Nganh nganh, String fileName) throws IOException {
+	private void addKhoa_Vien(Khoa_Vien khoa_vien, String fileName) throws IOException {
 		Workbook workbook = null;
 		Sheet sheet = null;
 		int lastRow = -1;
@@ -334,7 +334,7 @@ public class DanhSachNganhController {
 			row = sheet.createRow(lastRow + 1);
 		}
 		if(row != null) {
-			writeNganh(nganh, row);
+			writeKhoaVien(khoa_vien, row);
 		}
 		
 		FileOutputStream fout = new FileOutputStream(new File(fileName));
@@ -342,7 +342,7 @@ public class DanhSachNganhController {
 		fout.close();
 	}
 	
-	private boolean updateNganh(Nganh Nganh, String fileName) throws IOException {
+	private boolean updateKhoa_Vien(Khoa_Vien khoa_vien, String fileName) throws IOException {
 		boolean ck = false;
 		FileInputStream fin = new FileInputStream(new File(fileName));
 		Workbook workbook = new XSSFWorkbook(fin);
@@ -355,10 +355,10 @@ public class DanhSachNganhController {
 		while(iterator.hasNext()) {
 			nextRow = iterator.next();
 			Cell cell = nextRow.getCell(1);
-			String idNganh = cell.getStringCellValue();
-			if(idNganh.equalsIgnoreCase(Nganh.getIdNganh())) {
+			String idKhoaVien = cell.getStringCellValue();
+			if(idKhoaVien.equalsIgnoreCase(khoa_vien.getIdKhoa_Vien())) {
 				cell = nextRow.createCell(2);
-				cell.setCellValue(Nganh.getTenNganh());
+				cell.setCellValue(khoa_vien.getTenKhoa_Vien());
 				ck = true;
 				break;
 			}
@@ -372,7 +372,7 @@ public class DanhSachNganhController {
 		return ck;
 	}
 	
-	private boolean deleteNganh(String idNganh, String fileName) throws IOException {
+	private boolean deleteKhoa_Vien(String idKhoa_Vien, String fileName) throws IOException {
 		boolean ck = false;
 		FileInputStream fin = new FileInputStream(new File(fileName));
 		Workbook workbook = new XSSFWorkbook(fin);
@@ -389,7 +389,7 @@ public class DanhSachNganhController {
 			i++;
 			Cell cell = nextRow.getCell(1);
 			String idN = cell.getStringCellValue();
-			if(idN.equalsIgnoreCase(idNganh)) {
+			if(idN.equalsIgnoreCase(idKhoa_Vien)) {
 				int lastRow = sheet.getLastRowNum();
 				if(i < lastRow) {
 					sheet.shiftRows(i + 1, lastRow, -1);
@@ -461,20 +461,20 @@ public class DanhSachNganhController {
 	}
 
 	
-	private Nganh getNganh() {
-		String idNganh = tfIdNganh.getText();
-		String tenNganh = tfTenNganh.getText();
+	private Khoa_Vien getKhoa_Vien() {
+		String idNganh = tfIdKhoa_Vien.getText().toUpperCase();
+		String tenNganh = tfTenKhoa_Vien.getText();
 		if(idNganh.equals("") || tenNganh.equals("")) {
 			JOptionPane.showMessageDialog(null, "Có trường dữ liệu trống", "Error", JOptionPane.ERROR_MESSAGE);
 			return null;
 		}
-		Nganh nganh = new Nganh(null, idNganh, tenNganh);
-		return nganh;
+		Khoa_Vien khoa_vien = new Khoa_Vien(null, idNganh, tenNganh);
+		return khoa_vien;
 	}
 	
-	private boolean checkNganh(String idNganh) {
-		for (int i = 0; i < dsNganh.size(); i++) {
-			if (dsNganh.get(i).getIdNganh().equals(idNganh))
+	private boolean checkNganh(String idKhoa_Vien) {
+		for (Khoa_Vien khoa_vien: dsKhoa_Vien) {
+			if (khoa_vien.getIdKhoa_Vien().equals(idKhoa_Vien))
 				return false;
 		}
 		return true;
@@ -482,9 +482,9 @@ public class DanhSachNganhController {
 	
 	private void cancel() {
 		table.getSelectionModel().clearSelection();
-		tfIdNganh.setText("");
-		tfIdNganh.setEnabled(true);
-		tfTenNganh.setText("");
+		tfIdKhoa_Vien.setText("");
+		tfIdKhoa_Vien.setEnabled(true);
+		tfTenKhoa_Vien.setText("");
 		tfTimKiem.setText("");
 	}
 }

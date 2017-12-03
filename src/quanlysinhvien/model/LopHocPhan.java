@@ -49,7 +49,7 @@ public class LopHocPhan {
 		}
 	}
 	
-	public boolean xoaSinhVien(String idSinhVien, SinhVien sv) {
+	public boolean xoaSinhVien(String idSinhVien) {
 		for(int i = 0; i < dsSinhVien.size(); i++) {
 			if(dsSinhVien.get(i).getIdSinhVien().equals(idSinhVien)) {
 				dsSinhVien.remove(i);

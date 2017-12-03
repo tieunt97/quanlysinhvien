@@ -64,13 +64,6 @@ public class MainSinhVienTC extends JFrame implements ActionListener{
 	
 	
 	public MainSinhVienTC(TaiKhoan tk) {
-		try {
-			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
-				| UnsupportedLookAndFeelException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		conter = this.getContentPane();
 		mainPanel = new JPanel();
 		mainPanel.setLayout(carLayout = new CardLayout());

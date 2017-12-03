@@ -14,6 +14,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
 import quanlysinhvien.model.LopChuyenNganh;
@@ -23,8 +24,8 @@ public class PanelLopChuyenNganhView extends JPanel{
 	private JTextField tfIdNganh, tfTenLop, tfIdLopChuyenNganh, tfTenChuNhiem, tfTimKiem;
 	private JButton btnThem, btnSua, btnXoa, btnHuy, btnTimKiem, btnCapNhatSV;
 	private JComboBox<String> timKiemCB;
-	private String[] titleCols = {"Mã lớp", "Tên lớp", "Chủ nhiệm", "Mã ngành", "Tên ngành"};
-	private String[] timKiemVals = {"Mã lớp", "Chủ nhiệm", "Mã ngành"};
+	private String[] titleCols = {"Mã lớp", "Tên lớp", "Chủ nhiệm", "Mã Khoa/Viện", "Tên Khoa/Viện"};
+	private String[] timKiemVals = {"Mã lớp", "Chủ nhiệm", "Mã Khoa/Viện"};
 	
 	
 	
@@ -55,8 +56,8 @@ public class PanelLopChuyenNganhView extends JPanel{
 	
 	private JPanel createTablePanel() {
 		JPanel panel = new JPanel(new BorderLayout());
+		panel.setBorder(new TitledBorder(null, ""));
 		JScrollPane scroll = new JScrollPane(table = new JTable());
-		loadData(table, new ArrayList<LopChuyenNganh>(), "", "");
 		panel.add(scroll);
 		
 		return panel;
@@ -167,8 +168,8 @@ public class PanelLopChuyenNganhView extends JPanel{
 					data[index][0] = lopCN.getIdLopChuyenNganh();
 					data[index][1] = lopCN.getTenLop();
 					data[index][2] = lopCN.getTenChuNhiem();
-					data[index][3] = lopCN.getIdNganh();
-					data[index][4] = lopCN.getTenNganh();
+					data[index][3] = lopCN.getIdKhoaVien();
+					data[index][4] = lopCN.getTenKhoaVien();
 					index++;
 				}
 				break;
@@ -177,18 +178,18 @@ public class PanelLopChuyenNganhView extends JPanel{
 					data[index][0] = lopCN.getIdLopChuyenNganh();
 					data[index][1] = lopCN.getTenLop();
 					data[index][2] = lopCN.getTenChuNhiem();
-					data[index][3] = lopCN.getIdNganh();
-					data[index][4] = lopCN.getTenNganh();
+					data[index][3] = lopCN.getIdKhoaVien();
+					data[index][4] = lopCN.getTenKhoaVien();
 					index++;
 				}
 				break;
-			case "Mã ngành":
-				if(lopCN.getIdNganh().toLowerCase().indexOf(giaTri) >= 0) {
+			case "Mã Khoa/Viện":
+				if(lopCN.getIdKhoaVien().toLowerCase().indexOf(giaTri) >= 0) {
 					data[index][0] = lopCN.getIdLopChuyenNganh();
 					data[index][1] = lopCN.getTenLop();
 					data[index][2] = lopCN.getTenChuNhiem();
-					data[index][3] = lopCN.getIdNganh();
-					data[index][4] = lopCN.getTenNganh();
+					data[index][3] = lopCN.getIdKhoaVien();
+					data[index][4] = lopCN.getTenKhoaVien();
 					index++;
 				}
 				break;
@@ -196,8 +197,8 @@ public class PanelLopChuyenNganhView extends JPanel{
 				data[index][0] = lopCN.getIdLopChuyenNganh();
 				data[index][1] = lopCN.getTenLop();
 				data[index][2] = lopCN.getTenChuNhiem();
-				data[index][3] = lopCN.getIdNganh();
-				data[index][4] = lopCN.getTenNganh();
+				data[index][3] = lopCN.getIdKhoaVien();
+				data[index][4] = lopCN.getTenKhoaVien();
 				index++;
 				}
 				break;

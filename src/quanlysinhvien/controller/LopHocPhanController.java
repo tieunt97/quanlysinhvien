@@ -137,7 +137,6 @@ public class LopHocPhanController {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-						JOptionPane.showMessageDialog(null, "Thêm thành công");
 					}else {
 						JOptionPane.showMessageDialog(null, "Trùng mã lớp", "Error insert", JOptionPane.ERROR_MESSAGE);
 					}
@@ -206,6 +205,8 @@ public class LopHocPhanController {
 								boolean ck = false;
 								try {
 									ck = deleteLopHP(idLop, fileName);
+									boolean ck1 = (new File("quanlysinhvien\\danhsachhocphan\\lophocphan\\" + idLop + "_dsSV.xlsx")).delete();
+									System.out.println(ck1);
 								} catch (IOException e1) {
 									// TODO Auto-generated catch block
 									e1.printStackTrace();
@@ -262,7 +263,7 @@ public class LopHocPhanController {
 						break;
 					}
 				}
-				new CapNhatSinhVienController(capNhatSV, dsSinhVien, "quanlysinhvien\\danhsachhocphan\\lophocphan\\" + idLop + "_dsSV.xlsx");
+				new CapNhatSinhVienController(capNhatSV, dsSinhVien, "quanlysinhvien\\danhsachhocphan\\lophocphan\\" + idLop + "_dsSV.xlsx", "");
 			}
 		});
 		
@@ -568,7 +569,7 @@ public class LopHocPhanController {
 				if(dataSV.size() < 1) return null;
 			}
 			if(dataSV.size() > 0) {
-				SinhVien sv = new SinhVien(dataSV.get(0), dataSV.get(1), dataSV.get(2), dataSV.get(3), dataSV.get(4), dataSV.get(5), dataSV.get(6), dataSV.get(7), Double.parseDouble(dataSV.get(8)));
+				SinhVien sv = new SinhVien(dataSV.get(0), dataSV.get(1), dataSV.get(2), dataSV.get(3), dataSV.get(4), dataSV.get(5), dataSV.get(6), dataSV.get(7), dataSV.get(8), Double.parseDouble(dataSV.get(9)));
 				dsSV.add(sv);
 			}
 		}
@@ -581,9 +582,9 @@ public class LopHocPhanController {
 	private LopHocPhan getLopHocPhan() {
 		LopHocPhan lopHP;
 		String hocKy = (String) hocKyCB.getSelectedItem();
-		String idLop = tfIdLop.getText();
-		String loaiLop = tfLoaiLop.getText();
-		String idHocPhan = tfIdHocPhan.getText();
+		String idLop = tfIdLop.getText().toUpperCase().trim();
+		String loaiLop = tfLoaiLop.getText().trim();
+		String idHocPhan = tfIdHocPhan.getText().trim();
 		String tenLop = "";
 		try {
 			tenLop = getTenLop(idHocPhan);
@@ -595,10 +596,10 @@ public class LopHocPhanController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		String thoiGian = tfThoiGian.getText();
-		String tuanHoc = tfTuanHoc.getText();
-		String phongHoc = tfPhongHoc.getText();
-		String tenGiangVien = tfTenGV.getText();
+		String thoiGian = tfThoiGian.getText().trim();
+		String tuanHoc = tfTuanHoc.getText().trim();
+		String phongHoc = tfPhongHoc.getText().trim();
+		String tenGiangVien = tfTenGV.getText().trim();
 		if(hocKy.equals("") || idLop.equals("") || loaiLop.equals("") || idHocPhan.equals("") || 
 				tenGiangVien.equals("") || thoiGian.equals("") || tuanHoc.equals("") || phongHoc.equals("")) {
 			JOptionPane.showMessageDialog(null, "Có trường dữ liệu trống", "Error", JOptionPane.ERROR_MESSAGE);
@@ -612,7 +613,7 @@ public class LopHocPhanController {
 			JOptionPane.showMessageDialog(null, "Hãy kiểm tra các giá trị: Số SV max, Số SV hiện tại", "Error", JOptionPane.ERROR_MESSAGE);
 			return null;
 		}
-		lopHP = new LopHocPhan(hocKy, idLop, loaiLop, idHocPhan, tenLop, thoiGian, tuanHoc, phongHoc, null, tenGiangVien, soSVMax, soSVHienTai);
+		lopHP = new LopHocPhan(hocKy, idLop, loaiLop, idHocPhan, tenLop, thoiGian, tuanHoc, phongHoc, new ArrayList<SinhVien>(), tenGiangVien, soSVMax, soSVHienTai);
 		return lopHP;
 	}
 	
@@ -642,8 +643,8 @@ public class LopHocPhanController {
 	}
 
 	private boolean checkLopHP(String idLopHP) {
-		for (int i = 0; i < dsLopHP.size(); i++) {
-			if (dsLopHP.get(i).getIdLop().equals(idLopHP))
+		for (LopHocPhan lopHP: dsLopHP) {
+			if (lopHP.getIdLop().equals(idLopHP))
 				return false;
 		}
 		return true;

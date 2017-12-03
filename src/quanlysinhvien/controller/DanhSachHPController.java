@@ -238,8 +238,8 @@ public class DanhSachHPController {
 	}
 
 	private boolean checkID(String id) {
-		for (int i = 0; i < dsHocPhan.size(); i++) {
-			if (dsHocPhan.get(i).getIdHocPhan().equals(id))
+		for (HocPhan hp: dsHocPhan) {
+			if (hp.getIdHocPhan().equals(id))
 				return false;
 		}
 		return true;

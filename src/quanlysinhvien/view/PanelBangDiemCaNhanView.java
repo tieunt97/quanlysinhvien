@@ -13,6 +13,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
 public class PanelBangDiemCaNhanView extends JPanel{
@@ -37,7 +38,6 @@ public class PanelBangDiemCaNhanView extends JPanel{
 		label.setFont(new Font("Caribli", Font.BOLD, 18));
 		label.setForeground(Color.YELLOW);
 		label.setIcon(new ImageIcon(this.getClass().getResource("/score.png")));
-//		label.setIcon(new ImageIcon("/score.png"));
 		
 		panel.add(label);
 		panel.setBackground(new Color(0x009999));
@@ -90,9 +90,9 @@ public class PanelBangDiemCaNhanView extends JPanel{
 	
 	private JPanel createTable2() {
 		JPanel panel = new JPanel(new BorderLayout());
-		tableKetQua = new JTable();
+		panel.setBorder(new TitledBorder(null, ""));
+		JScrollPane scroll = new JScrollPane(tableKetQua = new JTable());
 		loadData(tableKetQua, titleCols2);
-		JScrollPane scroll = new JScrollPane(tableKetQua);
 		panel.add(scroll, BorderLayout.CENTER);
 		
 		return panel;
@@ -108,9 +108,9 @@ public class PanelBangDiemCaNhanView extends JPanel{
 	
 	private JPanel createTable() {
 		JPanel panel = new JPanel(new BorderLayout(5, 5));
-		tableDiem = new JTable();
+		panel.setBorder(new TitledBorder(null, ""));
+		JScrollPane scroll = new JScrollPane(tableDiem = new JTable());
 		loadData(tableDiem, titleCols1);
-		JScrollPane scroll = new JScrollPane(tableDiem);
 		panel.add(scroll, BorderLayout.CENTER);
 		JPanel panelB = new JPanel(new GridLayout(1, 8, 5, 5));
 		panelB.add(createtfTimKiem(tfHocKy));

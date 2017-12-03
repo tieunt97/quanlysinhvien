@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Window;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -14,7 +15,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
 import quanlysinhvien.model.DiemHocPhan;
@@ -24,7 +27,7 @@ public class CapNhatDiemSVView extends JDialog{
 	private JTextField tfIdHocPhan, tfIdLopHoc, tfDiemQT, tfDiemThi;
 	private JButton btnThem, btnSua, btnXoa, btnHuy;
 	private JComboBox<String> hocKyCB;
-	private String[] titleCols = {"Học kỳ", "Mã học phần", "Tên học phần", "Tín chỉ", "Lớp học", "Điểm QT", "Điểm thi", "Điểm chữ"};
+	private String[] titleCols = {"Học kỳ", "Mã học phần", "Tên học phần", "Tín chỉ", "Lớp học", "Điểm QT", "Điểm thi", "Điểm chữ", "Điểm thang 4"};
 	private String[] hocKyVals = {"20172", "20171", "20163", "20162", "20161", "20153", "20152", "20151"};
 	private String idSV;
 	
@@ -32,6 +35,7 @@ public class CapNhatDiemSVView extends JDialog{
 		this.idSV = idSV;
 		setSize(950, 650);
 		setLocationRelativeTo(null);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		add(createTitlePanel(), BorderLayout.NORTH);
 		add(createMainPanel(), BorderLayout.CENTER);
 		setVisible(true);
@@ -55,10 +59,10 @@ public class CapNhatDiemSVView extends JDialog{
 	
 	private JPanel createTablePanel() {
 		JPanel panel = new JPanel(new BorderLayout());
+		panel.setBorder(new TitledBorder(null, ""));
 		JScrollPane scroll = new JScrollPane(table = new JTable());
-		loadData(table, new ArrayList<DiemHocPhan>());
-		
 		panel.add(scroll);
+		
 		return panel;
 	}
 	
@@ -134,21 +138,22 @@ public class CapNhatDiemSVView extends JDialog{
 		String[][] data = convertData(dsDiem);
 		DefaultTableModel model = new DefaultTableModel(data, titleCols);
 		table.setModel(model);
+		table.getColumnModel().getColumn(2).setPreferredWidth(172);
 	}
 	
 	private String[][] convertData(ArrayList<DiemHocPhan> dsDiem) {
 		int size = dsDiem.size();
 		String data[][] = new String[size][titleCols.length];
 		for(int i = 0; i < size; i++) {
-//			"Học kỳ", "Mã học phần", "Tên học phần", "Tín chỉ", "Lớp học", "Điểm QT", "Điểm thi", "Điểm chữ"
 			data[i][0] = dsDiem.get(i).getHocKy();
 			data[i][1] = dsDiem.get(i).getIdHocPhan();
 			data[i][2] = dsDiem.get(i).getTenHP();
 			data[i][3] = dsDiem.get(i).getTinChi() + "";
-			data[i][4] = dsDiem.get(i).getLopHoc();
+			data[i][4] = dsDiem.get(i).getIdLopHoc();
 			data[i][5] = dsDiem.get(i).getDiemQT() + "";
 			data[i][6] = dsDiem.get(i).getDiemThi() + "";
 			data[i][7] = dsDiem.get(i).getDiemChu();
+			data[i][8] = dsDiem.get(i).getDiemThang4() + "";
 		}
 		
 		return data;

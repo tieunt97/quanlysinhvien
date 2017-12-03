@@ -14,6 +14,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
 import quanlysinhvien.model.LopHocPhan;
@@ -56,8 +57,8 @@ public class PanelLopHocPhanView extends  JPanel{
 	
 	private JPanel createTablePanel() {
 		JPanel panel = new JPanel(new BorderLayout());
+		panel.setBorder(new TitledBorder(null, ""));
 		JScrollPane scroll = new JScrollPane(table = new JTable());
-		loadData(table, new ArrayList<LopHocPhan>(), "", "");
 		panel.add(scroll);
 		
 		return panel;
@@ -165,18 +166,13 @@ public class PanelLopHocPhanView extends  JPanel{
 		return panel;
 	}
 	
-//	private JPanel createPanelCB(JComboBox<String> cb, String[] vals) {
-//		JPanel panel = new JPanel(new BorderLayout());
-//		panel.setBorder(new EmptyBorder(0, 0, 0, 135));
-//		panel.add(cb = new JComboBox<>(vals));
-//		
-//		return panel;
-//	}
-	
 	public void loadData(JTable table, ArrayList<LopHocPhan> dsLopHP, String timKiem, String giaTri) {
 		String[][] data = convertData(dsLopHP, timKiem, giaTri);
 		DefaultTableModel model = new DefaultTableModel(data, titleCols);
 		table.setModel(model);
+		table.getColumnModel().getColumn(4).setPreferredWidth(125);
+		table.getColumnModel().getColumn(5).setPreferredWidth(125);
+		table.getColumnModel().getColumn(8).setPreferredWidth(125);
 	}
 	
 	private String[][] convertData(ArrayList<LopHocPhan> dsLopHP, String timKiem, String giaTri) {
