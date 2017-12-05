@@ -344,9 +344,9 @@ public class SinhVienTinChiController {
 		tfEmail.setText("");
 		tfSoDT.setText("");
 		tfDiaChi.setText("");
-		tfDiemTB.setText("");
-		tfSoTCQua.setText("");
-		tfSoTCNo.setText("");
+		tfDiemTB.setText("0.0");
+		tfSoTCQua.setText("0");
+		tfSoTCNo.setText("0");
 		tfTimKiem.setText("");
 		bg.clearSelection();
 	}
@@ -777,7 +777,6 @@ public class SinhVienTinChiController {
 						ck = true;
 					}
 				}
-				//hate you 
 				break;
 			}
 		}

@@ -10,8 +10,9 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 public class PanelDangKiTotNghiepView extends JPanel{
-	private JLabel labDiemTB, labTongSoTC, labSoTCNo, labTongSoKy, labDiemTB1;
+	private JLabel labDiemTB, labTongSoTC, labSoTCNo, labTongSoKy, labDiemTB1, labHoTen;
 	private JButton btnDangKy;
+	private JPanel panelSVTC, panelSVNC;
 	
 	public PanelDangKiTotNghiepView() {
 		setLayout(new BorderLayout(10, 10));
@@ -33,17 +34,7 @@ public class PanelDangKiTotNghiepView extends JPanel{
 	private JPanel createMainPanel() {
 		JPanel panel = new JPanel(new BorderLayout(10, 10));
 		panel.setBorder(new EmptyBorder(0, 50, 40, 50));
-		panel.add(createMessagePanel(), BorderLayout.NORTH);
 		panel.add(createContentPanel(), BorderLayout.CENTER);
-		
-		return panel;
-	}
-	
-	private JPanel createMessagePanel() {
-		JPanel panel = new JPanel();
-		JLabel label;
-		panel.add(label = new JLabel("Bạn không có quyền truy cập vào mục này..."));
-		label.setFont(new Font("Caribli", Font.BOLD, 34));
 		
 		return panel;
 	}
@@ -52,19 +43,19 @@ public class PanelDangKiTotNghiepView extends JPanel{
 		JPanel panelMain = new JPanel(new GridLayout(2, 1, 15, 15));
 		panelMain.setBorder(new EmptyBorder(10, 400, 250, 400));
 		JPanel panel = new JPanel(new BorderLayout());
-		JPanel panelSVTC = new JPanel(new GridLayout(4, 2, 5, 5));
+		panelSVTC = new JPanel(new GridLayout(4, 2, 5, 5));
 		panelSVTC.add(createLabel("Họ tên SV:"));
-		panelSVTC.add(createLabel("Nguyễn Văn A"));
+		panelSVTC.add(labHoTen = createLabel(""));
 		panelSVTC.add(createLabel("Điểm TB:"));
-		panelSVTC.add(labDiemTB = createLabel("3.21"));
+		panelSVTC.add(labDiemTB = createLabel(""));
 		panelSVTC.add(createLabel("Tổng số TC qua:"));
-		panelSVTC.add(labTongSoTC = createLabel("158"));
+		panelSVTC.add(labTongSoTC = createLabel(""));
 		panelSVTC.add(createLabel("Số TC nợ:"));
-		panelSVTC.add(labSoTCNo = createLabel("0"));
+		panelSVTC.add(labSoTCNo = createLabel(""));
 		
-		JPanel panelSVNC = new JPanel(new GridLayout(2, 1, 5, 5));
+		panelSVNC = new JPanel(new GridLayout(2, 1, 5, 5));
 		panelSVNC.add(createLabel("Họ tên SV:"));
-		panelSVNC.add(createLabel("Nguyễn Văn A"));
+		panelSVNC.add(labHoTen);
 		panelSVNC.add(createLabel("Điểm TB:"));
 		panelSVNC.add(labDiemTB1 = createLabel("3.21"));
 		panelSVNC.add(createLabel("Tổng số kỳ:"));
@@ -86,5 +77,42 @@ public class PanelDangKiTotNghiepView extends JPanel{
 		label.setFont(new Font("Caribli", Font.BOLD, 16));
 		return label;
 	}
+
+	public JLabel getLabDiemTB() {
+		return labDiemTB;
+	}
+
+	public JLabel getLabTongSoTC() {
+		return labTongSoTC;
+	}
+
+	public JLabel getLabSoTCNo() {
+		return labSoTCNo;
+	}
+
+	public JLabel getLabTongSoKy() {
+		return labTongSoKy;
+	}
+
+	public JLabel getLabDiemTB1() {
+		return labDiemTB1;
+	}
+
+	public JButton getBtnDangKy() {
+		return btnDangKy;
+	}
+
+	public JLabel getLabHoTen() {
+		return labHoTen;
+	}
+
+	public JPanel getPanelSVTC() {
+		return panelSVTC;
+	}
+
+	public JPanel getPanelSVNC() {
+		return panelSVNC;
+	}
+	
 }
 

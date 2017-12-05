@@ -4,6 +4,12 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -15,12 +21,24 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import quanlysinhvien.model.DiemHocPhan;
+
 public class PanelBangDiemHocPhanView extends JPanel{
 	private JTextField tfIdSinhVien, tfHocKy, tfIdHP, tfTenHP, tfTinChi, tfDiemHP;
-	private JLabel lbSumHP, lbSumTC;
-	private String titleCols[] = {"Học kỳ", "Mã HP", "Tên HP", "TC", "Điểm học phẩn"};
+	private String titleCols[] = {"Học kỳ", "Mã HP", "Tên HP", "TC", "Điểm học phần"};
+	private JLabel labSumHP, labSumTC;
 	private JTable table;
-	 
+
+	
+	String[][] data;
 	
 	public PanelBangDiemHocPhanView() {
 		setLayout(new BorderLayout(15, 15));
@@ -34,7 +52,7 @@ public class PanelBangDiemHocPhanView extends JPanel{
 		JLabel label = new JLabel("Bảng điểm học phần");
 		label.setFont(new Font("Caribli", Font.BOLD, 18));
 		label.setForeground(Color.YELLOW);
-		label.setIcon(new ImageIcon(this.getClass().getResource("/score.png")));
+		label.setIcon(new ImageIcon("images/score.png"));
 		panel.add(label);
 		panel.setBackground(new Color(0x009999));
 		
@@ -55,7 +73,7 @@ public class PanelBangDiemHocPhanView extends JPanel{
 		panel.setBorder(new EmptyBorder(0, 0, 0, 900));
 		panel.add(createLabel("Mã sinh viên:", 16), BorderLayout.WEST);
 		panel.add(tfIdSinhVien = new JTextField(20), BorderLayout.CENTER);
-		tfIdSinhVien.setText("20153752");
+		tfIdSinhVien.setText("");
 		tfIdSinhVien.setEditable(false);
 		
 		return panel;
@@ -80,23 +98,28 @@ public class PanelBangDiemHocPhanView extends JPanel{
 	private JPanel createTable() {
 		JPanel panel = new JPanel(new BorderLayout(5, 5));
 		table = new JTable();
-		loadData(table);
 		JScrollPane scroll = new JScrollPane(table);
 		panel.add(scroll, BorderLayout.CENTER);
 		JPanel panelB = new JPanel(new GridLayout(1, 5, 5, 5));
+		
+		tfHocKy = new JTextField();
 		panelB.add(createtfTimKiem(tfHocKy));
+		tfIdHP = new JTextField();
 		panelB.add(createtfTimKiem(tfIdHP));
+		tfTenHP = new JTextField();
 		panelB.add(createtfTimKiem(tfTenHP));
+		tfTinChi = new JTextField();
 		panelB.add(createtfTimKiem(tfTinChi));
+		tfDiemHP = new JTextField();
 		panelB.add(createtfTimKiem(tfDiemHP));
 		panel.add(panelB, BorderLayout.SOUTH);
 		
 		return panel;
 	}
 	
-	private void loadData(JTable table) {
+	public void loadData(JTable table, ArrayList<DiemHocPhan> dsDiem) {
 		SwingUtilities.invokeLater(new Runnable(){public void run(){
-			String data[][] = null;
+			String data[][] = convertData(dsDiem);
 		    //Update the model here
 			DefaultTableModel tableModel = new DefaultTableModel(data, titleCols) {
 				@Override
@@ -105,20 +128,34 @@ public class PanelBangDiemHocPhanView extends JPanel{
 					return false;
 				}
 			};
+			
 			table.setModel(tableModel);
 		}});
+	}
+	
+	private String[][] convertData(ArrayList<DiemHocPhan> dsDiem) {
+		String[][] data = new String[dsDiem.size()][5];
+		for (int i = 0; i < dsDiem.size(); i++) {
+			data[i][0] = dsDiem.get(i).getHocKy();
+			data[i][1] = dsDiem.get(i).getIdHocPhan();
+			data[i][2] = dsDiem.get(i).getTenHP();
+			data[i][3] = dsDiem.get(i).getTinChi()+"";
+			data[i][4] = dsDiem.get(i).getDiemChu();
+		}
+		
+		return data;
 	}
 	
 	private JPanel createBottom() {
 		JPanel panel = new JPanel(new GridLayout(1, 2));
 		JPanel panelL = new JPanel();
 		panelL.add(createLabel("C =", 12));
-		panelL.add(lbSumTC = new JLabel("32"));
+		panelL.add(labSumHP = new JLabel());
 		panel.add(panelL);
 		
 		JPanel panelR  = new JPanel();
 		panelR.add(createLabel("TC =", 12));
-		panelR.add(lbSumHP = new JLabel("69"));
+		panelR.add(labSumTC = new JLabel());
 		panel.add(panelR);
 		
 		return panel;
@@ -133,9 +170,70 @@ public class PanelBangDiemHocPhanView extends JPanel{
 	
 	private JPanel createtfTimKiem(JTextField tf) {
 		JPanel panel = new JPanel(new BorderLayout(0, 0));
-		panel.add(tf = new JTextField(), BorderLayout.CENTER);
+		panel.add(tf, BorderLayout.CENTER);
 		
-		panel.add(new JLabel(new ImageIcon(this.getClass().getResource("/key.png"))), BorderLayout.EAST);
+		panel.add(new JLabel(new ImageIcon("images/key.png")), BorderLayout.EAST);
 		return panel;
 	}
+
+	public JTextField getTfHocKy() {
+		return tfHocKy;
+	}
+
+	public void setTfHocKy(JTextField tfHocKy) {
+		this.tfHocKy = tfHocKy;
+	}
+
+	public JTextField getTfIdHP() {
+		return tfIdHP;
+	}
+
+	public void setTfIdHP(JTextField tfIdHP) {
+		this.tfIdHP = tfIdHP;
+	}
+
+	public JTextField getTfTenHP() {
+		return tfTenHP;
+	}
+
+	public void setTfTenHP(JTextField tfTenHP) {
+		this.tfTenHP = tfTenHP;
+	}
+
+	public JTextField getTfTinChi() {
+		return tfTinChi;
+	}
+
+	public void setTfTinChi(JTextField tfTinChi) {
+		this.tfTinChi = tfTinChi;
+	}
+
+	public JTextField getTfDiemHP() {
+		return tfDiemHP;
+	}
+
+	public void setTfDiemHP(JTextField tfDiemHP) {
+		this.tfDiemHP = tfDiemHP;
+	}
+
+	public JTable getTable() {
+		return table;
+	}
+
+	public void setTable(JTable table) {
+		this.table = table;
+	}
+
+	public JTextField getTfIdSinhVien() {
+		return tfIdSinhVien;
+	}
+
+	public JLabel getLabSumHP() {
+		return labSumHP;
+	}
+
+	public JLabel getLabSumTC() {
+		return labSumTC;
+	}
+	
 }

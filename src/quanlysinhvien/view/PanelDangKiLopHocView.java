@@ -7,6 +7,7 @@ import java.awt.GridLayout;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -20,8 +21,10 @@ public class PanelDangKiLopHocView extends JPanel{
 	private JTextField tfDangKy;
 	private JButton btnDangKy, btnXoaDangKy, btnGuiDangKy;
 	private JTable tableDangKy, tableTKB;
-	private String[] titleCols1 = {"Mã lớp", "Tên lớp", "Mã học phần", "loại lớp", "Trạng thái ĐK"};
+	private String[] titleCols1 = {"Mã lớp", "Tên lớp", "Mã học phần", "loại lớp", "Trạng thái ĐK", "Select"};
 	private String[] titleCols2 = {"Thứ", "Thời gian", "Tuần học", "Phòng học", "Mã lớp"};
+	private JLabel lblSum;
+	private JCheckBox cbCheck;
 	
 	
 	public PanelDangKiLopHocView() {
@@ -36,7 +39,8 @@ public class PanelDangKiLopHocView extends JPanel{
 		JLabel label = new JLabel("Đăng ký lớp học");
 		label.setFont(new Font("Caribli", Font.BOLD, 18));
 		label.setForeground(Color.YELLOW);
-		label.setIcon(new ImageIcon(this.getClass().getResource("/register.png")));
+//		label.setIcon(new ImageIcon(this.getClass().getResource("/register.png")));
+		label.setIcon(new ImageIcon("images/register.png"));
 		panel.add(label);
 		panel.setBackground(new Color(0x009999));
 		
@@ -74,14 +78,32 @@ public class PanelDangKiLopHocView extends JPanel{
 		panel.add(createTitleTable("Các lớp đăng ký"), BorderLayout.NORTH);
 		
 		tableDangKy = new JTable();
-		loadData(tableDangKy, titleCols1);
+		//loadtitle table dang ki
+		loadData(tableDangKy, titleCols1, 1);
 		JScrollPane scroll = new JScrollPane(tableDangKy);
 		panel.add(scroll, BorderLayout.CENTER);
+		
+		JPanel panelSouth = new JPanel(new GridLayout(2, 1, 5, 5));
+		JPanel panelTongTC = new JPanel(new BorderLayout(50, 0));
+		panelTongTC.setBorder(new EmptyBorder(0, 850, 0, 50));
+		JPanel panelLabel = new JPanel(new BorderLayout());
+		JLabel lblTongTC = new JLabel("Tổng số TC đăng ký = ");
+		lblSum = new JLabel("0");
+		panelLabel.add(lblTongTC, BorderLayout.CENTER);
+		panelLabel.add(lblSum, BorderLayout.EAST);
+		panelTongTC.add(panelLabel, BorderLayout.CENTER);
+		
+		cbCheck = new JCheckBox();
+		panelTongTC.add(cbCheck, BorderLayout.EAST);
+		
+		panelSouth.add(panelTongTC);
 		
 		JPanel btnPanel = new JPanel(new BorderLayout());
 		btnPanel.setBorder(new EmptyBorder(5, 875, 0, 50));
 		btnPanel.add(btnXoaDangKy = new JButton("Xóa lớp"), BorderLayout.CENTER);
-		panel.add(btnPanel, BorderLayout.SOUTH);
+		panelSouth.add(btnPanel);
+		
+		panel.add(panelSouth, BorderLayout.SOUTH);
 		
 		
 		return panel;
@@ -92,7 +114,7 @@ public class PanelDangKiLopHocView extends JPanel{
 		panel.add(createTitleTable("Thời khóa biểu các lớp đăng ký"), BorderLayout.NORTH);
 		
 		tableTKB = new JTable();
-		loadData(tableTKB, titleCols2);
+		loadData(tableTKB, titleCols2, 2);
 		JScrollPane scroll = new JScrollPane(tableTKB);
 		panel.add(scroll, BorderLayout.CENTER);
 		
@@ -118,18 +140,112 @@ public class PanelDangKiLopHocView extends JPanel{
 		return label;
 	}
 	
-	private void loadData(JTable table, String[] titleCols) {
-		SwingUtilities.invokeLater(new Runnable(){public void run(){
-			String data[][] = null;
-		    //Update the model here
-			DefaultTableModel tableModel = new DefaultTableModel(data, titleCols) {
-				@Override
-				public boolean isCellEditable(int row, int column) {
-					// TODO Auto-generated method stub
-					return false;
+	
+	private void loadData(JTable table, String[] titleCols, int loaiTable) {
+//		SwingUtilities.invokeLater(new Runnable(){public void run(){
+//			String data[][] = null;
+//		    //Update the model here
+//			DefaultTableModel tableModel = new DefaultTableModel(data, titleCols) {
+//				@Override
+//				public boolean isCellEditable(int row, int column) {
+//					// TODO Auto-generated method stub
+//					return false;
+//				}
+//				
+//				@Override
+//				public Class<?> getColumnClass(int column) {
+//					// TODO Auto-generated method stub
+//					if(loaiTable ==1){
+//						if(column == 5){
+//							return Boolean.class;
+//						}
+//					}
+//					return String.class;
+//				}
+//			};
+//			table.setModel(tableModel);
+//		}});
+		
+		DefaultTableModel model = new DefaultTableModel(){
+			@Override
+			public Class<?> getColumnClass(int column) {
+				// TODO Auto-generated method stub
+				if(loaiTable ==1){
+					if(column == 5){
+						return Boolean.class;
+					}
 				}
-			};
-			table.setModel(tableModel);
-		}});
+				return String.class;
+			}
+		};
+		
+		model.setColumnIdentifiers(titleCols);
+		table.setModel(model);
 	}
+
+	public JTextField getTfDangKy() {
+		return tfDangKy;
+	}
+
+	public void setTfDangKy(JTextField tfDangKy) {
+		this.tfDangKy = tfDangKy;
+	}
+
+	public JButton getBtnDangKy() {
+		return btnDangKy;
+	}
+
+	public void setBtnDangKy(JButton btnDangKy) {
+		this.btnDangKy = btnDangKy;
+	}
+
+	public JButton getBtnXoaDangKy() {
+		return btnXoaDangKy;
+	}
+
+	public void setBtnXoaDangKy(JButton btnXoaDangKy) {
+		this.btnXoaDangKy = btnXoaDangKy;
+	}
+
+	public JButton getBtnGuiDangKy() {
+		return btnGuiDangKy;
+	}
+
+	public void setBtnGuiDangKy(JButton btnGuiDangKy) {
+		this.btnGuiDangKy = btnGuiDangKy;
+	}
+
+	public JTable getTableDangKy() {
+		return tableDangKy;
+	}
+
+	public void setTableDangKy(JTable tableDangKy) {
+		this.tableDangKy = tableDangKy;
+	}
+
+	public JTable getTableTKB() {
+		return tableTKB;
+	}
+
+	public void setTableTKB(JTable tableTKB) {
+		this.tableTKB = tableTKB;
+	}
+
+	public JLabel getLblSum() {
+		return lblSum;
+	}
+
+	public void setLblSum(JLabel lblSum) {
+		this.lblSum = lblSum;
+	}
+
+	public JCheckBox getCbCheck() {
+		return cbCheck;
+	}
+
+	public void setCbCheck(JCheckBox cbCheck) {
+		this.cbCheck = cbCheck;
+	}
+	
+	
 }

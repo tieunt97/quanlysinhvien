@@ -256,14 +256,16 @@ public class LopHocPhanController {
 				}
 				CapNhatSinhVienLCNView capNhatSV = new CapNhatSinhVienLCNView(new ArrayList<SinhVien>(), (String)table.getValueAt(row, 1));
 				ArrayList<SinhVien> dsSinhVien = new ArrayList<>();
+				LopHocPhan lopHP = new LopHocPhan();
 				String idLop = (String) table.getValueAt(row, 1);
 				for (int i = 0; i < dsLopHP.size(); i++) {
 					if(dsLopHP.get(i).getIdLop().equals(idLop)) {
 						dsSinhVien = dsLopHP.get(i).getDsSinhVien();
+						lopHP = dsLopHP.get(i);
 						break;
 					}
 				}
-				new CapNhatSinhVienController(capNhatSV, dsSinhVien, "quanlysinhvien\\danhsachhocphan\\lophocphan\\" + idLop + "_dsSV.xlsx", "");
+				new CapNhatSinhVienController(capNhatSV, dsSinhVien, "quanlysinhvien\\danhsachhocphan\\lophocphan\\" + idLop + "_dsSV.xlsx", "", lopHP);
 			}
 		});
 		

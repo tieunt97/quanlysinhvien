@@ -24,6 +24,22 @@ public class LopHocPhan {
 		this.soSVHienTai = dsSinhVien.size();
 	}
 	
+	public LopHocPhan(String hocKy, String idLop, String loaiLop, String idHocPhan, String tenLop, String thoiGian, String tuanHoc, String phongHoc, String tenGiangVien, int soSVMax, int soSVHienTai) {
+		this.hocKy = hocKy;
+		this.idLop = idLop;
+		this.loaiLop = loaiLop;
+		this.idHocPhan = idHocPhan;
+		this.tenLop = tenLop;
+		this.thoiGian = thoiGian;
+		this.tuanHoc = tuanHoc;
+		this.phongHoc = phongHoc;
+		this.tenGiangVien = tenGiangVien;
+		this.soSVMax = soSVMax;
+		this.soSVHienTai = soSVHienTai;
+		this.dsSinhVien = new ArrayList<>();
+	}
+	
+	
 	public LopHocPhan(String hocKy, String idLop, String loaiLop, String idHocPhan, String tenLop, String thoiGian, String tuanHoc, String phongHoc, ArrayList<SinhVien> dsSinhVien, String tenGiangVien, int soSVMax, int soSVHienTai) {
 		this.hocKy = hocKy;
 		this.idLop = idLop;
@@ -40,6 +56,10 @@ public class LopHocPhan {
 	}
 	
 	public boolean themSinhVien(SinhVien sv) {
+		if(kiemTraTrungSV(sv) == true){
+			return false;
+		}
+		
 		if(soSVHienTai < soSVMax) {
 			this.dsSinhVien.add(sv);
 			soSVHienTai++;
@@ -49,6 +69,18 @@ public class LopHocPhan {
 		}
 	}
 	
+	private boolean kiemTraTrungSV(SinhVien sv) {
+		// TODO Auto-generated method stub
+		int count = dsSinhVien.size();
+		for(int i = 0; i < count; i++){
+			if(sv.idSinhVien.equalsIgnoreCase(dsSinhVien.get(i).getIdSinhVien())){
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
 	public boolean xoaSinhVien(String idSinhVien) {
 		for(int i = 0; i < dsSinhVien.size(); i++) {
 			if(dsSinhVien.get(i).getIdSinhVien().equals(idSinhVien)) {

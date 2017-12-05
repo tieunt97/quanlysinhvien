@@ -4,6 +4,14 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
@@ -16,10 +24,20 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import quanlysinhvien.model.HocPhan;
+
 public class PanelDanhMucHP extends JPanel {
 	private JComboBox<String> khoaVienCB;
 	private JTextField tfTimIdHP, tfTimTenHP;
-	private String[] vals = {"All", "Viện CNTT-TT", "Viện Cơ khí", "Khoa thể chất", "Viện điện"};
+	private String[] vals = {"All", "Viện CNTT-TT", "Viện cơ khí", "Khoa thể chất", "Viện điện"};
 	private String[] titleCols = {"Mã học phần", "Tên học phần", "Số tín chỉ", "TC học phí", "Trọng số"};
 	private JTable table;
 	
@@ -34,7 +52,7 @@ public class PanelDanhMucHP extends JPanel {
 		panel.setBorder(new EmptyBorder(0, 10, 0, 0));
 		JLabel label;
 		panel.add(label = createLabel("Danh mục học phần", Font.BOLD, 18, 0xFFFF00));
-		label.setIcon(new ImageIcon(this.getClass().getResource("/list.png")));
+		label.setIcon(new ImageIcon("images/list.png"));
 		panel.setBackground(new Color(0x009999));
 		
 		return panel;
@@ -58,7 +76,9 @@ public class PanelDanhMucHP extends JPanel {
 		panel.add(panelL);
 		
 		JPanel panelR = new JPanel(new GridLayout(1, 2, 5, 5));
+		tfTimIdHP = new JTextField();
 		panelR.add(createLabTFPanel("Tìm kiếm theo mã học phần", tfTimIdHP));
+		tfTimTenHP = new JTextField();
 		panelR.add(createLabTFPanel("Tìm kiếm theo tên học phần", tfTimTenHP));
 		panel.add(panelR);
 		
@@ -73,16 +93,15 @@ public class PanelDanhMucHP extends JPanel {
 		panel.add(panelTitle, BorderLayout.NORTH);
 		
 		table = new JTable();
-		loadData(table);
 		JScrollPane scroll = new JScrollPane(table);
 		panel.add(scroll, BorderLayout.CENTER);
 		
 		return panel;
 	}
 	
-	private void loadData(JTable table) {
+	public void loadData(JTable table, ArrayList<HocPhan> dsHocPhan, String timKiem, String giaTri) {
 		SwingUtilities.invokeLater(new Runnable(){public void run(){
-			String data[][] = null;
+			String data[][] = convertData(dsHocPhan, timKiem, giaTri);
 		    //Update the model here
 			DefaultTableModel tableModel = new DefaultTableModel(data, titleCols) {
 				@Override
@@ -95,10 +114,98 @@ public class PanelDanhMucHP extends JPanel {
 		}});
 	}
 	
+	private String[][] convertData(ArrayList<HocPhan> dsHocPhan, String timKiem, String giaTri) {
+		String[][] data = new String[dsHocPhan.size()][5];
+		int index = 0;
+		for (int i = 0; i < dsHocPhan.size(); i++) {
+			switch(timKiem) {
+			case "Viện CNTT-TT":
+				if(dsHocPhan.get(i).getIdHocPhan().indexOf("IT") == 0) {
+					data[index][0] = dsHocPhan.get(i).getIdHocPhan();
+					data[index][1] = dsHocPhan.get(i).getTenHP();
+					data[index][2] = dsHocPhan.get(i).getSoTinChi()+"";
+					data[index][3] = dsHocPhan.get(i).getSoTCHocPhi()+"";
+					data[index][4] = dsHocPhan.get(i).getTrongSo()+"";
+					index++;
+				}
+				break;
+			case "Viện cơ khí":
+				if(dsHocPhan.get(i).getIdHocPhan().indexOf("ME") == 0) {
+					data[index][0] = dsHocPhan.get(i).getIdHocPhan();
+					data[index][1] = dsHocPhan.get(i).getTenHP();
+					data[index][2] = dsHocPhan.get(i).getSoTinChi()+"";
+					data[index][3] = dsHocPhan.get(i).getSoTCHocPhi()+"";
+					data[index][4] = dsHocPhan.get(i).getTrongSo()+"";
+					index++;
+				}
+				break;
+			case "Khoa thể chất":
+				if(dsHocPhan.get(i).getIdHocPhan().indexOf("PE") == 0) {
+					data[index][0] = dsHocPhan.get(i).getIdHocPhan();
+					data[index][1] = dsHocPhan.get(i).getTenHP();
+					data[index][2] = dsHocPhan.get(i).getSoTinChi()+"";
+					data[index][3] = dsHocPhan.get(i).getSoTCHocPhi()+"";
+					data[index][4] = dsHocPhan.get(i).getTrongSo()+"";
+					index++;
+				}
+				break;
+			case "Viện điện":
+				if(dsHocPhan.get(i).getIdHocPhan().indexOf("EE") == 0) {
+					data[index][0] = dsHocPhan.get(i).getIdHocPhan();
+					data[index][1] = dsHocPhan.get(i).getTenHP();
+					data[index][2] = dsHocPhan.get(i).getSoTinChi()+"";
+					data[index][3] = dsHocPhan.get(i).getSoTCHocPhi()+"";
+					data[index][4] = dsHocPhan.get(i).getTrongSo()+"";
+					index++;
+				}
+				break;
+			case "All": {
+				data[index][0] = dsHocPhan.get(i).getIdHocPhan();
+				data[index][1] = dsHocPhan.get(i).getTenHP();
+				data[index][2] = dsHocPhan.get(i).getSoTinChi()+"";
+				data[index][3] = dsHocPhan.get(i).getSoTCHocPhi()+"";
+				data[index][4] = dsHocPhan.get(i).getTrongSo()+"";
+				index++;
+				}
+				break;
+			case "idHP":
+				if(dsHocPhan.get(i).getIdHocPhan().toUpperCase().indexOf(giaTri.toUpperCase()) >= 0) {
+					data[index][0] = dsHocPhan.get(i).getIdHocPhan();
+					data[index][1] = dsHocPhan.get(i).getTenHP();
+					data[index][2] = dsHocPhan.get(i).getSoTinChi()+"";
+					data[index][3] = dsHocPhan.get(i).getSoTCHocPhi()+"";
+					data[index][4] = dsHocPhan.get(i).getTrongSo()+"";
+					index++;
+				}
+				break;
+			case "tenHP":
+				if(dsHocPhan.get(i).getTenHP().toUpperCase().indexOf(giaTri.toUpperCase()) >= 0) {
+					data[index][0] = dsHocPhan.get(i).getIdHocPhan();
+					data[index][1] = dsHocPhan.get(i).getTenHP();
+					data[index][2] = dsHocPhan.get(i).getSoTinChi()+"";
+					data[index][3] = dsHocPhan.get(i).getSoTCHocPhi()+"";
+					data[index][4] = dsHocPhan.get(i).getTrongSo()+"";
+					index++;
+				}
+				break;
+			}
+			
+			
+		}
+		if (index < dsHocPhan.size()) {
+			String[][] datatk = new String[index][titleCols.length];
+			for (int i = 0; i < index; i++) {
+				datatk[i] = data[i];
+			}
+			return datatk;
+		}
+		return data;
+	}
+	
 	private JPanel createLabTFPanel(String name, JTextField tf) {
 		JPanel panel = new JPanel(new BorderLayout(5, 5));
 		panel.add(createLabel(name, Font.PLAIN, 12, 0), BorderLayout.NORTH);
-		panel.add(tf = new JTextField(), BorderLayout.CENTER);
+		panel.add(tf, BorderLayout.CENTER);
 		return panel;
 	}
 	
@@ -111,4 +218,36 @@ public class PanelDanhMucHP extends JPanel {
 		return label;
 	}
 	
+	public JComboBox<String> getKhoaVienCB() {
+		return khoaVienCB;
+	}
+
+	public void setKhoaVienCB(JComboBox<String> khoaVienCB) {
+		this.khoaVienCB = khoaVienCB;
+	}
+
+	public JTextField getTfTimIdHP() {
+		return tfTimIdHP;
+	}
+
+	public void setTfTimIdHP(JTextField tfTimIdHP) {
+		this.tfTimIdHP = tfTimIdHP;
+	}
+
+	public JTextField getTfTimTenHP() {
+		return tfTimTenHP;
+	}
+
+	public void setTfTimTenHP(JTextField tfTimTenHP) {
+		this.tfTimTenHP = tfTimTenHP;
+	}
+
+	public JTable getTable() {
+		return table;
+	}
+
+	public void setTable(JTable table) {
+		this.table = table;
+	}
+
 }

@@ -252,7 +252,7 @@ public class LopChuyenNganhController {
 						}
 					}
 				}
-				new CapNhatSinhVienController(capNhatSV, dsSinhVien, "quanlysinhvien\\danhsachchuyennganh\\lopchuyennganh\\" + idLop + "_dsSV.xlsx", tenLop);
+				new CapNhatSinhVienController(capNhatSV, dsSinhVien, "quanlysinhvien\\danhsachchuyennganh\\lopchuyennganh\\" + idLop + "_dsSV.xlsx", tenLop, null);
 			}
 		});
 	}
