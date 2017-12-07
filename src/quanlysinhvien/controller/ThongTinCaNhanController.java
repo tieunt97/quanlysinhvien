@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
@@ -31,7 +30,7 @@ public class ThongTinCaNhanController {
 	private JButton btnCapNhat;
 	private String fileName;
 	private SinhVien sv;
-	
+
 	public ThongTinCaNhanController(PanelThongTinCaNhanView thongTinCaNhan, TaiKhoan tk) {
 		this.thongTinCaNhan = thongTinCaNhan;
 		this.gtIdSinhVien = thongTinCaNhan.getGtIdSinhVien();
@@ -42,14 +41,13 @@ public class ThongTinCaNhanController {
 		this.tfSoDT = thongTinCaNhan.getTfSoDT();
 		this.tfDiaChi = thongTinCaNhan.getTfDiaChi();
 		this.btnCapNhat = thongTinCaNhan.getBtnCapNhat();
-		if(tk.getLoaiTK().equals("svtc")) {
+		if (tk.getLoaiTK().equals("svtc")) {
 			fileName = "quanlysinhvien\\sinhvientinchi\\dsSinhVienTC.xlsx";
 		}
-		if(tk.getLoaiTK().equals("svnc")) {
+		if (tk.getLoaiTK().equals("svnc")) {
 			fileName = "quanlysinhvien\\sinhviennienche\\dsSinhVienNC.xlsx";
 		}
-		
-		
+
 		try {
 			sv = getSinhVien(tk, fileName);
 		} catch (IOException e) {
@@ -57,42 +55,43 @@ public class ThongTinCaNhanController {
 			sv = new SinhVien();
 			System.out.println("Error updateThongTin: " + e);
 		}
-		
+
 		setThongTin();
 		setAction();
 	}
-	
+
 	private void setThongTin() {
 		gtHoTen.setText(sv.getHoTen());
 		gtIdSinhVien.setText(sv.getIdSinhVien());
 		gtLop.setText(sv.getTenLop());
 		gtNgaySinh.setText(sv.getNgaySinh());
 	}
-	
+
 	private String[] getCapNhat() {
 		String[] capNhat = new String[3];
 		String email = tfEmail.getText();
 		String soDT = tfSoDT.getText();
 		String diaChi = tfDiaChi.getText();
-		if(email.equals("") || soDT.equals("") || diaChi.equals("")) {
+		if (email.equals("") || soDT.equals("") || diaChi.equals("")) {
 			JOptionPane.showMessageDialog(null, "Có trường dữ liệu trống", "Error", JOptionPane.ERROR_MESSAGE);
 			return null;
 		}
 		capNhat[0] = email;
 		capNhat[1] = soDT;
 		capNhat[2] = diaChi;
-	
+
 		return capNhat;
 	}
-	
+
 	private void setAction() {
 		btnCapNhat.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// TODO Auto-generated method stub
 				String[] capNhat = getCapNhat();
-				if(capNhat == null) return;
+				if (capNhat == null)
+					return;
 				boolean ck = false;
 				try {
 					ck = updateSV(capNhat);
@@ -100,25 +99,26 @@ public class ThongTinCaNhanController {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				if(ck) JOptionPane.showMessageDialog(null, "Cập nhật thành công");
+				if (ck)
+					JOptionPane.showMessageDialog(null, "Cập nhật thành công");
 				cancel();
 			}
 		});
 	}
-	
+
 	public static SinhVien getSinhVien(TaiKhoan tk, String fileName) throws IOException {
 		FileInputStream fin = new FileInputStream(new File(fileName));
 		Workbook workbook = new XSSFWorkbook(fin);
 		Sheet sheet = workbook.getSheetAt(0);
 		Iterator<Row> iterator = sheet.iterator();
 		Row nextRow;
-		if(iterator.hasNext())
+		if (iterator.hasNext())
 			nextRow = iterator.next();
-		while(iterator.hasNext()) {
+		while (iterator.hasNext()) {
 			nextRow = iterator.next();
 			Cell cell = nextRow.getCell(1);
 			String idSV = cell.getStringCellValue();
-			if(idSV.equals(tk.getTaiKhoan())) {
+			if (idSV.equals(tk.getTaiKhoan())) {
 				cell = nextRow.getCell(2);
 				String hoTen = cell.getStringCellValue();
 				cell = nextRow.getCell(3);
@@ -143,7 +143,7 @@ public class ThongTinCaNhanController {
 		}
 		return null;
 	}
-	
+
 	private boolean updateSV(String gt[]) throws IOException {
 		boolean ck = false;
 		String id = gtIdSinhVien.getText();
@@ -152,13 +152,13 @@ public class ThongTinCaNhanController {
 		Sheet sheet = workbook.getSheetAt(0);
 		Iterator<Row> iterator = sheet.iterator();
 		Row nextRow;
-		if(iterator.hasNext())
+		if (iterator.hasNext())
 			nextRow = iterator.next();
-		while(iterator.hasNext()) {
+		while (iterator.hasNext()) {
 			nextRow = iterator.next();
 			Cell cell = nextRow.getCell(1);
 			String idSV = cell.getStringCellValue();
-			if(idSV.equals(id)) {
+			if (idSV.equals(id)) {
 				cell = nextRow.createCell(7);
 				cell.setCellValue(gt[0]);
 				cell = nextRow.createCell(8);
@@ -169,14 +169,14 @@ public class ThongTinCaNhanController {
 				break;
 			}
 		}
-		
+
 		fin.close();
 		FileOutputStream fout = new FileOutputStream(new File(fileName));
 		workbook.write(fout);
 		fout.close();
 		return ck;
 	}
-	
+
 	private void cancel() {
 		tfDiaChi.setText("");
 		tfEmail.setText("");

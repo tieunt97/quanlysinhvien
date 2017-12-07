@@ -29,7 +29,7 @@ public class PanelSinhVienNienCheView extends JPanel{
 	private JComboBox<String> timKiemCB;
 	private JTextField tfIdSV, tfHoTen, tfKhoa, tfNgaySinh, tfEmail, tfSoDT, tfDiaChi, tfDiemTB, tfTongSoKy, tfTimKiem;
 	private String[] titleCols = {"Mã sinh viên", "Họ tên", "Khóa", "Ngày sinh", "Giới tính", 
-			"Email", "Số ĐT", "Địa chỉ", "Điểm TB", "Tổng số kỳ"};
+			"Email", "Số ĐT", "Địa chỉ", "Điểm TB", "Tổng số kỳ", "Số môn nợ"};
 	private String[] timKiemVals = {"Mã sinh viên", "Họ tên", "Khóa", "Địa chỉ", "Điểm TB", "Tổng số kỳ"};
 	
 	public PanelSinhVienNienCheView() {
@@ -89,7 +89,6 @@ public class PanelSinhVienNienCheView extends JPanel{
 		panelL.add(new JLabel("Khóa:"));
 		panelL.add(new JLabel("Ngày sinh:"));
 		panelL.add(new JLabel("Điểm TB:"));
-		panelL.add(new JLabel(""));
 		
 		
 		JPanel panelR = new JPanel(new GridLayout(6, 1, 5, 5));
@@ -97,8 +96,7 @@ public class PanelSinhVienNienCheView extends JPanel{
 		panelR.add(tfHoTen = new JTextField());
 		panelR.add(tfKhoa = new JTextField());
 		panelR.add(tfNgaySinh = new JTextField());
-		panelR.add(tfDiemTB = new JTextField());
-		panelR.add(new JLabel(""));
+		panelR.add(tfDiemTB = new JTextField("0.0"));
 		
 		panel.add(panelL, BorderLayout.WEST);
 		panel.add(panelR, BorderLayout.CENTER);
@@ -119,7 +117,7 @@ public class PanelSinhVienNienCheView extends JPanel{
 		panelR.add(tfEmail = new JTextField());
 		panelR.add(tfSoDT = new JTextField());
 		panelR.add(tfDiaChi = new JTextField());
-		panelR.add(tfTongSoKy = new JTextField());
+		panelR.add(tfTongSoKy = new JTextField("0"));
 		
 		panel.add(panelL, BorderLayout.WEST);
 		panel.add(panelR, BorderLayout.CENTER);
@@ -190,6 +188,7 @@ public class PanelSinhVienNienCheView extends JPanel{
 		String[][] data = convertData(dsSVNC, timKiem, giaTri);
 		DefaultTableModel model = new DefaultTableModel(data, titleCols);
 		table.setModel(model);
+		table.getColumnModel().getColumn(0).setPreferredWidth(90);
 		table.getColumnModel().getColumn(1).setPreferredWidth(140);
 		table.getColumnModel().getColumn(5).setPreferredWidth(140);
 		table.getColumnModel().getColumn(6).setPreferredWidth(140);
@@ -215,6 +214,7 @@ public class PanelSinhVienNienCheView extends JPanel{
 					data[index][7] = svnc.getDiaChi();
 					data[index][8] = svnc.getDiemTB() + "";
 					data[index][9] = svnc.getTongSoKy() + "";
+					data[index][10] = svnc.getSoMonNo() + "";
 					index++;
 				}
 				break;
@@ -230,6 +230,7 @@ public class PanelSinhVienNienCheView extends JPanel{
 					data[index][7] = svnc.getDiaChi();
 					data[index][8] = svnc.getDiemTB() + "";
 					data[index][9] = svnc.getTongSoKy() + "";
+					data[index][10] = svnc.getSoMonNo() + "";
 					index++;
 				}
 				break;
@@ -245,6 +246,7 @@ public class PanelSinhVienNienCheView extends JPanel{
 					data[index][7] = svnc.getDiaChi();
 					data[index][8] = svnc.getDiemTB() + "";
 					data[index][9] = svnc.getTongSoKy() + "";
+					data[index][10] = svnc.getSoMonNo() + "";
 					index++;
 				}
 				break;
@@ -260,6 +262,7 @@ public class PanelSinhVienNienCheView extends JPanel{
 					data[index][7] = svnc.getDiaChi();
 					data[index][8] = svnc.getDiemTB() + "";
 					data[index][9] = svnc.getTongSoKy() + "";
+					data[index][10] = svnc.getSoMonNo() + "";
 					index++;
 				}
 				break;
@@ -275,6 +278,7 @@ public class PanelSinhVienNienCheView extends JPanel{
 					data[index][7] = svnc.getDiaChi();
 					data[index][8] = svnc.getDiemTB() + "";
 					data[index][9] = svnc.getTongSoKy() + "";
+					data[index][10] = svnc.getSoMonNo() + "";
 					index++;
 				}
 				break;
@@ -290,6 +294,7 @@ public class PanelSinhVienNienCheView extends JPanel{
 					data[index][7] = svnc.getDiaChi();
 					data[index][8] = svnc.getDiemTB() + "";
 					data[index][9] = svnc.getTongSoKy() + "";
+					data[index][10] = svnc.getSoMonNo() + "";
 					index++;
 				}
 				break;
@@ -304,6 +309,7 @@ public class PanelSinhVienNienCheView extends JPanel{
 				data[index][7] = svnc.getDiaChi();
 				data[index][8] = svnc.getDiemTB() + "";
 				data[index][9] = svnc.getTongSoKy() + "";
+				data[index][10] = svnc.getSoMonNo() + "";
 				index++;
 			}
 				break;

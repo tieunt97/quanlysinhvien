@@ -14,6 +14,7 @@ import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -23,8 +24,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import quanlysinhvien.model.HocPhan;
-import quanlysinhvien.model.LopChuyenNganh;
 import quanlysinhvien.model.LopHocPhan;
 import quanlysinhvien.model.SinhVien;
 import quanlysinhvien.view.CapNhatSinhVienLCNView;
@@ -39,8 +38,9 @@ public class CapNhatSinhVienController {
 	private LopHocPhan lopHP;
 	private String fileName;
 	private String tenLop = "";
-	
-	public CapNhatSinhVienController(CapNhatSinhVienLCNView capNhatSV, ArrayList<SinhVien> dsSinhVien, String fileName, String tenLopCN, LopHocPhan lopHP) {
+
+	public CapNhatSinhVienController(CapNhatSinhVienLCNView capNhatSV, ArrayList<SinhVien> dsSinhVien, String fileName,
+			String tenLopCN, LopHocPhan lopHP) {
 		this.capNhatSV = capNhatSV;
 		this.fileName = fileName;
 		this.tenLop = tenLopCN;
@@ -51,22 +51,23 @@ public class CapNhatSinhVienController {
 		this.tfIdSinhVien = capNhatSV.getTfIdSinhVien();
 		this.loaiSVCB = capNhatSV.getLoaiSVCB();
 		this.capNhatSV.loadData(table, dsSinhVien);
-		if(lopHP != null)
+		if (lopHP != null)
 			this.lopHP = lopHP;
-		
+
 		setAction();
 	}
-	
+
 	private void setAction() {
 		btnThem.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				String idSV = tfIdSinhVien.getText().toUpperCase().trim();
 				String loaiSinhVien = (String) loaiSVCB.getSelectedItem();
-				if(idSV.equals("")) {
-					JOptionPane.showMessageDialog(null, "Mã sinh viên trống", "Error insert", JOptionPane.ERROR_MESSAGE);
+				if (idSV.equals("")) {
+					JOptionPane.showMessageDialog(null, "Mã sinh viên trống", "Error insert",
+							JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 				SinhVien sv = null;
@@ -76,34 +77,40 @@ public class CapNhatSinhVienController {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				if(sv == null) {
-					JOptionPane.showMessageDialog(null, "Sinh viên không tồn tại", "Error insert", JOptionPane.ERROR_MESSAGE);
+				if (sv == null) {
+					JOptionPane.showMessageDialog(null, "Sinh viên không tồn tại", "Error insert",
+							JOptionPane.ERROR_MESSAGE);
 					return;
-				}else {
-					if(checkSV(idSV)) {
-						if(!tenLop.equals("") && sv.getTenLop().equals("null")) {
+				} else {
+					if (checkSV(idSV)) {
+						if (!tenLop.equals("") && sv.getTenLop().equals("null")) {
 							sv.setTenLop(tenLop);
 							try {
 								updateLopSV(idSV, tenLop, loaiSinhVien);
 							} catch (IOException e1) {
 								// TODO Auto-generated catch block
 								System.out.println("Error cập nhật lớp CN: " + e1);
-//								e1.printStackTrace();
+								// e1.printStackTrace();
 							}
-						}else if(!sv.getTenLop().equals("null") && !tenLop.equals("")){
-							JOptionPane.showMessageDialog(null, "Sinh viên đang thuộc lớp: " + sv.getTenLop() + "\nCần xóa sinh viên khỏi lớp trước khi thêm vào lớp mới", "Warning", JOptionPane.WARNING_MESSAGE);
+						} else if (!sv.getTenLop().equals("null") && !tenLop.equals("")) {
+							JOptionPane.showMessageDialog(null,
+									"Sinh viên đang thuộc lớp: " + sv.getTenLop()
+											+ "\nCần xóa sinh viên khỏi lớp trước khi thêm vào lớp mới",
+									"Warning", JOptionPane.WARNING_MESSAGE);
 							return;
 						}
-						if(tenLop.equals("") && loaiSinhVien.equals("Sinh viên niên chế")) {
+						if (tenLop.equals("") && loaiSinhVien.equals("Sinh viên niên chế")) {
 							try {
 								addLopTKB(idSV, lopHP);
 							} catch (IOException e1) {
 								// TODO Auto-generated catch block
-//								e1.printStackTrace();
+								// e1.printStackTrace();
 							}
 						}
 						dsSinhVien.add(sv);
-						capNhatSV.loadData(table, dsSinhVien);
+						((DefaultTableModel) table.getModel()).addRow(new Object[] { sv.getIdSinhVien(), sv.getHoTen(),
+								sv.getKhoa(), sv.getTenLop(), sv.getNgaySinh(), sv.getGioiTinh(), sv.getEmail(),
+								sv.getSoDT(), sv.getDiaChi(), sv.getDiemTB() + "" });
 						try {
 							addSV(sv, fileName);
 							JOptionPane.showMessageDialog(null, "Thêm thành công");
@@ -111,14 +118,14 @@ public class CapNhatSinhVienController {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}
-					}else {
+					} else {
 						JOptionPane.showMessageDialog(null, "Trùng mã sinh viên", "Error", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			}
 		});
 		btnXoa.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
@@ -141,33 +148,39 @@ public class CapNhatSinhVienController {
 									// TODO Auto-generated catch block
 									e1.printStackTrace();
 								}
-								if(!tenLop.equals("")) {
+								if (!tenLop.equals("")) {
 									dsSinhVien.get(i).setTenLop("null");
 									try {
 										boolean ck1 = false;
-										ck1 = updateLopSV(dsSinhVien.get(i).getIdSinhVien(), "null", "Sinh viên tín chỉ");
-										if(ck1);
+										ck1 = updateLopSV(dsSinhVien.get(i).getIdSinhVien(), "null",
+												"Sinh viên tín chỉ");
+										if (ck1)
+											;
 										else {
-											updateLopSV(dsSinhVien.get(i).getIdSinhVien(), "null", "Sinh viên niên chế");
+											updateLopSV(dsSinhVien.get(i).getIdSinhVien(), "null",
+													"Sinh viên niên chế");
 										}
 									} catch (IOException e1) {
 										// TODO Auto-generated catch block
 										System.out.println("Error cập nhật lớp CN: " + e1);
 									}
 								}
-								if(tenLop.equals("")) {
+								if (tenLop.equals("")) {
 									try {
 										deleteLopTKB(id, lopHP.getIdLop());
 									} catch (IOException e1) {
 										// TODO Auto-generated catch block
+										System.out.println("Sinh vien tin chi: ");
 										e1.printStackTrace();
 									}
 								}
 								dsSinhVien.remove(i);
-								capNhatSV.loadData(table, dsSinhVien);
-								if(ck) JOptionPane.showMessageDialog(null, "Xóa thành công");
+								((DefaultTableModel) table.getModel()).removeRow(row);
+								if (ck)
+									JOptionPane.showMessageDialog(null, "Xóa thành công");
 								else {
-									JOptionPane.showMessageDialog(null, "Xóa lỗi", "Error delete", JOptionPane.ERROR_MESSAGE);
+									JOptionPane.showMessageDialog(null, "Xóa lỗi", "Error delete",
+											JOptionPane.ERROR_MESSAGE);
 								}
 								cancel();
 								return;
@@ -178,26 +191,26 @@ public class CapNhatSinhVienController {
 			}
 		});
 	}
-	
+
 	private void cancel() {
 		tfIdSinhVien.setText("");
 	}
-	
+
 	private boolean checkSV(String idSV) {
-		for (SinhVien sv: dsSinhVien) {
+		for (SinhVien sv : dsSinhVien) {
 			if (sv.getIdSinhVien().equals(idSV))
 				return false;
 		}
 		return true;
 	}
-	
+
 	private SinhVien getSinhVien(String loaiSinhVien, String idSV) throws IOException {
 		SinhVien sv = null;
 		String fileName = "";
-		if(loaiSinhVien.equals("Sinh viên tín chỉ")) {
+		if (loaiSinhVien.equals("Sinh viên tín chỉ")) {
 			fileName = "quanlysinhvien\\sinhvientinchi\\dsSinhVienTC.xlsx";
 		}
-		if(loaiSinhVien.equals("Sinh viên niên chế")) {
+		if (loaiSinhVien.equals("Sinh viên niên chế")) {
 			fileName = "quanlysinhvien\\sinhviennienche\\dsSinhVienNC.xlsx";
 		}
 		FileInputStream fin = new FileInputStream(new File(fileName));
@@ -205,14 +218,14 @@ public class CapNhatSinhVienController {
 		Sheet sheet = workbook.getSheetAt(0);
 		Iterator<Row> iterator = sheet.iterator();
 		Row nextRow;
-		if(iterator.hasNext()) {
+		if (iterator.hasNext()) {
 			nextRow = iterator.next();
 		}
-		while(iterator.hasNext()) {
+		while (iterator.hasNext()) {
 			nextRow = iterator.next();
 			Cell cell = nextRow.getCell(1);
 			String idSinhVien = cell.getStringCellValue();
-			if(idSinhVien.equals(idSV)) {
+			if (idSinhVien.equals(idSV)) {
 				cell = nextRow.getCell(2);
 				String hoTen = cell.getStringCellValue();
 				cell = nextRow.getCell(3);
@@ -237,10 +250,10 @@ public class CapNhatSinhVienController {
 		}
 		workbook.close();
 		fin.close();
-		
+
 		return sv;
 	}
-	
+
 	private void createHeader(Sheet sheet) {
 		CellStyle cellStyle = sheet.getWorkbook().createCellStyle();
 		Font font = sheet.getWorkbook().createFont();
@@ -260,7 +273,7 @@ public class CapNhatSinhVienController {
 		Cell cellKhoa = row.createCell(3);
 		cellKhoa.setCellStyle(cellStyle);
 		cellKhoa.setCellValue("Khóa");
-		
+
 		Cell cellTenLop = row.createCell(4);
 		cellTenLop.setCellStyle(cellStyle);
 		cellTenLop.setCellValue("Tên lớp");
@@ -312,7 +325,7 @@ public class CapNhatSinhVienController {
 		cell = row.createCell(10);
 		cell.setCellValue(sv.getDiemTB());
 	}
-	
+
 	private void addSV(SinhVien sv, String fileName) throws IOException {
 		Workbook workbook = null;
 		Sheet sheet = null;
@@ -322,7 +335,7 @@ public class CapNhatSinhVienController {
 			workbook = new XSSFWorkbook(inputStream);
 			sheet = workbook.getSheetAt(0);
 			lastRow = sheet.getLastRowNum();
-		}catch (Exception e) {
+		} catch (Exception e) {
 			// TODO: handle exception
 			workbook = new XSSFWorkbook();
 			sheet = workbook.createSheet();
@@ -330,47 +343,47 @@ public class CapNhatSinhVienController {
 		}
 
 		Row row = null;
-		if(lastRow < 0) {
+		if (lastRow < 0) {
 			createHeader(sheet);
 			row = sheet.createRow(1);
-		}else {
+		} else {
 			row = sheet.createRow(lastRow + 1);
 		}
-		if(row != null) {
+		if (row != null) {
 			writeSV(sv, row);
 		}
-		
+
 		FileOutputStream fout = new FileOutputStream(new File(fileName));
 		workbook.write(fout);
 		fout.close();
 	}
-	
+
 	private boolean deleteSV(SinhVien sv, String fileName) throws IOException {
 		boolean ck = false;
 		FileInputStream fin = new FileInputStream(new File(fileName));
 		Workbook workbook = new XSSFWorkbook(fin);
 		Sheet sheet = workbook.getSheetAt(0);
-		
+
 		Iterator<Row> iterator = sheet.iterator();
-		
+
 		Row nextRow = null;
 		if (iterator.hasNext())
 			nextRow = iterator.next(); // loại bỏ dòng tiêu đề
 		int i = 0;
-		while(iterator.hasNext()) {
+		while (iterator.hasNext()) {
 			nextRow = iterator.next();
 			i++;
 			Cell cell = nextRow.getCell(1);
 			String idSV = cell.getStringCellValue();
-			if(idSV.equalsIgnoreCase(sv.getIdSinhVien())) {
+			if (idSV.equalsIgnoreCase(sv.getIdSinhVien())) {
 				int lastRow = sheet.getLastRowNum();
-				if(i < lastRow) {
+				if (i < lastRow) {
 					sheet.shiftRows(i + 1, lastRow, -1);
 					ck = true;
 				}
-				if(i == lastRow) {
+				if (i == lastRow) {
 					Row removeRow = sheet.getRow(i);
-					if(removeRow != null) {
+					if (removeRow != null) {
 						sheet.removeRow(removeRow);
 						ck = true;
 					}
@@ -378,50 +391,50 @@ public class CapNhatSinhVienController {
 				break;
 			}
 		}
-		
+
 		fin.close();
-		
+
 		FileOutputStream fout = new FileOutputStream(new File(fileName));
 		workbook.write(fout);
 		fout.close();
 		return ck;
 	}
-	
+
 	private boolean updateLopSV(String idSinhVien, String tenLop, String loaiSV) throws IOException {
 		boolean ck = false;
 		String fileName = "";
-		if(loaiSV.equals("Sinh viên tín chỉ"))
+		if (loaiSV.equals("Sinh viên tín chỉ"))
 			fileName = "quanlysinhvien\\sinhvientinchi\\dsSinhVienTC.xlsx";
-		else if(loaiSV.equals("Sinh viên niên chế"))
+		else if (loaiSV.equals("Sinh viên niên chế"))
 			fileName = "quanlysinhvien\\sinhviennienche\\dsSinhVienNC.xlsx";
 		FileInputStream fin = new FileInputStream(new File(fileName));
 		Workbook workbook = new XSSFWorkbook(fin);
 		Sheet sheet = workbook.getSheetAt(0);
 		Iterator<Row> iterator = sheet.iterator();
-		
+
 		Row nextRow;
 		if (iterator.hasNext())
 			nextRow = iterator.next(); // loại bỏ dòng tiêu đề
-		while(iterator.hasNext()) {
+		while (iterator.hasNext()) {
 			nextRow = iterator.next();
 			Cell cell = nextRow.getCell(1);
 			String idSV = cell.getStringCellValue();
-			if(idSV.equalsIgnoreCase(idSinhVien)) {
+			if (idSV.equalsIgnoreCase(idSinhVien)) {
 				cell = nextRow.createCell(4);
 				cell.setCellValue(tenLop);
 				ck = true;
 				break;
 			}
 		}
-		
+
 		fin.close();
-		
+
 		FileOutputStream fout = new FileOutputStream(new File(fileName));
 		workbook.write(fout);
 		fout.close();
 		return ck;
 	}
-	
+
 	private void createHeaderTKB(Sheet sheet) {
 		CellStyle cellStyle = sheet.getWorkbook().createCellStyle();
 		Font font = sheet.getWorkbook().createFont();
@@ -445,7 +458,7 @@ public class CapNhatSinhVienController {
 		Cell cellIdHocPhan = row.createCell(4);
 		cellIdHocPhan.setCellStyle(cellStyle);
 		cellIdHocPhan.setCellValue("Mã học phần");
-		
+
 		Cell cellTenLop = row.createCell(5);
 		cellTenLop.setCellStyle(cellStyle);
 		cellTenLop.setCellValue("Tên lớp");
@@ -474,7 +487,7 @@ public class CapNhatSinhVienController {
 		cellSoSVHT.setCellStyle(cellStyle);
 		cellSoSVHT.setCellValue("Số SV hiện tại");
 	}
-	
+
 	private void writeLopTKB(LopHocPhan lopHP, Row row) {
 		Cell cell = row.createCell(1);
 		cell.setCellValue(lopHP.getHocKy());
@@ -499,7 +512,7 @@ public class CapNhatSinhVienController {
 		cell = row.createCell(11);
 		cell.setCellValue(lopHP.getSoSVHienTai());
 	}
-	
+
 	private void addLopTKB(String idSV, LopHocPhan lopHP) throws IOException {
 		String fileName = "quanlysinhvien\\sinhviennienche\\" + idSV + "\\tkb.xlsx";
 		Workbook workbook = null;
@@ -510,7 +523,7 @@ public class CapNhatSinhVienController {
 			workbook = new XSSFWorkbook(inputStream);
 			sheet = workbook.getSheetAt(0);
 			lastRow = sheet.getLastRowNum();
-		}catch (Exception e) {
+		} catch (Exception e) {
 			// TODO: handle exception
 			workbook = new XSSFWorkbook();
 			sheet = workbook.createSheet();
@@ -518,47 +531,48 @@ public class CapNhatSinhVienController {
 		}
 
 		Row row = null;
-		if(lastRow < 0) {
+		if (lastRow < 0) {
 			createHeaderTKB(sheet);
 			row = sheet.createRow(1);
-		}else {
+		} else {
 			row = sheet.createRow(lastRow + 1);
 		}
-		if(row != null) {
+		if (row != null) {
 			writeLopTKB(lopHP, row);
 		}
-		
+
 		FileOutputStream fout = new FileOutputStream(new File(fileName));
 		workbook.write(fout);
 		fout.close();
 	}
-	
-	private boolean deleteLopTKB(String fileName, String idLop) throws IOException {
+
+	private boolean deleteLopTKB(String idSV, String idLop) throws IOException {
 		boolean ck = false;
+		String fileName = "quanlysinhvien\\sinhviennienche\\" + idSV + "\\tkb.xlsx";
 		FileInputStream fin = new FileInputStream(new File(fileName));
 		Workbook workbook = new XSSFWorkbook(fin);
 		Sheet sheet = workbook.getSheetAt(0);
-		
+
 		Iterator<Row> iterator = sheet.iterator();
-		
+
 		Row nextRow = null;
 		if (iterator.hasNext())
 			nextRow = iterator.next(); // loại bỏ dòng tiêu đề
 		int i = 0;
-		while(iterator.hasNext()) {
+		while (iterator.hasNext()) {
 			nextRow = iterator.next();
 			i++;
-			Cell cell = nextRow.getCell(1);
+			Cell cell = nextRow.getCell(2);
 			String idLopHP = cell.getStringCellValue();
-			if(idLopHP.equalsIgnoreCase(idLop)) {
+			if (idLopHP.equalsIgnoreCase(idLop)) {
 				int lastRow = sheet.getLastRowNum();
-				if(i < lastRow) {
+				if (i < lastRow) {
 					sheet.shiftRows(i + 1, lastRow, -1);
 					ck = true;
 				}
-				if(i == lastRow) {
+				if (i == lastRow) {
 					Row removeRow = sheet.getRow(i);
-					if(removeRow != null) {
+					if (removeRow != null) {
 						sheet.removeRow(removeRow);
 						ck = true;
 					}
@@ -566,9 +580,9 @@ public class CapNhatSinhVienController {
 				break;
 			}
 		}
-		
+
 		fin.close();
-		
+
 		FileOutputStream fout = new FileOutputStream(new File(fileName));
 		workbook.write(fout);
 		fout.close();

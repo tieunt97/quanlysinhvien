@@ -4,11 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
@@ -21,14 +16,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
 import quanlysinhvien.model.DiemHocPhan;
 
 public class PanelBangDiemCaNhanView extends JPanel{
@@ -37,7 +24,7 @@ public class PanelBangDiemCaNhanView extends JPanel{
 	private JTextField tfHocKy, tfIdHP, tfTenHP, tfTinChi, tfLopHoc, tfDiemQT, tfDiemThi, tfDiemChu;
 	private String[] titleCols1 = {"Học kỳ", "Mã HP", "Tên HP", "TC", "Lớp học", "Điểm QT", "Điểm thi", "Điểm chữ"};
 	private String[] titleCols2 = {"Học kỳ", "GPA", "CPA", "TC qua", "TC tích lũy", "TC nợ ĐK", "TC ĐK", "Trình độ",
-			"mức CC", "CTĐT", "Dự kiến XLHT", "Xử lý chinhsh thức"};
+			"mức CC", "CTĐT", "Dự kiến XLHT", "Xử lý chính thức"};
 
 	 
 	public PanelBangDiemCaNhanView() {
@@ -167,6 +154,7 @@ public class PanelBangDiemCaNhanView extends JPanel{
 				}
 			};
 			table.setModel(tableModel);
+			table.getColumnModel().getColumn(2).setPreferredWidth(175);
 		}});
 	}
 	
@@ -191,6 +179,7 @@ public class PanelBangDiemCaNhanView extends JPanel{
 		DefaultTableModel model = new DefaultTableModel(data, titleCols2);
 		updateModel(model, dsDiem);
 		table.setModel(model);
+		if(table.getColumnCount() == 12) table.getColumnModel().getColumn(11).setPreferredWidth(100);
 	}
 	
 	private void updateModel(DefaultTableModel tableModel, ArrayList<DiemHocPhan> dsDiem) {
@@ -243,7 +232,7 @@ public class PanelBangDiemCaNhanView extends JPanel{
 			else if (TCNo < 16) rows[8] = "1";
 			else if (TCNo < 24) rows[8] = "2";
 			else rows[8] = "3";
-			rows[9] = "Ä�áº¡i há»�c";
+			rows[9] = "";
 			rows[10] = "";
 			rows[11] = "";
 			

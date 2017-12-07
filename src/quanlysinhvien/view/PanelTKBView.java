@@ -10,7 +10,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
@@ -64,6 +63,7 @@ public class PanelTKBView extends JPanel{
 		String[][] data = convertData(dsLopHP);
 		DefaultTableModel model = new DefaultTableModel(data, titleCols);
 		table.setModel(model);
+		table.getColumnModel().getColumn(6).setPreferredWidth(175);
 	}
 	
 	private String[][] convertData(ArrayList<LopHocPhan> dsLopHP){

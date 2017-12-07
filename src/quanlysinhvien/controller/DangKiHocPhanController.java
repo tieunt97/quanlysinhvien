@@ -34,6 +34,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import quanlysinhvien.model.DiemHocPhan;
 import quanlysinhvien.model.HocPhan;
+import quanlysinhvien.model.QuanLyHocPhan;
+import quanlysinhvien.model.TaiKhoan;
 import quanlysinhvien.view.PanelDangKiHocPhanView;
 
 public class DangKiHocPhanController {
@@ -45,16 +47,16 @@ public class DangKiHocPhanController {
 	private JCheckBox checkBox;
 	private JLabel lblSum;
 	private int tongSoTinChiDaDangKy = 0;
-	private ArrayList<HocPhan> dsHocPhan;
-	private ArrayList<HocPhan> dsHocPhanDaDangKy;
+	private QuanLyHocPhan dsHocPhan;
+	private QuanLyHocPhan dsHPDangKy;
 	private String idSV;
 
-	String fileDSHocPhan = "quanlysinhvien\\danhsachhocphan\\dsHocPhan.xlsx";
-
-	public DangKiHocPhanController(PanelDangKiHocPhanView panelDkiHP, String idSV) {
+	public DangKiHocPhanController(PanelDangKiHocPhanView panelDkiHP, TaiKhoan tk) {
 		this.panelDkiHP = panelDkiHP;
-		this.idSV = idSV;
+		this.idSV = tk.getTaiKhoan();
 		this.hocKy = panelDkiHP.getHocKy();
+		if (tk.getLoaiTK().equals("svnc")) {
+		}
 		this.tfDangky = panelDkiHP.getTfDangky();
 		this.btnDangKy = panelDkiHP.getBtnDangKy();
 		this.btnXoaHP = panelDkiHP.getBtnXoaHP();
@@ -64,63 +66,122 @@ public class DangKiHocPhanController {
 		this.lblSum = panelDkiHP.getLbSum();
 
 		/* Danh sách học phần trong bảng học phần */
-		try {
-			this.dsHocPhan = loadDanhSachHocPhan();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			this.dsHocPhan = new ArrayList<>();
-//			e.printStackTrace();
-		}
+		String fileDSHocPhan = "quanlysinhvien\\danhsachhocphan\\dsHocPhan.xlsx";
+		this.dsHocPhan = initDanhSachHocPhan(fileDSHocPhan);
 
-		try {
-			this.dsHocPhanDaDangKy = loadDSHocPhanDaDangKy();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			this.dsHocPhanDaDangKy = new ArrayList<>();
-//			e.printStackTrace();
-		}
+		/* Danh sach hoc phan da dang ki */
+		String dsHPDaDangKy = "quanlysinhvien\\sinhvientinchi\\" + idSV + "\\dsHocPhanDaDangKy.xlsx";
+		this.dsHPDangKy = initDanhSachHocPhanDky(dsHPDaDangKy);
 
-		/*load thông tin cũ vào bảng*/
+		/* load thông tin cũ vào bảng */
 		loadBangDangKyHocPhan();
 
 		addEvents();
 	}
 
-	private ArrayList<HocPhan> loadDanhSachHocPhan() throws IOException {
+	private QuanLyHocPhan initDanhSachHocPhanDky(String fileName) {
+		// TODO Auto-generated method stub
+		/* Kiểm tra file có tồn tại */
+		QuanLyHocPhan qlyHocPhan = null;
+		File file = new File(fileName);
+		if (!file.exists()) {
+			qlyHocPhan = new QuanLyHocPhan();
+			return qlyHocPhan;
+		}
+
+		ArrayList<HocPhan> dsHP = loadHocPhanDaDangKy(fileName);
+		qlyHocPhan = new QuanLyHocPhan(dsHP);
+
+		return qlyHocPhan;
+
+	}
+
+	private QuanLyHocPhan initDanhSachHocPhan(String fileDSHocPhan) {
+		// TODO Auto-generated method stub
+		QuanLyHocPhan qlyHocPhan = null;
+		File file = new File(fileDSHocPhan);
+		if (!file.exists()) {
+			qlyHocPhan = new QuanLyHocPhan();
+			return qlyHocPhan;
+		}
+
+		ArrayList<HocPhan> dsHP = loadDanhSachHocPhan(fileDSHocPhan);
+		qlyHocPhan = new QuanLyHocPhan(dsHP);
+
+		return qlyHocPhan;
+	}
+
+	private ArrayList<HocPhan> loadDanhSachHocPhan(String fileDSHocPhan) {
 		// TODO Auto-generated method stub
 		ArrayList<HocPhan> dsHocPhan = new ArrayList<>();
-		/* Khởi tạo file input */
 
-		FileInputStream fis = new FileInputStream(fileDSHocPhan);
-		XSSFWorkbook wb = new XSSFWorkbook(fis);
-		XSSFSheet sheet = wb.getSheetAt(0);
-		Row rowT;
-
-		String idHocPhan;
-		String tenHP;
-		String idNganh = "";
-		int soTinChi;
-		double soTCHocPhi;
-		double trongSo;
-		String ngayDangKyHP;
-
-		int lastRow = sheet.getLastRowNum();
-		for (int row = 1; row <= lastRow; row++) {
-			rowT = sheet.getRow(row);
-
-			idHocPhan = rowT.getCell(1).getStringCellValue();
-			tenHP = rowT.getCell(2).getStringCellValue();
-			soTinChi = (int) Math.round(rowT.getCell(3).getNumericCellValue());
-			soTCHocPhi = rowT.getCell(4).getNumericCellValue();
-			idNganh = rowT.getCell(5).getStringCellValue();
-			trongSo = rowT.getCell(6).getNumericCellValue();
-			ngayDangKyHP = new String(new Date(System.currentTimeMillis()).toString());
-
-			dsHocPhan.add(new HocPhan(idHocPhan, tenHP, soTinChi, soTCHocPhi, idNganh, trongSo, ngayDangKyHP));
+		/* Kiểm tra tồn tại file */
+		File file = new File(fileDSHocPhan);
+		if (!file.exists()) {
+			return dsHocPhan;
 		}
-		
-		wb.close();
-		fis.close();
+		/* Khởi tạo file input */
+		FileInputStream fis = null;
+		XSSFWorkbook wb = null;
+		try {
+			fis = new FileInputStream(fileDSHocPhan);
+			wb = new XSSFWorkbook(fis);
+			XSSFSheet sheet = wb.getSheetAt(0);
+			Row row;
+			Iterator<Row> itrRow = sheet.iterator();
+
+			/* Bỏ qua tiêu đề */
+			if (itrRow.hasNext()) {
+				itrRow.next();
+			}
+
+			while (itrRow.hasNext()) {
+				row = itrRow.next();
+
+				ArrayList<String> dataHP = new ArrayList<>();
+				Iterator<Cell> itrCell = row.iterator();
+				while (itrCell.hasNext()) {
+					Cell cell = itrCell.next();
+					String data = "";
+					switch (cell.getCellType()) {
+					case Cell.CELL_TYPE_STRING:
+						data = cell.getStringCellValue();
+						break;
+					case Cell.CELL_TYPE_NUMERIC:
+						data = Double.toString(cell.getNumericCellValue());
+						break;
+					default:
+						data = "";
+						break;
+					}
+					dataHP.add(data);
+					if (dataHP.size() < 1)
+						return null;
+				}
+
+				if (dataHP.size() != 0) {
+					String ngayDangKyHP = new String(new Date(System.currentTimeMillis()).toString());
+					dsHocPhan.add(new HocPhan(dataHP.get(0), dataHP.get(1), (int) Double.parseDouble(dataHP.get(2)),
+							Double.parseDouble(dataHP.get(3)), dataHP.get(4), Double.parseDouble(dataHP.get(5)),
+							ngayDangKyHP));
+				}
+			}
+
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				wb.close();
+				fis.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 
 		return dsHocPhan;
 
@@ -131,6 +192,7 @@ public class DangKiHocPhanController {
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
 		Object[] obj = new Object[6];
 
+		ArrayList<HocPhan> dsHocPhanDaDangKy = dsHPDangKy.getDsHocPhan();
 		int count = dsHocPhanDaDangKy.size();
 		for (int i = 0; i < count; i++) {
 			obj[0] = dsHocPhanDaDangKy.get(i).getIdHocPhan();
@@ -140,58 +202,97 @@ public class DangKiHocPhanController {
 			obj[4] = dsHocPhanDaDangKy.get(i).getSoTinChi();
 			obj[5] = false;
 
-			tongSoTinChiDaDangKy += Integer.parseInt(obj[4].toString());
-
 			model.addRow(obj);
 		}
+		tongSoTinChiDaDangKy = dsHPDangKy.getSoTCHienTai();
 		lblSum.setText(tongSoTinChiDaDangKy + "");
 	}
 
-	private ArrayList<HocPhan> loadDSHocPhanDaDangKy() throws IOException {
+	private ArrayList<HocPhan> loadHocPhanDaDangKy(String fileName) {
 		// TODO Auto-generated method stub
 		ArrayList<HocPhan> dsHP = new ArrayList<>();
-		File file = new File("quanlysinhvien\\sinhvientinchi\\" + idSV + "\\dsHocPhanDaDangKy.xlsx");
-		if(!file.exists()){
+		File file = new File(fileName);
+		if (!file.exists()) {
 			return new ArrayList<>();
 		}
-		
-		FileInputStream fis = new FileInputStream(file);
-		Workbook workbook = new XSSFWorkbook(fis);
-		Sheet firstSheet = workbook.getSheetAt(0);
-		Iterator<Row> iterator = firstSheet.iterator();
 
-		Row nextRow;
-		if (iterator.hasNext())
-			nextRow = iterator.next(); // loại bỏ dòng tiêu đề
-		while (iterator.hasNext()) {
-			nextRow = iterator.next();
-			Iterator<Cell> cellIterator = nextRow.cellIterator();
-			ArrayList<String> dataHP = new ArrayList<>();
-			while (cellIterator.hasNext()) {
-				Cell cell = cellIterator.next();
-				String data = "";
-				switch (cell.getCellType()) {
-				case Cell.CELL_TYPE_STRING:
-					data = cell.getStringCellValue();
-					break;
-				case Cell.CELL_TYPE_NUMERIC:
-					data = Double.toString(cell.getNumericCellValue());
-					break;
-				default:
-					data = "";
-					break;
-				}
-				dataHP.add(data);
-				if(dataHP.size() < 1) return null;
+		FileInputStream fis = null;
+		Workbook workbook = null;
+		try {
+			fis = new FileInputStream(file);
+			workbook = new XSSFWorkbook(fis);
+			Sheet firstSheet = workbook.getSheetAt(0);
+			Iterator<Row> iterator = firstSheet.iterator();
+
+			Row row;
+			if (iterator.hasNext()) {
+				iterator.next(); // loại bỏ dòng tiêu đề
 			}
-			if(dataHP.size() > 0) {
-				HocPhan hocPhan = new HocPhan(dataHP.get(0), dataHP.get(1), Integer.parseInt(dataHP.get(4)), dataHP.get(2));
+
+			while (iterator.hasNext()) {
+				row = iterator.next();
+
+				// ArrayList<String> dataHP = new ArrayList<>();
+				// Iterator<Cell> itrCell = row.iterator();
+				// while(itrCell.hasNext()){
+				// Cell cell = itrCell.next();
+				// String data = "";
+				// switch (cell.getCellType()) {
+				// case Cell.CELL_TYPE_STRING:
+				// data = cell.getStringCellValue();
+				// break;
+				// case Cell.CELL_TYPE_NUMERIC:
+				// data = Double.toString(cell.getNumericCellValue());
+				// break;
+				// default:
+				// data = "";
+				// break;
+				// }
+				// dataHP.add(data);
+				// if(dataHP.size() < 1) return null;
+				// }
+				//
+				// if(dataHP.size() != 0){
+				// dsHP.add(new HocPhan(dataHP.get(0), dataHP.get(1),
+				// Integer.parseInt(dataHP.get(2)), Double.parseDouble(dataHP.get(3)),
+				// dataHP.get(4), Double.parseDouble(dataHP.get(5)), dataHP.get(6)));
+				// }
+
+				String idHocPhan = row.getCell(1).getStringCellValue();
+				String tenHP = row.getCell(2).getStringCellValue();
+				int soTinChi = (int) row.getCell(3).getNumericCellValue();
+				double soTCHocPhi = row.getCell(4).getNumericCellValue();
+				String idNganh = row.getCell(5).getStringCellValue();
+				double trongSo = row.getCell(6).getNumericCellValue();
+				String ngayDangKyHP = row.getCell(7).getStringCellValue();
+
+				HocPhan hocPhan = new HocPhan(idHocPhan, tenHP, soTinChi, soTCHocPhi, idNganh, trongSo, ngayDangKyHP);
 				dsHP.add(hocPhan);
+
 			}
+
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				workbook.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				fis.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 		}
 
-		workbook.close();
-		fis.close();
 		return dsHP;
 	}
 
@@ -254,39 +355,51 @@ public class DangKiHocPhanController {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				DefaultTableModel model = (DefaultTableModel) table.getModel();
-				int row = 0;
-				int soTinChiHP = 0;
-				while (row < model.getRowCount()) {
-					Boolean check = Boolean.valueOf(model.getValueAt(row, 5).toString());
-					if (check == true) {
-						soTinChiHP = Integer.parseInt(model.getValueAt(row, 4).toString());
-						tongSoTinChiDaDangKy -= soTinChiHP;
-						model.removeRow(row);
-						lblSum.setText("" + tongSoTinChiDaDangKy);
-						continue;
-					}
-					row++;
-				}
-
+				xoaHocPhan();
+				return;
 			}
 		});
-
 		// su kien gui dang ki
 		btnGuiDangKy.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				UpdataTableDanhSachDangKy();
-				GuiDangKy();
+				guiDangKy();
 				return;
 			}
 
 		});
 	}
 
-	private void UpdataTableDanhSachDangKy() {
+	private void xoaHocPhan() {
+		// TODO Auto-generated method stub
+		DefaultTableModel model = (DefaultTableModel) table.getModel();
+		int row = 0;
+		while (row < model.getRowCount()) {
+			Boolean check = Boolean.valueOf(model.getValueAt(row, 5).toString());
+			if (check == true) {
+				String maHocPhan = model.getValueAt(row, 0).toString();
+				HocPhan hocPhan = dsHPDangKy.getHocPhan(maHocPhan);
+				/*
+				 * Xóa học phần trong ds học phần đăng kí. nếu xóa thành công thì xóa
+				 * trên bảng đăng kí
+				 */
+				if (dsHPDangKy.xoaHocPhan(hocPhan)) {
+					model.removeRow(row);
+				} else {
+					JOptionPane.showMessageDialog(null, "Không tìm thấy mã học phần: " + maHocPhan);
+					return;
+				}
+				continue;
+			}
+			row++;
+		}
+		tongSoTinChiDaDangKy = dsHPDangKy.getSoTCHienTai();
+		lblSum.setText("" + tongSoTinChiDaDangKy);
+	}
+
+	private void updataTableDanhSachDangKy() {
 		// TODO Auto-generated method stub
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
 		int count = model.getRowCount();
@@ -295,65 +408,81 @@ public class DangKiHocPhanController {
 		}
 	}
 
-	private void GuiDangKy() {
+	private void guiDangKy() {
 		// TODO Auto-generated method stub
+		FileOutputStream fos = null;
+		XSSFWorkbook wb = null;
 		try {
-			FileOutputStream fos = new FileOutputStream("quanlysinhvien\\sinhvientinchi\\" + idSV + "\\dsHocPhanDaDangKy.xlsx");
-			XSSFWorkbook wb = new XSSFWorkbook();
-			XSSFSheet sheet = wb.createSheet("DSHPdadangky");
-			XSSFRow Row;
+			fos = new FileOutputStream("quanlysinhvien\\sinhvientinchi\\" + idSV + "\\dsHocPhanDaDangKy.xlsx");
+			wb = new XSSFWorkbook();
+			XSSFSheet sheet = wb.createSheet();
+			XSSFRow row;
 
-			// ghi ra file exel
-			DefaultTableModel model = (DefaultTableModel) table.getModel();
+			/* tạo header cho file exel */
+			createHeader(sheet);
+			/* lấy dữ liệu từ ds hp đăng kí ghi vào file */
+			ArrayList<HocPhan> dsHocPhan = dsHPDangKy.getDsHocPhan();
+			int count = dsHocPhan.size();
+			int nextRow = 1;
+			for (int i = 0; i < count; i++) {
+				row = sheet.createRow(nextRow);
+				writeHocPhan(dsHocPhan.get(i), row);
 
-			// tạo header cho file exel
-			createHeaderRow(sheet);
-
-			// lấy dữ liệu từ bảng học phần lưu vào file
-			int count = model.getRowCount();
-			String[] data = new String[5];
-			for (int row = 0; row < count; row++) {
-				Row = sheet.createRow(row + 1);
-				data[0] = model.getValueAt(row, 0).toString();
-				data[1] = model.getValueAt(row, 1).toString();
-				data[2] = model.getValueAt(row, 2).toString();
-				data[3] = model.getValueAt(row, 3).toString();
-				data[4] = model.getValueAt(row, 4).toString();
-
-				addDataInputFile(data, Row);
+				nextRow++;
 			}
-
 			wb.write(fos);
 
-			wb.close();
-			fos.close();
+			/* Update trạng thái đăng kí trên bảng đăng kí */
+			updataTableDanhSachDangKy();
+
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			try {
+				wb.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				fos.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
-//		try {
-//			dsHocPhanDaDangKy = loadDSHocPhanDaDangKy();
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			dsHocPhanDaDangKy = new ArrayList<>();
-//			e.printStackTrace();
-//		}
 	}
 
-	private void addDataInputFile(String[] data, XSSFRow row) {
+	private void writeHocPhan(HocPhan hp, XSSFRow row) {
 		// TODO Auto-generated method stub
-		int count = data.length;
-		for (int i = 0; i < count; i++) {
-			Cell cell = row.createCell(i+1);
-			cell.setCellValue(data[i]);
-		}
+		Cell cellMaHocPhan = row.createCell(1);
+		cellMaHocPhan.setCellValue(hp.getIdHocPhan());
+
+		Cell cellTenHocPhan = row.createCell(2);
+		cellTenHocPhan.setCellValue(hp.getTenHP());
+
+		Cell cellSoTC = row.createCell(3);
+		cellSoTC.setCellValue(hp.getSoTinChi());
+
+		Cell cellTCHocPhi = row.createCell(4);
+		cellTCHocPhi.setCellValue(hp.getSoTCHocPhi());
+
+		Cell cellMaNganh = row.createCell(5);
+		cellMaNganh.setCellValue(hp.getIdNganh());
+
+		Cell cellTrongSo = row.createCell(6);
+		cellTrongSo.setCellValue(hp.getTrongSo());
+
+		Cell cellNgayDangKy = row.createCell(7);
+		cellNgayDangKy.setCellValue(hp.getNgayDangKy());
 	}
 
-	private void createHeaderRow(XSSFSheet sheet) {
+	private void createHeader(XSSFSheet sheet) {
 		// TODO Auto-generated method stub
 		CellStyle cellStyle = sheet.getWorkbook().createCellStyle();
 		Font font = sheet.getWorkbook().createFont();
@@ -363,26 +492,34 @@ public class DangKiHocPhanController {
 
 		// tạo dòng mới
 		XSSFRow row = sheet.createRow(0);
-		Cell cellMaHocPhan = row.createCell(1);
 
+		Cell cellMaHocPhan = row.createCell(1);
 		cellMaHocPhan.setCellStyle(cellStyle);
 		cellMaHocPhan.setCellValue("Mã Học Phần");
 
 		Cell cellTenHocPhan = row.createCell(2);
 		cellTenHocPhan.setCellStyle(cellStyle);
-		cellTenHocPhan.setCellValue("Tên Lớp");
+		cellTenHocPhan.setCellValue("Tên học phần");
 
-		Cell cellNgayDK = row.createCell(3);
-		cellNgayDK.setCellStyle(cellStyle);
-		cellNgayDK.setCellValue("Ngày đăng kí");
+		Cell cellSoTC = row.createCell(3);
+		cellSoTC.setCellStyle(cellStyle);
+		cellSoTC.setCellValue("Số tín chỉ");
 
-		Cell cellTTDangKy = row.createCell(4);
-		cellTTDangKy.setCellStyle(cellStyle);
-		cellTTDangKy.setCellValue("TT Đăng Ký");
+		Cell cellTCHocPhi = row.createCell(4);
+		cellTCHocPhi.setCellStyle(cellStyle);
+		cellTCHocPhi.setCellValue("Số TC học phí");
 
-		Cell celltongSoTinChiDaDangKy = row.createCell(5);
-		celltongSoTinChiDaDangKy.setCellStyle(cellStyle);
-		celltongSoTinChiDaDangKy.setCellValue("Số Tín Chỉ");
+		Cell cellMaNganh = row.createCell(5);
+		cellMaNganh.setCellStyle(cellStyle);
+		cellMaNganh.setCellValue("Mã ngành");
+
+		Cell cellTrongSo = row.createCell(6);
+		cellTrongSo.setCellStyle(cellStyle);
+		cellTrongSo.setCellValue("Trọng số");
+
+		Cell cellNgayDangKy = row.createCell(7);
+		cellNgayDangKy.setCellStyle(cellStyle);
+		cellNgayDangKy.setCellValue("Ngày Đăng Ký");
 	}
 
 	public void DangKiHocPhan() {
@@ -392,54 +529,42 @@ public class DangKiHocPhanController {
 			return;
 		}
 		/* Kiểm tra học phần có tồn tại */
-		HocPhan hocphan = getHocPhan(maHocPhan);
-		if (hocphan == null) {
+		HocPhan hocPhan = dsHocPhan.getHocPhan(maHocPhan);
+		if (hocPhan == null) {
 			JOptionPane.showMessageDialog(null, "Không tìm thấy mã học phần.");
 			return;
 		}
 
-		DefaultTableModel model = (DefaultTableModel) table.getModel();
 		/* kiểm tra học phần có trùng trong bảng đăng kí học phần */
-		int count = model.getRowCount();
-		String maHP = "";
-		for (int i = 0; i < count; i++) {
-			maHP = model.getValueAt(i, 0).toString();
-			if (maHP.equalsIgnoreCase(maHocPhan)) {
-				JOptionPane.showMessageDialog(null, "Mã học phần đã có trong bảng đăng kí học phần.");
-				return;
-			}
+		if (dsHPDangKy.checkHocPhan(maHocPhan)) {
+			JOptionPane.showMessageDialog(null, "Học phần: " + maHocPhan + " đã tồn tại trong bảng đăng kí");
+			return;
 		}
 
-		tongSoTinChiDaDangKy += hocphan.getSoTinChi();
+		tongSoTinChiDaDangKy += hocPhan.getSoTinChi();
 		/* kiểm tra có quá giới hạn tín chỉ HP được phép đăng ki */
 		if (tongSoTinChiDaDangKy > 24) {
 			JOptionPane.showMessageDialog(null, "Quá 24 tín chỉ.");
 			return;
 		}
 
+		/* thêm học phần vào danh sách học phân đăng kí */
+		dsHPDangKy.themHocPhan(hocPhan);
+
 		/* Thêm vào bảng */
+		DefaultTableModel model = (DefaultTableModel) table.getModel();
 		Object[] obj = new Object[6];
-		obj[0] = hocphan.getIdHocPhan();
-		obj[1] = hocphan.getTenHP();
-		obj[2] = new Date(System.currentTimeMillis());
+		obj[0] = hocPhan.getIdHocPhan();
+		obj[1] = hocPhan.getTenHP();
+		obj[2] = hocPhan.getNgayDangKy();
 		obj[3] = "Chưa gửi đăng kí";
-		obj[4] = Math.round(hocphan.getSoTinChi());
+		obj[4] = Math.round(hocPhan.getSoTinChi());
 		obj[5] = false;
-
 		model.addRow(obj);
-		lblSum.setText(tongSoTinChiDaDangKy + "");
 
+		/* set text fiel và label tín chỉ */
+		lblSum.setText(tongSoTinChiDaDangKy + "");
 		tfDangky.setText("");
 	}
 
-	public HocPhan getHocPhan(String maHP) {
-		int count = dsHocPhan.size();
-		for (int i = 0; i < count; i++) {
-			if (maHP.equalsIgnoreCase(dsHocPhan.get(i).getIdHocPhan())) {
-				return dsHocPhan.get(i);
-			}
-		}
-
-		return null;
-	}
 }

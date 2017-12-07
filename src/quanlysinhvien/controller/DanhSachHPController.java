@@ -17,6 +17,7 @@ import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -43,11 +44,10 @@ public class DanhSachHPController {
 		fileName = "quanlysinhvien\\danhsachhocphan\\dsHocPhan.xlsx";
 		try {
 			this.dsHocPhan = readFile(fileName);
-			System.out.println("Success readFile.");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			dsHocPhan = new ArrayList<>();
-			e.printStackTrace();
+			System.out.println("Error danhSachHP: " + e);
 		}
 		this.table = danhSachHP.getTable();
 		this.btnThem = danhSachHP.getBtnThem();
@@ -110,7 +110,9 @@ public class DanhSachHPController {
 				if (hp != null) {
 					if (checkID(hp.getIdHocPhan())) {
 						dsHocPhan.add(hp);
-						danhSachHP.loadData(table, dsHocPhan, "", "");
+						((DefaultTableModel) table.getModel())
+								.addRow(new Object[] { hp.getIdHocPhan(), hp.getTenHP(), hp.getSoTinChi() + "",
+										hp.getSoTCHocPhi() + "", hp.getIdNganh(), hp.getTrongSo() + "" });
 						try {
 							addHP(hp, fileName);
 						} catch (IOException e1) {
@@ -130,7 +132,8 @@ public class DanhSachHPController {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (table.getSelectedRow() < 0) {
+				int row = table.getSelectedRow();
+				if (row < 0) {
 					JOptionPane.showMessageDialog(null, "Cần chọn một hàng để sửa", "Error update",
 							JOptionPane.ERROR_MESSAGE);
 					return;
@@ -155,11 +158,12 @@ public class DanhSachHPController {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-					if(ck) JOptionPane.showMessageDialog(null, "Cập nhật thành công");
+					if (ck)
+						JOptionPane.showMessageDialog(null, "Cập nhật thành công");
 					else {
 						JOptionPane.showMessageDialog(null, "Lỗi cập nhật", "Error update", JOptionPane.ERROR_MESSAGE);
 					}
-					danhSachHP.loadData(table, dsHocPhan, "", "");
+					updateRowTable(hp, row);
 					cancel();
 				}
 			}
@@ -189,10 +193,12 @@ public class DanhSachHPController {
 									e1.printStackTrace();
 								}
 								dsHocPhan.remove(i);
-								danhSachHP.loadData(table, dsHocPhan, "", "");
-								if(ck) JOptionPane.showMessageDialog(null, "Xóa thành công");
+								((DefaultTableModel) table.getModel()).removeRow(row);
+								if (ck)
+									JOptionPane.showMessageDialog(null, "Xóa thành công");
 								else {
-									JOptionPane.showMessageDialog(null, "Xóa lỗi", "Error delete", JOptionPane.ERROR_MESSAGE);
+									JOptionPane.showMessageDialog(null, "Xóa lỗi", "Error delete",
+											JOptionPane.ERROR_MESSAGE);
 								}
 								cancel();
 								return;
@@ -226,6 +232,14 @@ public class DanhSachHPController {
 
 	}
 
+	private void updateRowTable(HocPhan hp, int row) {
+		table.setValueAt(hp.getTenHP() + "", row, 1);
+		table.setValueAt(hp.getSoTinChi() + "", row, 2);
+		table.setValueAt(hp.getSoTCHocPhi() + "", row, 3);
+		table.setValueAt(hp.getIdNganh(), row, 4);
+		table.setValueAt(hp.getTrongSo() + "", row, 5);
+	}
+
 	private void cancel() {
 		tfIdHocPhan.setText("");
 		tfIdHocPhan.setEnabled(true);
@@ -238,7 +252,7 @@ public class DanhSachHPController {
 	}
 
 	private boolean checkID(String id) {
-		for (HocPhan hp: dsHocPhan) {
+		for (HocPhan hp : dsHocPhan) {
 			if (hp.getIdHocPhan().equals(id))
 				return false;
 		}
@@ -257,7 +271,7 @@ public class DanhSachHPController {
 			return null;
 		}
 		try {
-			if(!checkNganh(idNganh)) {
+			if (!checkNganh(idNganh)) {
 				JOptionPane.showMessageDialog(null, "Mã ngành không tồn tại", "Error", JOptionPane.ERROR_MESSAGE);
 				return null;
 			}
@@ -273,15 +287,15 @@ public class DanhSachHPController {
 			soTCHocPhi = Double.parseDouble(tfSoTCHocPhi.getText().trim());
 			trongSo = Double.parseDouble(tfTrongSo.getText().trim());
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "Hãy kiểm tra các giá trị: Số tín chỉ, Số TC học phí, Trọng số", "Error",
-					JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Hãy kiểm tra các giá trị: Số tín chỉ, Số TC học phí, Trọng số",
+					"Error", JOptionPane.ERROR_MESSAGE);
 			return null;
 		}
 
 		HocPhan hp = new HocPhan(idHocPhan, tenHP, soTinChi, soTCHocPhi, idNganh, trongSo);
 		return hp;
 	}
-	
+
 	private boolean checkNganh(String idNganh) throws IOException {
 		boolean ck = false;
 		FileInputStream fin = new FileInputStream(new File("quanlysinhvien\\danhsachchuyennganh\\dsNganh.xlsx"));
@@ -289,87 +303,93 @@ public class DanhSachHPController {
 		Sheet sheet = workbook.getSheetAt(0);
 		Iterator<Row> iterator = sheet.iterator();
 		Row nextRow;
-		if(iterator.hasNext()) nextRow = iterator.next();
-		while(iterator.hasNext()) {
+		if (iterator.hasNext())
+			nextRow = iterator.next();
+		while (iterator.hasNext()) {
 			nextRow = iterator.next();
 			Cell cell = nextRow.getCell(1);
 			String idN = cell.getStringCellValue();
-			if(idN.equals(idNganh))
+			if (idN.equals(idNganh)) {
 				ck = true;
+				break;
+			}
 		}
-		
+
 		return ck;
 	}
-	
+
 	private ArrayList<HocPhan> readFile(String fileName) throws IOException {
 		ArrayList<HocPhan> dsHocPhan = new ArrayList<>();
 		FileInputStream inputStream = new FileInputStream(new File(fileName));
-        
-        Workbook workbook = new XSSFWorkbook(inputStream);
-        Sheet firstSheet = workbook.getSheetAt(0);
-        Iterator<Row> iterator = firstSheet.iterator();
-         
-        Row nextRow;
-        if(iterator.hasNext()) nextRow = iterator.next();  //loại bỏ dòng tiêu đề
-        while (iterator.hasNext()) {
-            nextRow = iterator.next();
-            Iterator<Cell> cellIterator = nextRow.cellIterator();
-            ArrayList<String> dataHP = new ArrayList<>();
-            while (cellIterator.hasNext()) {
-                Cell cell = cellIterator.next();
-                String data = "";
-                switch (cell.getCellType()) {
-                    case Cell.CELL_TYPE_STRING:
-                    	data = cell.getStringCellValue();
-                    	break;
-                    case Cell.CELL_TYPE_NUMERIC:
-                        data = Double.toString(cell.getNumericCellValue());
-                        break;
-                    default: data = "";
-                        break;
-                }
-                dataHP.add(data);
-            }
-            HocPhan hp = new HocPhan(dataHP.get(0), dataHP.get(1), (int)(Double.parseDouble(dataHP.get(2))), (int)(Double.parseDouble(dataHP.get(3))), dataHP.get(4), Double.parseDouble(dataHP.get(5)));
-            dsHocPhan.add(hp);
-        }
-        
-        workbook.close();
-        inputStream.close();
-        return dsHocPhan;
+
+		Workbook workbook = new XSSFWorkbook(inputStream);
+		Sheet firstSheet = workbook.getSheetAt(0);
+		Iterator<Row> iterator = firstSheet.iterator();
+
+		Row nextRow;
+		if (iterator.hasNext())
+			nextRow = iterator.next(); // loại bỏ dòng tiêu đề
+		while (iterator.hasNext()) {
+			nextRow = iterator.next();
+			Iterator<Cell> cellIterator = nextRow.cellIterator();
+			ArrayList<String> dataHP = new ArrayList<>();
+			while (cellIterator.hasNext()) {
+				Cell cell = cellIterator.next();
+				String data = "";
+				switch (cell.getCellType()) {
+				case Cell.CELL_TYPE_STRING:
+					data = cell.getStringCellValue();
+					break;
+				case Cell.CELL_TYPE_NUMERIC:
+					data = Double.toString(cell.getNumericCellValue());
+					break;
+				default:
+					data = "";
+					break;
+				}
+				dataHP.add(data);
+			}
+			HocPhan hp = new HocPhan(dataHP.get(0), dataHP.get(1), (int) (Double.parseDouble(dataHP.get(2))),
+					(int) (Double.parseDouble(dataHP.get(3))), dataHP.get(4), Double.parseDouble(dataHP.get(5)));
+			dsHocPhan.add(hp);
+		}
+
+		workbook.close();
+		inputStream.close();
+		return dsHocPhan;
 	}
-	
+
 	private void createHeader(Sheet sheet) {
 		CellStyle cellStyle = sheet.getWorkbook().createCellStyle();
 		Font font = sheet.getWorkbook().createFont();
 		font.setBold(true);
 		cellStyle.setFont(font);
-		
+
 		Row row = sheet.createRow(0);
-		Cell cellIdHP  = row.createCell(1);
+		Cell cellIdHP = row.createCell(1);
 		cellIdHP.setCellStyle(cellStyle);
 		cellIdHP.setCellValue("Mã học phần");
-		
+
 		Cell cellTenHP = row.createCell(2);
 		cellTenHP.setCellStyle(cellStyle);
 		cellTenHP.setCellValue("Tên HP");
-		
+
 		Cell cellSoTC = row.createCell(3);
 		cellSoTC.setCellStyle(cellStyle);
 		cellSoTC.setCellValue("Số TC");
-		
+
 		Cell cellSoTCHocPhi = row.createCell(4);
 		cellSoTCHocPhi.setCellStyle(cellStyle);
 		cellSoTCHocPhi.setCellValue("Số TC học phí");
-		
+
 		Cell cellIdNganh = row.createCell(5);
 		cellIdNganh.setCellStyle(cellStyle);
 		cellIdNganh.setCellValue("Mã ngành");
-		
+
 		Cell cellTrongSo = row.createCell(6);
 		cellTrongSo.setCellStyle(cellStyle);
 		cellTrongSo.setCellValue("Trọng số");
-		
+
 	}
 
 	private void writeHocPhan(HocPhan hp, Row row) {
@@ -386,7 +406,7 @@ public class DanhSachHPController {
 		cell = row.createCell(6);
 		cell.setCellValue(hp.getTrongSo());
 	}
-	
+
 	private void addHP(HocPhan hp, String fileName) throws IOException {
 		Workbook workbook = null;
 		Sheet sheet = null;
@@ -396,7 +416,7 @@ public class DanhSachHPController {
 			workbook = new XSSFWorkbook(inputStream);
 			sheet = workbook.getSheetAt(0);
 			lastRow = sheet.getLastRowNum();
-		}catch (Exception e) {
+		} catch (Exception e) {
 			// TODO: handle exception
 			workbook = new XSSFWorkbook();
 			sheet = workbook.createSheet();
@@ -404,37 +424,38 @@ public class DanhSachHPController {
 		}
 
 		Row row = null;
-		if(lastRow < 0) {
+		if (lastRow < 0) {
 			createHeader(sheet);
 			row = sheet.createRow(1);
-		}else {
+		} else {
 			row = sheet.createRow(lastRow + 1);
 		}
-		if(row != null) {
+		if (row != null) {
 			writeHocPhan(hp, row);
 		}
-		
+
 		FileOutputStream fout = new FileOutputStream(new File(fileName));
 		workbook.write(fout);
 		fout.close();
 	}
-	
+
 	private boolean updateHP(HocPhan hp, String fileName) throws IOException {
 		boolean ck = false;
 		FileInputStream fin = new FileInputStream(new File(fileName));
 		Workbook workbook = new XSSFWorkbook(fin);
 		Sheet sheet = workbook.getSheetAt(0);
 		Iterator<Row> iterator = sheet.iterator();
-		
+
 		Row nextRow;
 		if (iterator.hasNext())
 			nextRow = iterator.next(); // loại bỏ dòng tiêu đề
-		while(iterator.hasNext()) {
+		while (iterator.hasNext()) {
 			nextRow = iterator.next();
 			Cell cell = nextRow.getCell(1);
 			String idHP = cell.getStringCellValue();
-			if(idHP.equalsIgnoreCase(hp.getIdHocPhan())) {
-//				String idHocPhan, String tenHP, int soTinChi, double soTCHocPhi, String idNganh, double trongSo) {
+			if (idHP.equalsIgnoreCase(hp.getIdHocPhan())) {
+				// String idHocPhan, String tenHP, int soTinChi, double soTCHocPhi, String
+				// idNganh, double trongSo) {
 				cell = nextRow.createCell(2);
 				cell.setCellValue(hp.getTenHP());
 				cell = nextRow.createCell(3);
@@ -449,52 +470,52 @@ public class DanhSachHPController {
 				break;
 			}
 		}
-		
+
 		fin.close();
-		
+
 		FileOutputStream fout = new FileOutputStream(new File(fileName));
 		workbook.write(fout);
 		fout.close();
 		return ck;
 	}
-	
+
 	private boolean deleteHP(HocPhan hp, String fileName) throws IOException {
 		boolean ck = false;
 		FileInputStream fin = new FileInputStream(new File(fileName));
 		Workbook workbook = new XSSFWorkbook(fin);
 		Sheet sheet = workbook.getSheetAt(0);
-		
+
 		Iterator<Row> iterator = sheet.iterator();
-		
+
 		Row nextRow = null;
 		if (iterator.hasNext())
 			nextRow = iterator.next(); // loại bỏ dòng tiêu đề
 		int i = 0;
-		while(iterator.hasNext()) {
+		while (iterator.hasNext()) {
 			nextRow = iterator.next();
 			i++;
 			Cell cell = nextRow.getCell(1);
 			String idSV = cell.getStringCellValue();
-			if(idSV.equalsIgnoreCase(hp.getIdHocPhan())) {
+			if (idSV.equalsIgnoreCase(hp.getIdHocPhan())) {
 				int lastRow = sheet.getLastRowNum();
-				if(i < lastRow) {
+				if (i < lastRow) {
 					sheet.shiftRows(i + 1, lastRow, -1);
 					ck = true;
 				}
-				if(i == lastRow) {
+				if (i == lastRow) {
 					Row removeRow = sheet.getRow(i);
-					if(removeRow != null) {
+					if (removeRow != null) {
 						sheet.removeRow(removeRow);
 						ck = true;
 					}
 				}
-				//hate you 
+				// hate you
 				break;
 			}
 		}
-		
+
 		fin.close();
-		
+
 		FileOutputStream fout = new FileOutputStream(new File(fileName));
 		workbook.write(fout);
 		fout.close();

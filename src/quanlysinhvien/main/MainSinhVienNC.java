@@ -21,6 +21,8 @@ import javax.swing.border.EmptyBorder;
 import quanlysinhvien.controller.BangDiemCaNhanController;
 import quanlysinhvien.controller.BangDiemHocPhanController;
 import quanlysinhvien.controller.ChuongTrinhDaoTaoSVController;
+import quanlysinhvien.controller.DangKiHocPhanController;
+import quanlysinhvien.controller.DangKiLopHocController;
 import quanlysinhvien.controller.DangKiTotNghiepController;
 import quanlysinhvien.controller.DanhMucHPController;
 import quanlysinhvien.controller.DanhSachHPController;
@@ -44,7 +46,7 @@ public class MainSinhVienNC extends JFrame implements ActionListener{
 	private JMenuBar menuBar;
 	private JMenu menuTrangChu, menuThongTinCaNhan, menuChuongTrinhDaoTao, menuKeHoachHocTap, menuKetQuaHocTap, menuDangKyHocTap;
 	private JMenuItem miTrangChu, miTTCN, miDoiMK, miTKB, miBangDiemCN, miBangDiemHP, miDanhMucHocPhan, miChuongTrinhDaoTaoSV,
-		miDKTN;
+		miDKHP, miDKLH, miDKTN;
 	private CardLayout carLayout;
 	private Container conter;
 	private JPanel mainPanel, dangXuatPanel;
@@ -66,6 +68,8 @@ public class MainSinhVienNC extends JFrame implements ActionListener{
 	private PanelBangDiemHocPhanView bangDiemHP;
 	private PanelBangDiemCaNhanView bangDiemCaNhan;
 	
+	private PanelDangKiHocPhanView dangKyHocPhan;
+	private PanelDangKiLopHocView dangKyLopHoc;
 	private PanelDangKiTotNghiepView dangKyTotNghiep;
 
 	public MainSinhVienNC(TaiKhoan tk) {
@@ -93,6 +97,10 @@ public class MainSinhVienNC extends JFrame implements ActionListener{
 		mainPanel.add(bangDiemHP = new PanelBangDiemHocPhanView(), "bangDiemHP");
 		new BangDiemHocPhanController(bangDiemHP, tk.getTaiKhoan(), "svnc");
 		
+		mainPanel.add(dangKyHocPhan = new PanelDangKiHocPhanView(), "DKHP");
+		new DangKiHocPhanController(dangKyHocPhan, tk);
+		mainPanel.add(dangKyLopHoc = new PanelDangKiLopHocView(), "DKLH");
+		new DangKiLopHocController(dangKyLopHoc, tk.getTaiKhoan());
 		mainPanel.add(dangKyTotNghiep = new PanelDangKiTotNghiepView(), "DKTN");
 		new DangKiTotNghiepController(dangKyTotNghiep, tk);
 		
@@ -130,6 +138,8 @@ public class MainSinhVienNC extends JFrame implements ActionListener{
 		menuKetQuaHocTap.add(miBangDiemHP = createMenuItem("Bảng điểm học phần"));
 		
 		menuBar.add(menuDangKyHocTap = createJMenu("Đăng ký học tập"));
+		menuDangKyHocTap.add(miDKHP = createMenuItem("Đăng ký học phần"));
+		menuDangKyHocTap.add(miDKLH = createMenuItem("Đăng ký lớp học"));
 		menuDangKyHocTap.add(miDKTN = createMenuItem("Đăng ký tốt nghiệp"));
 		
 		return menuBar;
@@ -196,6 +206,13 @@ public class MainSinhVienNC extends JFrame implements ActionListener{
 		}
 		if(e.getSource() == miBangDiemHP) {
 			carLayout.show(mainPanel, "bangDiemHP");
+			return;
+		}
+		if(e.getSource() == miDKHP) {
+			carLayout.show(mainPanel, "DKHP");
+		}
+		if(e.getSource() == miDKLH) {
+			carLayout.show(mainPanel, "DKLH");
 			return;
 		}
 		if(e.getSource() == miDKTN) {

@@ -6,9 +6,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
@@ -22,14 +22,14 @@ import quanlysinhvien.model.DiemHocPhan;
 import quanlysinhvien.view.PanelBangDiemHocPhanView;
 
 public class BangDiemHocPhanController {
-	private JTextField  tfHocKy, tfIdHP, tfTenHP, tfTinChi, tfDiemHP, tfIdSinhVien;
+	private JTextField tfHocKy, tfIdHP, tfTenHP, tfTinChi, tfDiemHP, tfIdSinhVien;
 	private JLabel labSumHP, labSumTC;
 	private JTable table;
 	private PanelBangDiemHocPhanView bangDiemHocPhan;
 	private ArrayList<DiemHocPhan> dsDiem;
-	
+
 	private String[][] data;
-	
+
 	public BangDiemHocPhanController(PanelBangDiemHocPhanView bangDiemHocPhan, String idSV, String loaiSV) {
 		this.bangDiemHocPhan = bangDiemHocPhan;
 		this.tfHocKy = bangDiemHocPhan.getTfHocKy();
@@ -43,9 +43,10 @@ public class BangDiemHocPhanController {
 		this.labSumTC = bangDiemHocPhan.getLabSumTC();
 		this.labSumTC.setText("0");
 		this.table = bangDiemHocPhan.getTable();
-		
+
 		try {
 			dsDiem = readFile(idSV, loaiSV);
+			Collections.sort(dsDiem, new sapXepDiem());
 			labSumHP.setText(Integer.toString(dsDiem.size()));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -53,14 +54,14 @@ public class BangDiemHocPhanController {
 			labSumHP.setText("0");
 			System.out.println("Error bangDiemHP: " + e);
 		}
-		
+
 		this.bangDiemHocPhan.loadData(table, dsDiem);
-		
+
 		loadDataIntoPiece();
-		
+
 		setAction();
 	}
-	
+
 	private void setAction() {
 		tfHocKy.addKeyListener(new KeyAdapter() {
 			@Override
@@ -70,7 +71,7 @@ public class BangDiemHocPhanController {
 				}
 			}
 		});
-		
+
 		tfIdHP.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -79,7 +80,7 @@ public class BangDiemHocPhanController {
 				}
 			}
 		});
-		
+
 		tfTenHP.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -88,7 +89,7 @@ public class BangDiemHocPhanController {
 				}
 			}
 		});
-		
+
 		tfTinChi.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -97,7 +98,7 @@ public class BangDiemHocPhanController {
 				}
 			}
 		});
-		
+
 		tfDiemHP.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -107,67 +108,69 @@ public class BangDiemHocPhanController {
 			}
 		});
 	}
-	
+
 	private ArrayList<DiemHocPhan> readFile(String idSV, String loaiSV) throws IOException {
 		dsDiem = new ArrayList<DiemHocPhan>();
 		int sumTC = 0;
-		
-		File file; 
-		if(loaiSV.equals("svtc")) file = new File ("quanlysinhvien/sinhvientinchi/" + idSV + "/diem.xlsx");
-		else file = new File ("quanlysinhvien/sinhviennienche/" + idSV + "/diem.xlsx");
+
+		File file;
+		if (loaiSV.equals("svtc"))
+			file = new File("quanlysinhvien/sinhvientinchi/" + idSV + "/diem.xlsx");
+		else
+			file = new File("quanlysinhvien/sinhviennienche/" + idSV + "/diem.xlsx");
 		FileInputStream inputStream = new FileInputStream(file);
-		
+
 		Workbook workbook = new XSSFWorkbook(inputStream);
 		Sheet sheet = workbook.getSheetAt(0);
-		
+
 		int rowCount = sheet.getLastRowNum();
-		
+
 		for (int i = 1; i <= rowCount; i++) {
-			
+
 			DiemHocPhan diem = new DiemHocPhan();
-			
+
 			Row row = sheet.getRow(i);
 			Cell cell;
-			
+
 			cell = row.getCell(1);
 			diem.setHocKy(cell.getStringCellValue());
-			
+
 			cell = row.getCell(2);
 			diem.setIdHocPhan(cell.getStringCellValue());
-			
+
 			cell = row.getCell(3);
 			diem.setTenHP(cell.getStringCellValue());
-			
+
 			cell = row.getCell(4);
 			int tc = (int) cell.getNumericCellValue();
 			diem.setTinChi(tc);
 			sumTC += tc;
-			
+
 			cell = row.getCell(5);
 			diem.setIdLopHoc(cell.getStringCellValue());
-			
+
 			cell = row.getCell(6);
 			diem.setDiemQT((double) cell.getNumericCellValue());
-			
+
 			cell = row.getCell(7);
 			diem.setDiemThi((double) cell.getNumericCellValue());
-			
+
 			cell = row.getCell(8);
 			diem.setDiemChu(cell.getStringCellValue());
-			
+
 			cell = row.getCell(9);
 			diem.setDiemThang4(cell.getNumericCellValue());
-			
+
 			dsDiem.add(diem);
 		}
 		labSumTC.setText(Integer.toString(sumTC));
-		
+
 		workbook.close();
 		inputStream.close();
-		
+
 		return dsDiem;
 	}
-	
+
 	private ArrayList<DiemHocPhan> ketQuaTimKiem(String strTimKiem, int j) {
 		ArrayList<DiemHocPhan> result = new ArrayList<DiemHocPhan>();
 		strTimKiem = strTimKiem.toLowerCase();
@@ -179,7 +182,7 @@ public class BangDiemHocPhanController {
 
 		return result;
 	}
-	
+
 	private void loadDataIntoPiece() {
 		data = new String[dsDiem.size()][5];
 		for (int i = 0; i < dsDiem.size(); i++) {

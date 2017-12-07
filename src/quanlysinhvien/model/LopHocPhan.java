@@ -69,7 +69,7 @@ public class LopHocPhan {
 		}
 	}
 	
-	private boolean kiemTraTrungSV(SinhVien sv) {
+	public boolean kiemTraTrungSV(SinhVien sv) {
 		// TODO Auto-generated method stub
 		int count = dsSinhVien.size();
 		for(int i = 0; i < count; i++){

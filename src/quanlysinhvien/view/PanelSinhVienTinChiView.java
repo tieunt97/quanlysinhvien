@@ -97,8 +97,8 @@ public class PanelSinhVienTinChiView extends JPanel {
 		panelR.add(tfHoTen = new JTextField());
 		panelR.add(tfKhoa = new JTextField());
 		panelR.add(tfNgaySinh = new JTextField());
-		panelR.add(tfDiemTB = new JTextField());
-		panelR.add(tfSoTCQua = new JTextField());
+		panelR.add(tfDiemTB = new JTextField("0.0"));
+		panelR.add(tfSoTCQua = new JTextField("0"));
 
 		panel.add(panelL, BorderLayout.WEST);
 		panel.add(panelR, BorderLayout.CENTER);
@@ -119,7 +119,7 @@ public class PanelSinhVienTinChiView extends JPanel {
 		panelR.add(tfEmail = new JTextField());
 		panelR.add(tfSoDT = new JTextField());
 		panelR.add(tfDiaChi = new JTextField());
-		panelR.add(tfSoTCNo = new JTextField());
+		panelR.add(tfSoTCNo = new JTextField("0"));
 
 		panel.add(panelL, BorderLayout.WEST);
 		panel.add(panelR, BorderLayout.CENTER);

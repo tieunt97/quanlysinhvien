@@ -1,5 +1,6 @@
 package quanlysinhvien.view;
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -10,9 +11,9 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 public class PanelDangKiTotNghiepView extends JPanel{
-	private JLabel labDiemTB, labTongSoTC, labSoTCNo, labTongSoKy, labDiemTB1, labHoTen;
+	private JLabel labDiemTB, labTongSoTC, labSoTCNo, labTongSoKy, labDiemTB1, labHoTen, labHoTen1;
 	private JButton btnDangKy;
-	private JPanel panelSVTC, panelSVNC;
+	private JPanel panelSVTC, panelSVNC, panel;
 	
 	public PanelDangKiTotNghiepView() {
 		setLayout(new BorderLayout(10, 10));
@@ -42,7 +43,8 @@ public class PanelDangKiTotNghiepView extends JPanel{
 	private JPanel createContentPanel() {
 		JPanel panelMain = new JPanel(new GridLayout(2, 1, 15, 15));
 		panelMain.setBorder(new EmptyBorder(10, 400, 250, 400));
-		JPanel panel = new JPanel(new BorderLayout());
+		panel = new JPanel();
+		panel.setLayout(new CardLayout());
 		panelSVTC = new JPanel(new GridLayout(4, 2, 5, 5));
 		panelSVTC.add(createLabel("Họ tên SV:"));
 		panelSVTC.add(labHoTen = createLabel(""));
@@ -53,16 +55,16 @@ public class PanelDangKiTotNghiepView extends JPanel{
 		panelSVTC.add(createLabel("Số TC nợ:"));
 		panelSVTC.add(labSoTCNo = createLabel(""));
 		
-		panelSVNC = new JPanel(new GridLayout(2, 1, 5, 5));
+		panelSVNC = new JPanel(new GridLayout(4, 2, 5, 5));
 		panelSVNC.add(createLabel("Họ tên SV:"));
-		panelSVNC.add(labHoTen);
+		panelSVNC.add(labHoTen1 = createLabel(""));
 		panelSVNC.add(createLabel("Điểm TB:"));
 		panelSVNC.add(labDiemTB1 = createLabel("3.21"));
 		panelSVNC.add(createLabel("Tổng số kỳ:"));
 		panelSVNC.add(labTongSoKy = createLabel("4"));
 		
-		panel.add(panelSVNC);
-		panel.add(panelSVTC);
+		panel.add(panelSVNC, "svnc");
+		panel.add(panelSVTC, "svtc");
 		
 		JPanel panelDangKy = new JPanel();
 		panelDangKy.add(btnDangKy = new JButton("Đăng ký"));
@@ -106,6 +108,10 @@ public class PanelDangKiTotNghiepView extends JPanel{
 		return labHoTen;
 	}
 
+	public JLabel getLabHoTen1() {
+		return labHoTen1;
+	}
+
 	public JPanel getPanelSVTC() {
 		return panelSVTC;
 	}
@@ -113,6 +119,10 @@ public class PanelDangKiTotNghiepView extends JPanel{
 	public JPanel getPanelSVNC() {
 		return panelSVNC;
 	}
-	
+
+	public JPanel getPanel() {
+		return panel;
+	}
+
 }
 
