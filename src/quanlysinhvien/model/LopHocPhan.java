@@ -36,6 +36,7 @@ public class LopHocPhan {
 		this.tenGiangVien = tenGiangVien;
 		this.soSVMax = soSVMax;
 		this.soSVHienTai = soSVHienTai;
+		
 		this.dsSinhVien = new ArrayList<>();
 	}
 	
@@ -52,7 +53,7 @@ public class LopHocPhan {
 		this.dsSinhVien = dsSinhVien;
 		this.tenGiangVien = tenGiangVien;
 		this.soSVMax = soSVMax;
-		this.soSVHienTai = soSVHienTai;
+		this.soSVHienTai = dsSinhVien.size();
 	}
 	
 	public boolean themSinhVien(SinhVien sv) {
@@ -62,7 +63,7 @@ public class LopHocPhan {
 		
 		if(soSVHienTai < soSVMax) {
 			this.dsSinhVien.add(sv);
-			soSVHienTai++;
+			soSVHienTai = dsSinhVien.size();
 			return true;
 		}else {
 			return false;
@@ -85,6 +86,7 @@ public class LopHocPhan {
 		for(int i = 0; i < dsSinhVien.size(); i++) {
 			if(dsSinhVien.get(i).getIdSinhVien().equals(idSinhVien)) {
 				dsSinhVien.remove(i);
+				soSVHienTai = dsSinhVien.size();
 				return true;
 			}
 		}

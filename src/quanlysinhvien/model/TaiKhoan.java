@@ -16,7 +16,7 @@ public class TaiKhoan {
 	}
 	
 	public boolean check(TaiKhoan tk) {
-		if(this.taiKhoan.equalsIgnoreCase(tk.getTaiKhoan()) && this.matKhau.equals(tk.getMatKhau())) return true;
+		if(this.taiKhoan.equalsIgnoreCase(tk.getTaiKhoan()) && this.matKhau.equalsIgnoreCase(tk.getMatKhau())) return true;
 		else return false;
 	}
 

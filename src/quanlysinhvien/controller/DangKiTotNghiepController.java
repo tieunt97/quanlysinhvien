@@ -1,6 +1,7 @@
 package quanlysinhvien.controller;
 
 import java.awt.CardLayout;
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -21,18 +22,20 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import quanlysinhvien.model.DiemHocPhan;
+import quanlysinhvien.model.SinhVien;
 import quanlysinhvien.model.SinhVienNienChe;
 import quanlysinhvien.model.SinhVienTinChi;
 import quanlysinhvien.model.TaiKhoan;
 import quanlysinhvien.view.PanelDangKiTotNghiepView;
 
 public class DangKiTotNghiepController {
-	private JLabel labDiemTB, labTongSoTC, labSoTCNo, labTongSoKy, labDiemTB1, labHoTen, labHoTen1;
+	private JLabel labDiemTB, labTongSoTC, labSoTCNo, labTongSoKy, labDiemTB1, labHoTen, labHoTen1, labSoMonNo;
 	private JButton btnDangKy;
 	private JPanel panel;
 	private CardLayout cardLayout;
 	private TaiKhoan tk;
-
+	private SinhVien sv;
+	
 	public DangKiTotNghiepController(PanelDangKiTotNghiepView dkTN, TaiKhoan tk) {
 		this.panel = dkTN.getPanel();
 		this.cardLayout = (CardLayout) panel.getLayout();
@@ -43,6 +46,7 @@ public class DangKiTotNghiepController {
 		this.labDiemTB1 = dkTN.getLabDiemTB1();
 		this.labHoTen = dkTN.getLabHoTen();
 		this.labHoTen1 = dkTN.getLabHoTen1();
+		this.labSoMonNo = dkTN.getLabSoMonNo();
 		this.btnDangKy = dkTN.getBtnDangKy();
 		this.tk = tk;
 
@@ -57,282 +61,184 @@ public class DangKiTotNghiepController {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// TODO Auto-generated method stub
-				ArrayList<DiemHocPhan> dsDiem;
-				try {
-					dsDiem = loadBangDiemHocPhan(tk);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					dsDiem = new ArrayList<>();
-					e.printStackTrace();
-				}
-				XetTotNghiep(dsDiem);
+				XetTotNghiep(sv);
 			}
 		});
 	}
 
 	private void setThongTin() {
 		if (tk.getLoaiTK().equals("svtc")) {
-			SinhVienTinChi svtc;
 			try {
-				svtc = getSinhVienTC(tk, "quanlysinhvien/sinhvientinchi/dsSinhVienTC.xlsx");
+				sv = getSinhVien(tk, "quanlysinhvien/sinhvientinchi/dsSinhVienTC.xlsx");
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				svtc = new SinhVienTinChi();
+				sv = new SinhVienTinChi();
 				e.printStackTrace();
 			}
+			
+			SinhVienTinChi svtc = (SinhVienTinChi) sv;
 			labHoTen.setText(svtc.getHoTen());
 			labTongSoTC.setText(Integer.toString(svtc.getSoTCQua()));
 			labSoTCNo.setText(Integer.toString(svtc.getSoTCNo()));
 			labDiemTB.setText(Double.toString(svtc.getDiemTB()));
 			cardLayout.show(panel, "svtc");
 		} else {
-			SinhVienNienChe svnc;
 			try {
-				svnc = getSinhVienNC(tk, "quanlysinhvien/sinhviennienche/dsSinhVienNC.xlsx");
+				sv = (SinhVienNienChe) getSinhVien(tk, "quanlysinhvien/sinhviennienche/dsSinhVienNC.xlsx");
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				svnc = new SinhVienNienChe();
+				sv = new SinhVienNienChe();
 				e.printStackTrace();
 			}
+			
+			SinhVienNienChe svnc = (SinhVienNienChe) sv;
 			labHoTen1.setText(svnc.getHoTen());
 			labTongSoKy.setText(Integer.toString(svnc.getTongSoKy()));
 			labDiemTB1.setText(Double.toString(svnc.getDiemTB()));
+			labSoMonNo.setText(Integer.toString(svnc.getSoMonNo()));
 			cardLayout.show(panel, "svnc");
 		}
 	}
 
-	public SinhVienTinChi getSinhVienTC(TaiKhoan tk, String fileName) throws IOException {
-		FileInputStream fin = new FileInputStream(new File(fileName));
-		Workbook workbook = new XSSFWorkbook(fin);
-		Sheet sheet = workbook.getSheetAt(0);
-		Iterator<Row> iterator = sheet.iterator();
-		Row nextRow;
-		if (iterator.hasNext())
-			nextRow = iterator.next();
-		while (iterator.hasNext()) {
-			nextRow = iterator.next();
-			Cell cell = nextRow.getCell(1);
-			String idSV = cell.getStringCellValue();
-			if (idSV.equals(tk.getTaiKhoan())) {
-				cell = nextRow.getCell(2);
-				String hoTen = cell.getStringCellValue();
-				cell = nextRow.getCell(3);
-				String khoa = cell.getStringCellValue();
-				cell = nextRow.getCell(4);
-				String tenLop = cell.getStringCellValue();
-				cell = nextRow.getCell(5);
-				String ngaySinh = cell.getStringCellValue();
-				cell = nextRow.getCell(6);
-				String gioiTinh = cell.getStringCellValue();
-				cell = nextRow.getCell(7);
-				String email = cell.getStringCellValue();
-				cell = nextRow.getCell(8);
-				String soDT = cell.getStringCellValue();
-				cell = nextRow.getCell(9);
-				String diaChi = cell.getStringCellValue();
-				cell = nextRow.getCell(10);
-				double diemTB = Double.parseDouble(Double.toString(cell.getNumericCellValue()));
-				cell = nextRow.getCell(11);
-				int soTCQua = (int) Double.parseDouble(Double.toString(cell.getNumericCellValue()));
-				cell = nextRow.getCell(12);
-				int soTCno = (int) Double.parseDouble(Double.toString(cell.getNumericCellValue()));
-				SinhVienTinChi svtc = new SinhVienTinChi(idSV, hoTen, khoa, tenLop, ngaySinh, gioiTinh, email, soDT,
-						diaChi, diemTB, soTCQua, soTCno);
-				return svtc;
-			}
+	public SinhVien getSinhVien(TaiKhoan tk, String fileName) throws IOException {
+		SinhVien sinhVien = null;
+		FileInputStream fis = new FileInputStream(new File(fileName));
+		XSSFWorkbook wb = new XSSFWorkbook(fis);
+		Sheet sheet = wb.getSheetAt(0);
+		Iterator<Row> itrRow = sheet.iterator();
+		Row row;
+		
+		/*bỏ qua header*/
+		if(itrRow.hasNext()){
+			itrRow.next();
 		}
-		return null;
-	}
-
-	public SinhVienNienChe getSinhVienNC(TaiKhoan tk, String fileName) throws IOException {
-		FileInputStream fin = new FileInputStream(new File(fileName));
-		Workbook workbook = new XSSFWorkbook(fin);
-		Sheet sheet = workbook.getSheetAt(0);
-		Iterator<Row> iterator = sheet.iterator();
-		Row nextRow;
-		if (iterator.hasNext())
-			nextRow = iterator.next();
-		while (iterator.hasNext()) {
-			nextRow = iterator.next();
-			Cell cell = nextRow.getCell(1);
-			String idSV = cell.getStringCellValue();
-			if (idSV.equals(tk.getTaiKhoan())) {
-				cell = nextRow.getCell(2);
-				String hoTen = cell.getStringCellValue();
-				cell = nextRow.getCell(3);
-				String khoa = cell.getStringCellValue();
-				cell = nextRow.getCell(4);
-				String tenLop = cell.getStringCellValue();
-				cell = nextRow.getCell(5);
-				String ngaySinh = cell.getStringCellValue();
-				cell = nextRow.getCell(6);
-				String gioiTinh = cell.getStringCellValue();
-				cell = nextRow.getCell(7);
-				String email = cell.getStringCellValue();
-				cell = nextRow.getCell(8);
-				String soDT = cell.getStringCellValue();
-				cell = nextRow.getCell(9);
-				String diaChi = cell.getStringCellValue();
-				cell = nextRow.getCell(10);
-				double diemTB = Double.parseDouble(Double.toString(cell.getNumericCellValue()));
-				cell = nextRow.getCell(11);
-				int tongSoKy = (int) Double.parseDouble(Double.toString(cell.getNumericCellValue()));
-				cell = nextRow.getCell(12);
-				int soMonNo = (int) Double.parseDouble(Double.toString(cell.getNumericCellValue()));
-				SinhVienNienChe svnc = new SinhVienNienChe(idSV, hoTen, khoa, tenLop, ngaySinh, gioiTinh, email, soDT,
-						diaChi, diemTB, tongSoKy, soMonNo);
-				return svnc;
-			}
-		}
-		return null;
-	}
-
-	public ArrayList<DiemHocPhan> loadBangDiemHocPhan(TaiKhoan tk) throws IOException {
-		ArrayList<DiemHocPhan> dsDiem = new ArrayList<DiemHocPhan>();
-
-		File file;
-		if (tk.getLoaiTK().equals("svtc"))
-			file = new File("quanlysinhvien/sinhvientinchi/" + tk.getTaiKhoan() + "/diem.xlsx");
-		else
-			file = new File("quanlysinhvien/sinhviennienche/" + tk.getTaiKhoan() + "/diem.xlsx");
-		FileInputStream inputStream = new FileInputStream(file);
-
-		Workbook workbook = new XSSFWorkbook(inputStream);
-		Sheet sheet = workbook.getSheetAt(0);
-		int rowCount = sheet.getLastRowNum();
-		for (int i = 1; i <= rowCount; i++) {
-			DiemHocPhan diem = new DiemHocPhan();
-			Row row = sheet.getRow(i);
-			Cell cell;
-
-			cell = row.getCell(1);
-			diem.setHocKy(cell.getStringCellValue());
-
-			cell = row.getCell(2);
-			diem.setIdHocPhan(cell.getStringCellValue());
-
-			cell = row.getCell(3);
-			diem.setTenHP(cell.getStringCellValue());
-
-			cell = row.getCell(4);
-			diem.setTinChi((int) cell.getNumericCellValue());
-
-			// lop hoc
-			cell = row.getCell(5);
-
-			cell = row.getCell(6);
-			diem.setDiemQT((double) cell.getNumericCellValue());
-
-			cell = row.getCell(7);
-			diem.setDiemThi((double) cell.getNumericCellValue());
-
-			cell = row.getCell(8);
-			diem.setDiemChu(cell.getStringCellValue());
-
-			switch (diem.getDiemChu()) {
-			case "A+":
-				diem.setDiemThang4(4);
-				break;
-			case "A":
-				diem.setDiemThang4(4);
-				break;
-			case "B+":
-				diem.setDiemThang4(3.5);
-				break;
-			case "B":
-				diem.setDiemThang4(3);
-				break;
-			case "C+":
-				diem.setDiemThang4(2.5);
-				break;
-			case "C":
-				diem.setDiemThang4(2);
-				break;
-			case "D+":
-				diem.setDiemThang4(1.5);
-				break;
-			case "D":
-				diem.setDiemThang4(1);
-				break;
-			case "F":
-				diem.setDiemThang4(0);
-				break;
-
-			default:
-				break;
-			}
-
-			dsDiem.add(diem);
-		}
-
-		return dsDiem;
-	}
-
-	private boolean XetTotNghiep(ArrayList<DiemHocPhan> dsDiem) {
-		int i = 0;
-		float tong = 0;
-		int TCTichLuy = 0;
-		int TCNo = 0;
-		int TCDK = 0;
-		float trinhDo = 1;
-		float CPA = 0;
-		while (true) {
-			if (i >= dsDiem.size())
-				break;
-			int begin = i;
-			trinhDo += 1;
-			String hocky = dsDiem.get(i).getHocKy();
-			float GPA = 0;
-			int TCQua = 0;
-
-			for (int j = i + 1; j < dsDiem.size(); j++) {
-				if (dsDiem.get(j).getHocKy().equals(dsDiem.get(i).getHocKy()))
-					i++;
-			}
-			for (int j = begin; j <= i; j++) {
-				if (dsDiem.get(j).getHocKy().equals(hocky)) {
-					GPA += dsDiem.get(j).getDiemThang4() * dsDiem.get(j).getTinChi();
-					tong += dsDiem.get(j).getDiemThang4() * dsDiem.get(j).getTinChi();
-					TCQua += dsDiem.get(j).getTinChi();
-					TCTichLuy += dsDiem.get(j).getTinChi();
-					TCDK += dsDiem.get(j).getTinChi();
-				} else {
-					tong += dsDiem.get(j).getDiemThang4() * dsDiem.get(j).getTinChi();
-					TCTichLuy += dsDiem.get(j).getTinChi();
-					TCDK += dsDiem.get(j).getTinChi();
+		
+		/*đọc file theo dòng*/
+		while(itrRow.hasNext()){
+			row = itrRow.next();
+			ArrayList<String> dataSV = new ArrayList<>();
+			Iterator<Cell> itrCell = row.iterator();
+			while(itrCell.hasNext()){
+				Cell cell = itrCell.next();
+				String data = "";
+				switch (cell.getCellType()) {
+				case Cell.CELL_TYPE_STRING:
+					data = cell.getStringCellValue();
+					break;
+				case Cell.CELL_TYPE_NUMERIC:
+					data = Double.toString(cell.getNumericCellValue());
+					break;
+				default:
+					data = "";
+					break;
 				}
-
+				dataSV.add(data);
+				if(dataSV.size() < 1) return null;
 			}
-
-			GPA = GPA / TCQua;
-			CPA = tong / TCTichLuy;
-
-			i++;
+			
+			if(dataSV.get(0).equalsIgnoreCase(tk.getTaiKhoan())){
+				if(tk.getLoaiTK().equalsIgnoreCase("svtc")){
+					sinhVien = new SinhVienTinChi(dataSV.get(0), dataSV.get(1), dataSV.get(2), dataSV.get(3), dataSV.get(4), dataSV.get(5), dataSV.get(6), dataSV.get(7), dataSV.get(8), Double.parseDouble(dataSV.get(9)), (int) Double.parseDouble(dataSV.get(10)), (int) Double.parseDouble(dataSV.get(11)));
+				}else if(tk.getLoaiTK().equalsIgnoreCase("svnc")){
+					sinhVien = new SinhVienNienChe(dataSV.get(0), dataSV.get(1), dataSV.get(2), dataSV.get(3), dataSV.get(4), dataSV.get(5), dataSV.get(6), dataSV.get(7), dataSV.get(8), Double.parseDouble(dataSV.get(9)), (int) Double.parseDouble(dataSV.get(10)), (int) Double.parseDouble(dataSV.get(11)));
+				}
+				return sinhVien;
+			}
 		}
+		
+		return new SinhVien();
+	}
 
+	
+	private boolean XetTotNghiep(SinhVien sv) {
 		/* Xét điều kiện tốt nghiệp */
-		if (TCTichLuy >= 165 && TCNo == 0 && CPA >= 2.0) {
-			if (CPA >= 3.8) {
-				JOptionPane.showMessageDialog(null,
-						"Bạn đã đăng kí tốt nghiệp thành công\n." + "Xếp loại XUẤT SẮC");
-			} else if (CPA >= 3.5) {
-				JOptionPane.showMessageDialog(null,
-						"Bạn đã đăng kí tốt nghiệp thành công\n." + "Xếp loại GIỎI");
-			} else if (CPA >= 2.5) {
-				JOptionPane.showMessageDialog(null,
-						"Bạn đã đăng kí tốt nghiệp thành công\n." + "Xếp loại KHÁ");
-			} else if (CPA >= 2.0) {
-				JOptionPane.showMessageDialog(null,
-						"Bạn đã đăng kí tốt nghiệp thành công\n." + "Xếp loại TRUNG BÌNH");
+		if(sv instanceof SinhVienTinChi) {
+			SinhVienTinChi svtc = (SinhVienTinChi) sv;
+			try {
+				if(checkNoTheChat(svtc)) {
+					JOptionPane.showMessageDialog(null, "Sinh viên chưa hoàn thành các môn học thể chất");
+					return false;
+				}
+				if (svtc.getSoTCQua() >= 165 && svtc.getSoTCNo() == 0 && sv.getDiemTB() >= 2.0) {
+					if (sv.getDiemTB() >= 3.8) {
+						JOptionPane.showMessageDialog(null,
+								"Bạn đã đăng kí tốt nghiệp thành công\n." + "Xếp loại XUẤT SẮC");
+					} else if (svtc.getDiemTB() >= 3.5) {
+						JOptionPane.showMessageDialog(null,
+								"Bạn đã đăng kí tốt nghiệp thành công\n." + "Xếp loại GIỎI");
+					} else if (svtc.getDiemTB() >= 2.5) {
+						JOptionPane.showMessageDialog(null,
+								"Bạn đã đăng kí tốt nghiệp thành công\n." + "Xếp loại KHÁ");
+					} else if (svtc.getDiemTB() >= 2.0) {
+						JOptionPane.showMessageDialog(null,
+								"Bạn đã đăng kí tốt nghiệp thành công\n." + "Xếp loại TRUNG BÌNH");
+					}
+					
+					return true;
+				} else {
+					JOptionPane.showMessageDialog(null,
+							"Số tín chỉ tích lũy = " + svtc.getSoTCQua() + "\nTín chỉ nợ = " + svtc.getSoTCNo() + "\nCPA = " + svtc.getDiemTB()
+							+ "\nBạn không đủ điều kiện tốt nghiệp\n"
+							+ "Điều kiện tốt nghiệp: TC tích lũy >= 165, TC nợ = 0 , CPA >= 2.0");
+					return false;
+				}
+			} catch (HeadlessException | IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return false;
 			}
-
-			return true;
-		} else {
-			JOptionPane.showMessageDialog(null,
-					"Số tín chỉ tích lũy = " + TCTichLuy + "\nTín chỉ nợ = " + TCNo + "\n CPA = " + CPA
-							+ "\nBạn không đủ điều kiện tốt nghiệp\n."
-							+ "TC tích lũy >= 165, TC nợ = 0 , CPA >= 2.0");
-			return false;
+		}else if(sv instanceof SinhVienNienChe){
+			SinhVienNienChe svnc = (SinhVienNienChe) sv;
+			if(svnc.getTongSoKy() == 8 && svnc.getSoMonNo() == 0 && svnc.getDiemTB() >=2.0) {
+				if (svnc.getDiemTB() >= 3.8) {
+					JOptionPane.showMessageDialog(null,
+							"Bạn đã đăng kí tốt nghiệp thành công\n." + "Xếp loại XUẤT SẮC");
+				} else if (svnc.getDiemTB() >= 3.5) {
+					JOptionPane.showMessageDialog(null,
+							"Bạn đã đăng kí tốt nghiệp thành công\n." + "Xếp loại GIỎI");
+				} else if (svnc.getDiemTB() >= 2.5) {
+					JOptionPane.showMessageDialog(null,
+							"Bạn đã đăng kí tốt nghiệp thành công\n." + "Xếp loại KHÁ");
+				} else if (svnc.getDiemTB() >= 2.0) {
+					JOptionPane.showMessageDialog(null,
+							"Bạn đã đăng kí tốt nghiệp thành công\n." + "Xếp loại TRUNG BÌNH");
+				}
+				
+				return true;
+			}else {
+				JOptionPane.showMessageDialog(null,
+						"Tổng số kỳ = " + svnc.getTongSoKy() + "\nSố môn nợ = " + svnc.getSoMonNo() + "\nCPA = " + svnc.getDiemTB()
+						+ "\nBạn không đủ điều kiện tốt nghiệp\n"
+						+ "Điều kiện tốt nghiệp: Số kỳ học = 8, Số môn nợ = 0 , CPA >= 2.0");
+				return false;
+			}
 		}
+		
+		return false;
+	}
+	
+	
+	//kiểm tra sinh viên tín chỉ đã qua hết các môn thể chất chưa?
+	private boolean checkNoTheChat(SinhVienTinChi svtc) throws IOException {
+		boolean ck = false;
+		FileInputStream fin = new FileInputStream(new File("quanlysinhvien\\sinhvientinchi\\" + svtc.getIdSinhVien() + "\\diem.xlsx"));
+		Workbook workbook = new XSSFWorkbook(fin);
+		Sheet sheet = workbook.getSheetAt(0);
+		Row nextRow;
+		Iterator<Row> iterator = sheet.iterator();
+		if(iterator.hasNext()) nextRow = iterator.next();
+		while(iterator.hasNext()) {
+			nextRow = iterator.next();
+			Cell cell = nextRow.getCell(2);
+			if(cell.getStringCellValue().indexOf("PE") == 0) {
+				cell = nextRow.getCell(9);
+				if((double) cell.getNumericCellValue() == 0.0) {
+					ck = true;
+					break;
+				}
+			}
+		}
+		
+		return ck;
 	}
 }

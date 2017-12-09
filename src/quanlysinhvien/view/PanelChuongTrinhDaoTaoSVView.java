@@ -17,6 +17,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import quanlysinhvien.model.DiemHocPhan;
+import quanlysinhvien.model.HocPhan;
 
 public class PanelChuongTrinhDaoTaoSVView extends JPanel{
 	private JTextField tfIdSinhVien, tfIdHP, tfTenHP, tfKyHoc, tfTinChi, tfDiemChu, tfDiemSo, tfVien_Khoa;
@@ -117,9 +118,9 @@ public class PanelChuongTrinhDaoTaoSVView extends JPanel{
 		return lb;
 	}
 	
-	public void loadData(JTable table, ArrayList<DiemHocPhan> dsDiem, String[] vienKhoa, String timKiem, String giaTri) {
+	public void loadData(JTable table, ArrayList<DiemHocPhan> dsDiem, String timKiem, String giaTri) {
 		SwingUtilities.invokeLater(new Runnable(){public void run(){
-			String data[][] = convertData(dsDiem, vienKhoa, timKiem,  giaTri);
+			String data[][] = convertData(dsDiem, timKiem,  giaTri);
 		    //Update the model here
 			DefaultTableModel tableModel = new DefaultTableModel(data, titleCols) {
 				@Override
@@ -133,121 +134,122 @@ public class PanelChuongTrinhDaoTaoSVView extends JPanel{
 		}});
 	}
 	
-	private String[][] convertData(ArrayList<DiemHocPhan> dsDiem, String[] vienKhoa, String timKiem, String giaTri) {
+	private String[][] convertData(ArrayList<DiemHocPhan> dsDiem, String timKiem, String giaTri) {
 		String[][] data = new String[dsDiem.size()][7];
 		int index = 0;
 		int size = dsDiem.size();
 		for (int i = 0; i < size; i++) {
+			HocPhan hp = dsDiem.get(i).getHocPhan();
 			switch(timKiem) {
 			case "idHP":
-				if(dsDiem.get(i).getIdHocPhan().toLowerCase().indexOf(giaTri) >= 0) {
-					data[index][0] = dsDiem.get(i).getIdHocPhan();
-					data[index][1] = dsDiem.get(i).getTenHP();
+				if(hp.getIdHocPhan().toLowerCase().indexOf(giaTri) >= 0) {
+					data[index][0] = hp.getIdHocPhan();
+					data[index][1] = hp.getTenHP();
 					data[index][2] = dsDiem.get(i).getHocKy();
-					data[index][3] = dsDiem.get(i).getTinChi()+"";
+					data[index][3] = hp.getSoTinChi()+"";
 					data[index][4] = dsDiem.get(i).getDiemChu();
 					double diem4 = dsDiem.get(i).getDiemThang4();
 					if(diem4 == 0.0) data[index][5] = "";
 					else data[index][5] = diem4 + "";
-					data[index][6] = vienKhoa[i];
+					data[index][6] = hp.getIdNganh();
 					index++;
 				}
 				break;
 			case "tenHP":
-				if(dsDiem.get(i).getTenHP().toLowerCase().indexOf(giaTri) >= 0) {
-					data[index][0] = dsDiem.get(i).getIdHocPhan();
-					data[index][1] = dsDiem.get(i).getTenHP();
+				if(hp.getTenHP().toLowerCase().indexOf(giaTri) >= 0) {
+					data[index][0] = hp.getIdHocPhan();
+					data[index][1] = hp.getTenHP();
 					data[index][2] = dsDiem.get(i).getHocKy();
-					data[index][3] = dsDiem.get(i).getTinChi()+"";
+					data[index][3] = hp.getSoTinChi()+"";
 					data[index][4] = dsDiem.get(i).getDiemChu();
 					double diem4 = dsDiem.get(i).getDiemThang4();
 					if(diem4 == 0.0) data[index][5] = "";
 					else data[index][5] = diem4 + "";
-					data[index][6] = vienKhoa[i];
+					data[index][6] = hp.getIdNganh();
 					index++;
 				}
 				break;
 			case "hocKy":
 				if(Integer.parseInt(dsDiem.get(i).getHocKy()) == Integer.parseInt(giaTri)) {
-					data[index][0] = dsDiem.get(i).getIdHocPhan();
-					data[index][1] = dsDiem.get(i).getTenHP();
+					data[index][0] = hp.getIdHocPhan();
+					data[index][1] = hp.getTenHP();
 					data[index][2] = dsDiem.get(i).getHocKy();
-					data[index][3] = dsDiem.get(i).getTinChi()+"";
+					data[index][3] = hp.getSoTinChi()+"";
 					data[index][4] = dsDiem.get(i).getDiemChu();
 					double diem4 = dsDiem.get(i).getDiemThang4();
 					if(diem4 == 0.0) data[index][5] = "";
 					else data[index][5] = diem4 + "";
-					data[index][6] = vienKhoa[i];
+					data[index][6] = hp.getIdNganh();
 					index++;
 				}
 				break;
 			case "tinChi":
-				if(dsDiem.get(i).getTinChi() == Integer.parseInt(giaTri)) {
-					data[index][0] = dsDiem.get(i).getIdHocPhan();
-					data[index][1] = dsDiem.get(i).getTenHP();
+				if(hp.getSoTinChi() == Integer.parseInt(giaTri)) {
+					data[index][0] = hp.getIdHocPhan();
+					data[index][1] = hp.getTenHP();
 					data[index][2] = dsDiem.get(i).getHocKy();
-					data[index][3] = dsDiem.get(i).getTinChi()+"";
+					data[index][3] = hp.getSoTinChi()+"";
 					data[index][4] = dsDiem.get(i).getDiemChu();
 					double diem4 = dsDiem.get(i).getDiemThang4();
 					if(diem4 == 0.0) data[index][5] = "";
 					else data[index][5] = diem4 + "";
-					data[index][6] = vienKhoa[i];
+					data[index][6] = hp.getIdNganh();
 					index++;
 				}
 				break;
 			case "diemChu":
 				if(dsDiem.get(i).getDiemChu().toLowerCase().indexOf(giaTri) >= 0) {
-					data[index][0] = dsDiem.get(i).getIdHocPhan();
-					data[index][1] = dsDiem.get(i).getTenHP();
+					data[index][0] = hp.getIdHocPhan();
+					data[index][1] = hp.getTenHP();
 					data[index][2] = dsDiem.get(i).getHocKy();
-					data[index][3] = dsDiem.get(i).getTinChi()+"";
+					data[index][3] = hp.getSoTinChi()+"";
 					data[index][4] = dsDiem.get(i).getDiemChu();
 					double diem4 = dsDiem.get(i).getDiemThang4();
 					if(diem4 == 0.0) data[index][5] = "";
 					else data[index][5] = diem4 + "";
-					data[index][6] = vienKhoa[i];
+					data[index][6] = hp.getIdNganh();
 					index++;
 				}
 				break;
 			case "diem4":
-				if(dsDiem.get(i).getIdHocPhan().toLowerCase().indexOf(giaTri) >= 0) {
-					data[index][0] = dsDiem.get(i).getIdHocPhan();
-					data[index][1] = dsDiem.get(i).getTenHP();
+				if(dsDiem.get(i).getDiemThang4() == Double.parseDouble(giaTri)) {
+					data[index][0] = hp.getIdHocPhan();
+					data[index][1] = hp.getTenHP();
 					data[index][2] = dsDiem.get(i).getHocKy();
-					data[index][3] = dsDiem.get(i).getTinChi()+"";
+					data[index][3] = hp.getSoTinChi()+"";
 					data[index][4] = dsDiem.get(i).getDiemChu();
 					double diem4 = dsDiem.get(i).getDiemThang4();
 					if(diem4 == 0.0) data[index][5] = "";
 					else data[index][5] = diem4 + "";
-					data[index][6] = vienKhoa[i];
+					data[index][6] = hp.getIdNganh();
 					index++;
 				}
 				break;
 			case "vienKhoa":
-				if(vienKhoa[i].toLowerCase().indexOf(giaTri) >= 0) {
-					data[index][0] = dsDiem.get(i).getIdHocPhan();
-					data[index][1] = dsDiem.get(i).getTenHP();
+				if(hp.getIdNganh().toLowerCase().indexOf(giaTri) >= 0) {
+					data[index][0] = hp.getIdHocPhan();
+					data[index][1] = hp.getTenHP();
 					data[index][2] = dsDiem.get(i).getHocKy();
-					data[index][3] = dsDiem.get(i).getTinChi()+"";
+					data[index][3] = hp.getSoTinChi()+"";
 					data[index][4] = dsDiem.get(i).getDiemChu();
 					double diem4 = dsDiem.get(i).getDiemThang4();
 					if(diem4 == 0.0) data[index][5] = "";
 					else data[index][5] = diem4 + "";
-					data[index][6] = vienKhoa[i];
+					data[index][6] = hp.getIdNganh();
 					index++;
 				}
 				break;
 			case "":
 				{
-					data[index][0] = dsDiem.get(i).getIdHocPhan();
-					data[index][1] = dsDiem.get(i).getTenHP();
+					data[index][0] = hp.getIdHocPhan();
+					data[index][1] = hp.getTenHP();
 					data[index][2] = dsDiem.get(i).getHocKy();
-					data[index][3] = dsDiem.get(i).getTinChi()+"";
+					data[index][3] = hp.getSoTinChi()+"";
 					data[index][4] = dsDiem.get(i).getDiemChu();
 					double diem4 = dsDiem.get(i).getDiemThang4();
 					if(diem4 == 0.0) data[index][5] = "";
 					else data[index][5] = diem4 + "";
-					data[index][6] = vienKhoa[i];
+					data[index][6] = hp.getIdNganh();
 					index++;
 				}
 				break;

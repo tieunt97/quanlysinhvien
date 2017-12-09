@@ -100,7 +100,7 @@ public class MainSinhVienNC extends JFrame implements ActionListener{
 		mainPanel.add(dangKyHocPhan = new PanelDangKiHocPhanView(), "DKHP");
 		new DangKiHocPhanController(dangKyHocPhan, tk);
 		mainPanel.add(dangKyLopHoc = new PanelDangKiLopHocView(), "DKLH");
-		new DangKiLopHocController(dangKyLopHoc, tk.getTaiKhoan());
+		new DangKiLopHocController(dangKyLopHoc, tk);
 		mainPanel.add(dangKyTotNghiep = new PanelDangKiTotNghiepView(), "DKTN");
 		new DangKiTotNghiepController(dangKyTotNghiep, tk);
 		

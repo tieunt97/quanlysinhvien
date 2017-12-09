@@ -19,6 +19,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
+import quanlysinhvien.model.SinhVien;
 import quanlysinhvien.model.SinhVienTinChi;
 
 public class PanelSinhVienTinChiView extends JPanel {
@@ -186,7 +187,7 @@ public class PanelSinhVienTinChiView extends JPanel {
 		return label;
 	}
 
-	public void loadData(JTable table, ArrayList<SinhVienTinChi> dsSVTC, String timKiem, String giaTri) {
+	public void loadData(JTable table, ArrayList<SinhVien> dsSVTC, String timKiem, String giaTri) {
 		String[][] data = convertData(dsSVTC, timKiem, giaTri);
 		DefaultTableModel model = new DefaultTableModel(data, titleCols);
 		table.setModel(model);
@@ -197,12 +198,14 @@ public class PanelSinhVienTinChiView extends JPanel {
 		table.getColumnModel().getColumn(7).setPreferredWidth(135);
 	}
 
-	private String[][] convertData(ArrayList<SinhVienTinChi> list, String timKiem, String giaTri) {
+	private String[][] convertData(ArrayList<SinhVien> list, String timKiem, String giaTri) {
 		int size = list.size();
 		String data[][] = new String[size][titleCols.length];
 		int index = 0;
 		for (int i = 0; i < size; i++) {
-			SinhVienTinChi svtc = list.get(i);
+			if(!(list.get(i) instanceof SinhVienTinChi))
+				continue;
+			SinhVienTinChi svtc = (SinhVienTinChi) list.get(i);
 			switch (timKiem) {
 			case "Mã sinh viên":
 				if (svtc.getIdSinhVien().toLowerCase().indexOf(giaTri) >= 0) {
@@ -317,7 +320,7 @@ public class PanelSinhVienTinChiView extends JPanel {
 				break;
 			}
 		}
-		if (!giaTri.equals("")) {
+		if (index < size) {
 			String[][] datatk = new String[index][titleCols.length];
 			for (int i = 0; i < index; i++) {
 				datatk[i] = data[i];

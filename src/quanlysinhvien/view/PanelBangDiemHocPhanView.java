@@ -17,6 +17,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import quanlysinhvien.model.DiemHocPhan;
+import quanlysinhvien.model.HocPhan;
 
 public class PanelBangDiemHocPhanView extends JPanel{
 	private JTextField tfIdSinhVien, tfHocKy, tfIdHP, tfTenHP, tfTinChi, tfDiemHP;
@@ -123,10 +124,11 @@ public class PanelBangDiemHocPhanView extends JPanel{
 	private String[][] convertData(ArrayList<DiemHocPhan> dsDiem) {
 		String[][] data = new String[dsDiem.size()][5];
 		for (int i = 0; i < dsDiem.size(); i++) {
+			HocPhan hp = dsDiem.get(i).getHocPhan();
 			data[i][0] = dsDiem.get(i).getHocKy();
-			data[i][1] = dsDiem.get(i).getIdHocPhan();
-			data[i][2] = dsDiem.get(i).getTenHP();
-			data[i][3] = dsDiem.get(i).getTinChi()+"";
+			data[i][1] = hp.getIdHocPhan();
+			data[i][2] = hp.getTenHP();
+			data[i][3] = hp.getSoTinChi()+"";
 			data[i][4] = dsDiem.get(i).getDiemChu();
 		}
 		

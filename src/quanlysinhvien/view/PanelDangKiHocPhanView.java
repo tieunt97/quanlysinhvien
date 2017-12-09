@@ -20,9 +20,9 @@ import javax.swing.table.DefaultTableModel;
 
 public class PanelDangKiHocPhanView extends JPanel{
 	private String titleCols[] = {"Mã HP", "Tên lớp", "Ngày đăng ký", "TT đăng ký", "Số TC", "Select"};
-	private String hkVals[] = {"20171", "20172"};
+	private String hkVals[] = {"20173", "20172", "20171"};
 	private JComboBox<String> hocKy;
-	private JLabel gtThongTin, lbSum;
+	private JLabel gtThongTin, lbSum, labHocKy, labIdSV;
 	private JTextField tfDangky;
 	private JButton btnDangKy, btnXoaHP, btnGuiDangKy;
 	private JTable table;
@@ -40,7 +40,6 @@ public class PanelDangKiHocPhanView extends JPanel{
 		JLabel label = new JLabel("Đăng ký học phần");
 		label.setFont(new Font("Caribli", Font.BOLD, 18));
 		label.setForeground(Color.YELLOW);
-//		label.setIcon(new ImageIcon(this.getClass().getResource("/register.png")));
 		label.setIcon(new ImageIcon("images/register.png"));
 		panel.add(label);
 		panel.setBackground(new Color(0x009999));
@@ -90,7 +89,14 @@ public class PanelDangKiHocPhanView extends JPanel{
 	private JPanel createTablePanel() {
 		JPanel panel = new JPanel(new BorderLayout(5, 5));
 		JPanel panelTitle = new JPanel();
-		panelTitle.add(createLabel("Bảng đăng ký học phần kỳ " + hocKy.getSelectedItem() + " của sinh viên 20153752", 16));
+		labHocKy = new JLabel("");
+		labHocKy.setFont(new Font("Caribli", Font.PLAIN, 16));
+		labIdSV = new JLabel();
+		labIdSV.setFont(new Font("Caribli", Font.PLAIN, 16));
+		panelTitle.add(createLabel("Bảng đăng ký học phần kỳ", 16));
+		panelTitle.add(labHocKy);
+		panelTitle.add(createLabel("của sinh viên", 16));
+		panelTitle.add(labIdSV);
 		panelTitle.setBackground(Color.LIGHT_GRAY);
 		panel.add(panelTitle, BorderLayout.NORTH);
 		
@@ -254,6 +260,14 @@ public class PanelDangKiHocPhanView extends JPanel{
 
 	public void setLbSum(JLabel lbSum) {
 		this.lbSum = lbSum;
+	}
+
+	public JLabel getLabHocKy() {
+		return labHocKy;
+	}
+
+	public JLabel getLabIdSV() {
+		return labIdSV;
 	}
 	
 }

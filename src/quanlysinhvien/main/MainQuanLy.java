@@ -24,6 +24,7 @@ import quanlysinhvien.controller.LopChuyenNganhController;
 import quanlysinhvien.controller.LopHocPhanController;
 import quanlysinhvien.controller.SinhVienNienCheController;
 import quanlysinhvien.controller.SinhVienTinChiController;
+import quanlysinhvien.model.QuanLySinhVien;
 import quanlysinhvien.view.PanelDanhSachHPView;
 import quanlysinhvien.view.PanelDanhSachNganhView;
 import quanlysinhvien.view.PanelHeThongView;
@@ -51,6 +52,10 @@ public class MainQuanLy extends JFrame implements ActionListener{
 	private PanelDanhSachNganhView dsNganh;
 	private PanelLopChuyenNganhView lopCN;
 	
+	private QuanLySinhVien dsSinhVien;
+	
+	
+	
 	public MainQuanLy() {
 		conter = this.getContentPane();
 		mainPanel = new JPanel();
@@ -58,10 +63,11 @@ public class MainQuanLy extends JFrame implements ActionListener{
 		
 		mainPanel.add(trangChu = new PanelHeThongView());
 		
+		dsSinhVien = new QuanLySinhVien();
 		mainPanel.add(SVTC = new PanelSinhVienTinChiView(), "SVTC");
-		new SinhVienTinChiController(SVTC);
+		new SinhVienTinChiController(SVTC, dsSinhVien);
 		mainPanel.add(SVNC = new PanelSinhVienNienCheView(), "SVNC");
-		new SinhVienNienCheController(SVNC);
+		new SinhVienNienCheController(SVNC, dsSinhVien);
 		
 		mainPanel.add(dsHP = new PanelDanhSachHPView(), "dsHP");
 		new DanhSachHPController(dsHP);
@@ -158,17 +164,6 @@ public class MainQuanLy extends JFrame implements ActionListener{
 			return;
 		}
 		
-	}
-	
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new Runnable() {
-			
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				new MainQuanLy();
-			}
-		});
 	}
 
 	public JButton getBtnLogout() {

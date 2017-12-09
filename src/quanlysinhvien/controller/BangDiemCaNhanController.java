@@ -22,10 +22,13 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import quanlysinhvien.model.DiemHocPhan;
+import quanlysinhvien.model.HocPhan;
 import quanlysinhvien.model.SinhVien;
 import quanlysinhvien.model.TaiKhoan;
 import quanlysinhvien.view.PanelBangDiemCaNhanView;
 
+
+//sắp xếp danh sách điểm 
 class sapXepDiem implements Comparator<DiemHocPhan> {
 
 	@Override
@@ -239,38 +242,37 @@ public class BangDiemCaNhanController {
 
 		for (int i = 1; i <= rowCount; i++) {
 
-			DiemHocPhan diem = new DiemHocPhan();
-
 			Row row = sheet.getRow(i);
 			Cell cell;
 
 			cell = row.getCell(1);
-			diem.setHocKy(cell.getStringCellValue());
+			String hocKy = cell.getStringCellValue();
 
 			cell = row.getCell(2);
-			diem.setIdHocPhan(cell.getStringCellValue());
+			String idHP = cell.getStringCellValue();
 
 			cell = row.getCell(3);
-			diem.setTenHP(cell.getStringCellValue());
+			String tenHP = cell.getStringCellValue();
 
 			cell = row.getCell(4);
-			diem.setTinChi((int) cell.getNumericCellValue());
+			int soTC = (int) cell.getNumericCellValue();
 
 			cell = row.getCell(5);
-			diem.setIdLopHoc(cell.getStringCellValue());
+			String idLopHP = cell.getStringCellValue();
 
 			cell = row.getCell(6);
-			diem.setDiemQT((double) cell.getNumericCellValue());
+			double diemQT = (double) cell.getNumericCellValue();
 
 			cell = row.getCell(7);
-			diem.setDiemThi((double) cell.getNumericCellValue());
+			double diemThi = (double) cell.getNumericCellValue();
 
 			cell = row.getCell(8);
-			diem.setDiemChu(cell.getStringCellValue());
+			String diemChu = cell.getStringCellValue();
 
 			cell = row.getCell(9);
-			diem.setDiemThang4(cell.getNumericCellValue());
+			double diemThang4 = cell.getNumericCellValue();
 
+			DiemHocPhan diem = new DiemHocPhan(hocKy, idHP, tenHP, soTC, idLopHP, diemQT, diemThi, diemChu, diemThang4);
 			dsDiem.add(diem);
 		}
 
@@ -283,10 +285,11 @@ public class BangDiemCaNhanController {
 	private void loadDataIntoPiece() {
 		data = new String[dsDiem.size()][8];
 		for (int i = 0; i < dsDiem.size(); i++) {
+			HocPhan hp = dsDiem.get(i).getHocPhan();
 			data[i][0] = dsDiem.get(i).getHocKy();
-			data[i][1] = dsDiem.get(i).getIdHocPhan();
-			data[i][2] = dsDiem.get(i).getTenHP();
-			data[i][3] = Integer.toString(dsDiem.get(i).getTinChi());
+			data[i][1] = hp.getIdHocPhan();
+			data[i][2] = hp.getTenHP();
+			data[i][3] = Integer.toString(hp.getSoTinChi());
 			data[i][4] = "";
 			data[i][5] = Double.toString(dsDiem.get(i).getDiemQT());
 			data[i][6] = Double.toString(dsDiem.get(i).getDiemThi());

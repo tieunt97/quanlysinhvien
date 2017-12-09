@@ -60,6 +60,7 @@ public class ThongTinCaNhanController {
 		setAction();
 	}
 
+	//cập nhật thông tin sinh viên lên view
 	private void setThongTin() {
 		gtHoTen.setText(sv.getHoTen());
 		gtIdSinhVien.setText(sv.getIdSinhVien());
@@ -67,6 +68,7 @@ public class ThongTinCaNhanController {
 		gtNgaySinh.setText(sv.getNgaySinh());
 	}
 
+	//lấy dữ liệu cập nhật của sinh viên
 	private String[] getCapNhat() {
 		String[] capNhat = new String[3];
 		String email = tfEmail.getText();
@@ -83,6 +85,7 @@ public class ThongTinCaNhanController {
 		return capNhat;
 	}
 
+	//bắt sự kiện
 	private void setAction() {
 		btnCapNhat.addActionListener(new ActionListener() {
 
@@ -106,6 +109,7 @@ public class ThongTinCaNhanController {
 		});
 	}
 
+	//lấy dữ liệu sinh viên trong file
 	public static SinhVien getSinhVien(TaiKhoan tk, String fileName) throws IOException {
 		FileInputStream fin = new FileInputStream(new File(fileName));
 		Workbook workbook = new XSSFWorkbook(fin);
@@ -144,6 +148,7 @@ public class ThongTinCaNhanController {
 		return null;
 	}
 
+	//cập nhật dữ liêu sinh viên trong file
 	private boolean updateSV(String gt[]) throws IOException {
 		boolean ck = false;
 		String id = gtIdSinhVien.getText();
@@ -177,6 +182,7 @@ public class ThongTinCaNhanController {
 		return ck;
 	}
 
+	//reset input
 	private void cancel() {
 		tfDiaChi.setText("");
 		tfEmail.setText("");

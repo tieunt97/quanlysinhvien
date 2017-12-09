@@ -2,8 +2,8 @@ package quanlysinhvien.controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -30,6 +30,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import quanlysinhvien.model.DiemHocPhan;
 import quanlysinhvien.model.HocPhan;
 import quanlysinhvien.model.LopHocPhan;
+import quanlysinhvien.model.SinhVien;
 import quanlysinhvien.view.CapNhatDiemSVView;
 
 public class CapNhatDiemSVController {
@@ -67,15 +68,10 @@ public class CapNhatDiemSVController {
 		setAction();
 	}
 
+	
+	//bắt sự kiện
 	private void setAction() {
-		table.addMouseListener(new MouseListener() {
-
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
+		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				// TODO Auto-generated method stub
@@ -89,23 +85,6 @@ public class CapNhatDiemSVController {
 					tfDiemThi.setText((String) table.getValueAt(row, 6));
 				}
 			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				// TODO Auto-generated method stub
-			}
 		});
 
 		btnThem.addActionListener(new ActionListener() {
@@ -115,16 +94,19 @@ public class CapNhatDiemSVController {
 				// TODO Auto-generated method stub
 				DiemHocPhan diemHP = getDiemHP();
 				if (diemHP != null) {
-					String idHocPhan = diemHP.getIdHocPhan();
+					HocPhan hp = diemHP.getHocPhan();
+					String idHocPhan = hp.getIdHocPhan();
 					if (checkDiemHP(idHocPhan)) {
 						dsDiemHP.add(diemHP);
-						((DefaultTableModel) table.getModel())
-								.addRow(new Object[] { diemHP.getHocKy(), diemHP.getIdHocPhan(), diemHP.getTenHP(),
-										diemHP.getTinChi() + "", diemHP.getIdLopHoc(), diemHP.getDiemQT() + "",
-										diemHP.getDiemThi() + "", diemHP.getDiemChu(), diemHP.getDiemThang4() + "" });
+						//thêm điểm học phần của sinh viên lên bảng điểm
+						((DefaultTableModel) table.getModel()).addRow(new Object[] { diemHP.getHocKy(), hp.getIdHocPhan(), hp.getTenHP(),
+						hp.getSoTinChi() + "", diemHP.getIdLopHoc(), diemHP.getDiemQT() + "",
+						diemHP.getDiemThi() + "", diemHP.getDiemChu(), diemHP.getDiemThang4() + "" });
 						try {
 							addDiemSV(diemHP);
+							updateDiemCTDT(diemHP);
 							if (loaiSV.equals("svnc") && diemHP.getDiemThang4() == 0.0) {
+								//thêm học phần vào danh sách học phần nợ của sinh viên
 								addHocPhanNo("quanlysinhvien\\sinhviennienche\\" + idSV + "\\hocPhanNo.xlsx",
 										idHocPhan);
 							}
@@ -153,12 +135,16 @@ public class CapNhatDiemSVController {
 					return;
 				}
 				DiemHocPhan diemHP = getDiemHP();
+				HocPhan hocPhan = diemHP.getHocPhan();
+				double diemThang4 = 0;
 				if (diemHP != null) {
 					for (int i = 0; i < dsDiemHP.size(); i++) {
-						if (dsDiemHP.get(i).getIdHocPhan().equals(diemHP.getIdHocPhan())) {
+						HocPhan hp = dsDiemHP.get(i).getHocPhan();
+						if (hp.getIdHocPhan().equals(hocPhan.getIdHocPhan())) {
+							diemThang4 = dsDiemHP.get(i).getDiemThang4();
 							dsDiemHP.get(i).setHocKy(diemHP.getHocKy());
-							dsDiemHP.get(i).setTenHP(diemHP.getTenHP());
-							dsDiemHP.get(i).setTinChi(diemHP.getTinChi());
+							hp.setTenHP(hocPhan.getTenHP());
+							hp.setSoTinChi(hocPhan.getSoTinChi());
 							dsDiemHP.get(i).setIdLopHoc(diemHP.getIdLopHoc());
 							dsDiemHP.get(i).setDiemQT(diemHP.getDiemQT());
 							dsDiemHP.get(i).setDiemThi(diemHP.getDiemThi());
@@ -167,10 +153,16 @@ public class CapNhatDiemSVController {
 							break;
 						}
 					}
-					updateRowTable(diemHP, row);
+					updateRowTable(diemHP, row); //cập nhật lại giá trị của hàng trong bảng - ứng với điểm sinh viên đc sửa
 					boolean ck = false;
 					try {
 						ck = updateDiemHP(diemHP);
+						updateDiemCTDT(diemHP);
+						if(diemThang4 == 0 && diemHP.getDiemThang4() != 0) {
+							//xóa học phần nợ khi đã qua
+							deleteHocPhanNo("quanlysinhvien\\sinhviennienche\\" + idSV + "\\hocPhanNo.xlsx",
+										diemHP.getHocPhan().getIdHocPhan());
+						}
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -201,10 +193,11 @@ public class CapNhatDiemSVController {
 						String id = (String) table.getValueAt(row, 1);
 						double diemTB = Double.parseDouble((String) table.getValueAt(row, 8));
 						for (int i = 0; i < dsDiemHP.size(); i++) {
-							if (dsDiemHP.get(i).getIdHocPhan().equals(id)) {
+							if (dsDiemHP.get(i).getHocPhan().getIdHocPhan().equals(id)) {
 								boolean ck = false;
 								try {
 									ck = deleteDiemHP(id);
+									updateDiemCTDT(new DiemHocPhan("", id, "", 0, "", 0, 0, "", -1));
 									if (diemTB == 0.0)
 										if (deleteHocPhanNo(
 												"quanlysinhvien\\sinhviennienche\\" + idSV + "\\hocPhanNo.xlsx", id))
@@ -215,7 +208,7 @@ public class CapNhatDiemSVController {
 									e1.printStackTrace();
 								}
 								dsDiemHP.remove(i);
-								((DefaultTableModel) table.getModel()).removeRow(row);
+								((DefaultTableModel) table.getModel()).removeRow(row); //xía hàng tương ứng trên bảng
 								if (ck)
 									JOptionPane.showMessageDialog(null, "Xóa thành công");
 								else {
@@ -241,10 +234,11 @@ public class CapNhatDiemSVController {
 
 	}
 
+	//cập nhật giá trị của hàng trong bảng
 	private void updateRowTable(DiemHocPhan diem, int row) {
 		table.setValueAt(diem.getHocKy(), row, 0);
-		table.setValueAt(diem.getTenHP(), row, 2);
-		table.setValueAt(diem.getTinChi() + "", row, 3);
+		table.setValueAt(diem.getHocPhan().getTenHP(), row, 2);
+		table.setValueAt(diem.getHocPhan().getSoTinChi() + "", row, 3);
 		table.setValueAt(diem.getIdLopHoc(), row, 4);
 		table.setValueAt(diem.getDiemQT() + "", row, 5);
 		table.setValueAt(diem.getDiemThi() + "", row, 6);
@@ -252,14 +246,16 @@ public class CapNhatDiemSVController {
 		table.setValueAt(diem.getDiemThang4() + "", row, 8);
 	}
 
+	//kiểm tra xem đã có điểm học phần cần kiểm tra trong bảng chưa?
 	private boolean checkDiemHP(String idHocPhan) {
 		for (DiemHocPhan diemHP : dsDiemHP) {
-			if (diemHP.getIdHocPhan().equals(idHocPhan))
+			if (diemHP.getHocPhan().getIdHocPhan().equals(idHocPhan))
 				return false;
 		}
 		return true;
 	}
 
+	//reset input
 	private void cancel() {
 		table.getSelectionModel().clearSelection();
 		tfIdHocPhan.setText("");
@@ -269,6 +265,7 @@ public class CapNhatDiemSVController {
 		tfDiemThi.setText("");
 	}
 
+	//lấy điểm học phần từ input
 	private DiemHocPhan getDiemHP() {
 		String hocKy = (String) hocKyCB.getSelectedItem();
 		String idLopHoc = tfIdLopHoc.getText().trim().toUpperCase();
@@ -304,6 +301,8 @@ public class CapNhatDiemSVController {
 		return diem;
 	}
 
+	
+	//lấy học phần ứng với mã học phần truyền vào
 	private HocPhan getHocPhan(String idHocPhan) throws IOException {
 		HocPhan hp = null;
 		FileInputStream fin = new FileInputStream(new File("quanlysinhvien\\danhsachhocphan\\dsHocPhan.xlsx"));
@@ -338,6 +337,7 @@ public class CapNhatDiemSVController {
 		return hp;
 	}
 
+	//lấy lớp học phần trong danh sách lớp học phần ứng với mã lớp truyền vào
 	private LopHocPhan getLopHP(String idLop) throws IOException {
 		LopHocPhan lopHP = null;
 		FileInputStream fin = new FileInputStream(
@@ -375,7 +375,7 @@ public class CapNhatDiemSVController {
 				cell = nextRow.getCell(11);
 				int soSVHienTai = (int) Double.parseDouble(Double.toString(cell.getNumericCellValue()));
 
-				lopHP = new LopHocPhan(hocKy, idLop, loaiLop, idHocPhan, tenLop, thoiGian, tuanHoc, phongHoc, null,
+				lopHP = new LopHocPhan(hocKy, idLop, loaiLop, idHocPhan, tenLop, thoiGian, tuanHoc, phongHoc,
 						tenGiangVien, soSVMax, soSVHienTai);
 			}
 		}
@@ -383,6 +383,8 @@ public class CapNhatDiemSVController {
 		return lopHP;
 	}
 
+	
+	//lấy danh sách điểm học phần của sinh viên
 	private ArrayList<DiemHocPhan> readFile() throws IOException {
 		ArrayList<DiemHocPhan> dsDiemHP = new ArrayList<>();
 		String fileName = "";
@@ -435,6 +437,7 @@ public class CapNhatDiemSVController {
 		return dsDiemHP;
 	}
 
+	//thêm điểm học phần vào file điểm của sinh viên
 	private void addDiemSV(DiemHocPhan diemHP) throws IOException {
 		Workbook workbook = null;
 		Sheet sheet = null;
@@ -457,7 +460,7 @@ public class CapNhatDiemSVController {
 		}
 
 		Row row = null;
-		if (lastRow < 0) {
+		if (lastRow < 0) { //tạo tiêu đề nếu file chưa có dữ liệu
 			createHeader(sheet);
 			row = sheet.createRow(1);
 		} else {
@@ -472,6 +475,7 @@ public class CapNhatDiemSVController {
 		fout.close();
 	}
 
+	//tạo tiêu đề file điểm học phần của sinh viên
 	private void createHeader(Sheet sheet) {
 		CellStyle cellStyle = sheet.getWorkbook().createCellStyle();
 		Font font = sheet.getWorkbook().createFont();
@@ -517,8 +521,10 @@ public class CapNhatDiemSVController {
 		cellDiem4.setCellValue("Điểm thang 4");
 	}
 
+	//cập nhật điểm học phần của sinh viên trong file điểm
 	private boolean updateDiemHP(DiemHocPhan diemHP) throws FileNotFoundException, IOException {
 		String fileName = "";
+		HocPhan hp = diemHP.getHocPhan();
 		boolean ck = false;
 		if (loaiSV.equals("svtc"))
 			fileName = "quanlysinhvien\\sinhvientinchi\\" + idSV + "\\diem.xlsx";
@@ -536,13 +542,13 @@ public class CapNhatDiemSVController {
 			nextRow = iterator.next();
 			Cell cell = nextRow.getCell(2);
 			String idHocPhan = cell.getStringCellValue();
-			if (idHocPhan.equalsIgnoreCase(diemHP.getIdHocPhan())) {
+			if (idHocPhan.equalsIgnoreCase(hp.getIdHocPhan())) {
 				cell = nextRow.createCell(1);
 				cell.setCellValue(diemHP.getHocKy());
 				cell = nextRow.createCell(3);
-				cell.setCellValue(diemHP.getTenHP());
+				cell.setCellValue(hp.getTenHP());
 				cell = nextRow.createCell(4);
-				cell.setCellValue(diemHP.getTinChi());
+				cell.setCellValue(hp.getSoTinChi());
 				cell = nextRow.createCell(5);
 				cell.setCellValue(diemHP.getIdLopHoc());
 				cell = nextRow.createCell(6);
@@ -566,6 +572,7 @@ public class CapNhatDiemSVController {
 		return ck;
 	}
 
+	//xóa điểm học phần sinh viên
 	private boolean deleteDiemHP(String idHocPhan) throws IOException {
 		boolean ck = false;
 		String fileName = "";
@@ -614,15 +621,16 @@ public class CapNhatDiemSVController {
 		return ck;
 	}
 
+	//ghi dòng dữ liệu diểm học phần tương ứng với row trong file điểm 
 	private void writeDiemHP(DiemHocPhan diemHP, Row row) {
 		Cell cell = row.createCell(1);
 		cell.setCellValue(diemHP.getHocKy());
 		cell = row.createCell(2);
-		cell.setCellValue(diemHP.getIdHocPhan());
+		cell.setCellValue(diemHP.getHocPhan().getIdHocPhan());
 		cell = row.createCell(3);
-		cell.setCellValue(diemHP.getTenHP());
+		cell.setCellValue(diemHP.getHocPhan().getTenHP());
 		cell = row.createCell(4);
-		cell.setCellValue(diemHP.getTinChi());
+		cell.setCellValue(diemHP.getHocPhan().getSoTinChi());
 		cell = row.createCell(5);
 		cell.setCellValue(diemHP.getIdLopHoc());
 		cell = row.createCell(6);
@@ -635,6 +643,7 @@ public class CapNhatDiemSVController {
 		cell.setCellValue(diemHP.getDiemThang4());
 	}
 
+	//thêm vào danh sách học phần nợ của sinh viên niên chế
 	private void addHocPhanNo(String fileName, String idHP) throws IOException {
 		Workbook workbook = null;
 		Sheet sheet = null;
@@ -668,6 +677,7 @@ public class CapNhatDiemSVController {
 
 	}
 
+	//xóa học phần nợ tương ứng idHocPhan trong file học phần nợ svnc
 	private boolean deleteHocPhanNo(String fileName, String idHocPhan) throws IOException {
 		boolean ck = false;
 		FileInputStream fin = new FileInputStream(new File(fileName));
@@ -710,6 +720,7 @@ public class CapNhatDiemSVController {
 		return ck;
 	}
 
+	//tạo tiêu đề file hocPhanNo svnc
 	private void createHeaderHPNo(Sheet sheet) {
 		CellStyle cellStyle = sheet.getWorkbook().createCellStyle();
 		Font font = sheet.getWorkbook().createFont();
@@ -726,5 +737,45 @@ public class CapNhatDiemSVController {
 	private void writeHPNo(String idHP, Row row) {
 		Cell cell = row.createCell(1);
 		cell.setCellValue(idHP);
+	}
+	
+	private boolean updateDiemCTDT(DiemHocPhan diem) throws IOException {
+		boolean ck = false;
+		String fileName = "";
+		if(loaiSV.equalsIgnoreCase("svtc"))
+			fileName = "quanlysinhvien\\sinhvientinchi\\" + idSV + "\\ctdt.xlsx";
+		else fileName = "quanlysinhvien\\sinhviennienche\\" + idSV + "\\ctdt.xlsx";
+		FileInputStream fin = new FileInputStream(new File(fileName));
+		Workbook workbook = new XSSFWorkbook(fin);
+		Sheet sheet = workbook.getSheetAt(0);
+		Row nextRow;
+		Iterator<Row> iterator = sheet.iterator();
+		if(iterator.hasNext())
+			nextRow = iterator.next();
+		while(iterator.hasNext()) {
+			nextRow = iterator.next();
+			Cell cell = nextRow.getCell(1);
+			if(diem.getHocPhan().getIdHocPhan().equalsIgnoreCase(cell.getStringCellValue())) {
+				cell = nextRow.getCell(4);
+				if(diem.getHocPhan().getSoTinChi() == -1)
+					cell.setCellValue("");
+				else cell.setCellValue(diem.getHocPhan().getSoTinChi());
+				cell = nextRow.getCell(5);
+				if(diem.getDiemChu() == "") cell.setCellValue("");
+				else
+					cell.setCellValue(diem.getDiemChu());
+				cell = nextRow.getCell(6);
+				if(diem.getDiemThang4() == -1)
+					cell.setCellValue("");
+				else
+					cell.setCellValue(diem.getDiemThang4());
+				ck = true;
+			}
+		}
+		fin.close();
+		FileOutputStream fout = new FileOutputStream(new File(fileName));
+		workbook.write(fout);
+		fout.close();
+		return ck;
 	}
 }

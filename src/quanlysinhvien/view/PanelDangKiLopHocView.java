@@ -8,6 +8,7 @@ import java.awt.GridLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -24,7 +25,7 @@ public class PanelDangKiLopHocView extends JPanel{
 	private String[] titleCols2 = {"Thứ", "Thời gian", "Tuần học", "Phòng học", "Mã lớp"};
 	private JLabel lblSum;
 	private JCheckBox cbCheck;
-	
+	private JComboBox<String> hocKy;
 	
 	public PanelDangKiLopHocView() {
 		setLayout(new BorderLayout(15, 15));
@@ -57,7 +58,9 @@ public class PanelDangKiLopHocView extends JPanel{
 	
 	private JPanel createPanelDangKy() {
 		JPanel panel = new JPanel();
-		panel.add(new JLabel("Mã lớp: "));
+		panel.add(new JLabel("Học kỳ: "));
+		panel.add(hocKy = new JComboBox<>());
+		panel.add(new JLabel("        Mã lớp: "));
 		panel.add(tfDangKy = new JTextField(10));
 		panel.add(btnDangKy = new JButton("Đăng ký"));
 		
@@ -245,6 +248,9 @@ public class PanelDangKiLopHocView extends JPanel{
 	public void setCbCheck(JCheckBox cbCheck) {
 		this.cbCheck = cbCheck;
 	}
-	
+
+	public JComboBox<String> getHocKy() {
+		return hocKy;
+	}
 	
 }

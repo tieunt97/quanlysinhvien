@@ -23,13 +23,10 @@ import quanlysinhvien.view.PanelChuongTrinhDaoTaoSVView;
 public class ChuongTrinhDaoTaoSVController {
 	private JTextField tfIdSinhVien, tfIdHP, tfTenHP, tfKyHoc, tfTinChi, tfDiemChu, tfDiemSo, tfVien_Khoa;
 	private JTable table;
-
 	private PanelChuongTrinhDaoTaoSVView chuongTrinhDaoTaoSV;
-
 	private ArrayList<DiemHocPhan> dsDiem;
 
-	private String[] vienKhoa;
-
+	
 	public ChuongTrinhDaoTaoSVController(PanelChuongTrinhDaoTaoSVView chuongTrinhDaoTaoSV, TaiKhoan tk) {
 		this.chuongTrinhDaoTaoSV = chuongTrinhDaoTaoSV;
 		this.tfIdSinhVien = chuongTrinhDaoTaoSV.getTfIdSinhVien();
@@ -51,20 +48,21 @@ public class ChuongTrinhDaoTaoSVController {
 			System.out.println("Error chuongTrinhDaoTao: " + e);
 		}
 
-		this.chuongTrinhDaoTaoSV.loadData(table, dsDiem, vienKhoa, "", "");
+		this.chuongTrinhDaoTaoSV.loadData(table, dsDiem, "", "");
 
 		setAction();
 	}
 
+	//bắt sự kiện
 	private void setAction() {
 		tfIdHP.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
 				String giaTri = tfIdHP.getText().toLowerCase();
 				if (giaTri.equals(""))
-					chuongTrinhDaoTaoSV.loadData(table, dsDiem, vienKhoa, "", "");
+					chuongTrinhDaoTaoSV.loadData(table, dsDiem, "", "");
 				else
-					chuongTrinhDaoTaoSV.loadData(table, dsDiem, vienKhoa, "idHP", giaTri);
+					chuongTrinhDaoTaoSV.loadData(table, dsDiem, "idHP", giaTri);
 			}
 		});
 		tfTenHP.addKeyListener(new KeyAdapter() {
@@ -72,9 +70,9 @@ public class ChuongTrinhDaoTaoSVController {
 			public void keyReleased(KeyEvent e) {
 				String giaTri = tfTenHP.getText().toLowerCase();
 				if (giaTri.equals(""))
-					chuongTrinhDaoTaoSV.loadData(table, dsDiem, vienKhoa, "", "");
+					chuongTrinhDaoTaoSV.loadData(table, dsDiem, "", "");
 				else
-					chuongTrinhDaoTaoSV.loadData(table, dsDiem, vienKhoa, "tenHP", giaTri);
+					chuongTrinhDaoTaoSV.loadData(table, dsDiem, "tenHP", giaTri);
 			}
 		});
 		tfKyHoc.addKeyListener(new KeyAdapter() {
@@ -82,9 +80,9 @@ public class ChuongTrinhDaoTaoSVController {
 			public void keyReleased(KeyEvent e) {
 				String giaTri = tfKyHoc.getText().toLowerCase();
 				if (giaTri.equals(""))
-					chuongTrinhDaoTaoSV.loadData(table, dsDiem, vienKhoa, "", "");
+					chuongTrinhDaoTaoSV.loadData(table, dsDiem, "", "");
 				else
-					chuongTrinhDaoTaoSV.loadData(table, dsDiem, vienKhoa, "hocKy", giaTri);
+					chuongTrinhDaoTaoSV.loadData(table, dsDiem, "hocKy", giaTri);
 			}
 		});
 		tfTinChi.addKeyListener(new KeyAdapter() {
@@ -92,9 +90,9 @@ public class ChuongTrinhDaoTaoSVController {
 			public void keyReleased(KeyEvent e) {
 				String giaTri = tfTinChi.getText().toLowerCase();
 				if (giaTri.equals(""))
-					chuongTrinhDaoTaoSV.loadData(table, dsDiem, vienKhoa, "", "");
+					chuongTrinhDaoTaoSV.loadData(table, dsDiem, "", "");
 				else
-					chuongTrinhDaoTaoSV.loadData(table, dsDiem, vienKhoa, "tinChi", giaTri);
+					chuongTrinhDaoTaoSV.loadData(table, dsDiem, "tinChi", giaTri);
 			}
 		});
 		tfDiemChu.addKeyListener(new KeyAdapter() {
@@ -102,9 +100,9 @@ public class ChuongTrinhDaoTaoSVController {
 			public void keyReleased(KeyEvent e) {
 				String giaTri = tfDiemChu.getText().toLowerCase();
 				if (giaTri.equals(""))
-					chuongTrinhDaoTaoSV.loadData(table, dsDiem, vienKhoa, "", "");
+					chuongTrinhDaoTaoSV.loadData(table, dsDiem, "", "");
 				else
-					chuongTrinhDaoTaoSV.loadData(table, dsDiem, vienKhoa, "diemChu", giaTri);
+					chuongTrinhDaoTaoSV.loadData(table, dsDiem, "diemChu", giaTri);
 			}
 		});
 		tfDiemSo.addKeyListener(new KeyAdapter() {
@@ -112,9 +110,9 @@ public class ChuongTrinhDaoTaoSVController {
 			public void keyReleased(KeyEvent e) {
 				String giaTri = tfDiemSo.getText().toLowerCase();
 				if (giaTri.equals(""))
-					chuongTrinhDaoTaoSV.loadData(table, dsDiem, vienKhoa, "", "");
+					chuongTrinhDaoTaoSV.loadData(table, dsDiem, "", "");
 				else
-					chuongTrinhDaoTaoSV.loadData(table, dsDiem, vienKhoa, "diem4", giaTri);
+					chuongTrinhDaoTaoSV.loadData(table, dsDiem, "diem4", giaTri);
 			}
 		});
 		tfVien_Khoa.addKeyListener(new KeyAdapter() {
@@ -122,13 +120,14 @@ public class ChuongTrinhDaoTaoSVController {
 			public void keyReleased(KeyEvent e) {
 				String giaTri = tfVien_Khoa.getText().toLowerCase();
 				if (giaTri.equals(""))
-					chuongTrinhDaoTaoSV.loadData(table, dsDiem, vienKhoa, "", "");
+					chuongTrinhDaoTaoSV.loadData(table, dsDiem, "", "");
 				else
-					chuongTrinhDaoTaoSV.loadData(table, dsDiem, vienKhoa, "vienKhoa", giaTri);
+					chuongTrinhDaoTaoSV.loadData(table, dsDiem, "vienKhoa", giaTri);
 			}
 		});
 	}
 
+	//đọc file chương trình đào tạo của sinh viên
 	private ArrayList<DiemHocPhan> readFile(String idSV, String loaiSV) throws IOException {
 		dsDiem = new ArrayList<DiemHocPhan>();
 		File file;
@@ -143,37 +142,37 @@ public class ChuongTrinhDaoTaoSVController {
 		Sheet sheet = workbook.getSheetAt(0);
 
 		int rowCount = sheet.getLastRowNum();
-		vienKhoa = new String[rowCount];
 		for (int i = 1; i <= rowCount; i++) {
-
-			DiemHocPhan diem = new DiemHocPhan();
-
 			Row row = sheet.getRow(i);
 			Cell cell;
 
 			cell = row.getCell(3);
-			diem.setHocKy((int) cell.getNumericCellValue() + "");
+			String hocKy = (int) cell.getNumericCellValue() + "";
 
 			cell = row.getCell(1);
-			diem.setIdHocPhan(cell.getStringCellValue());
+			String idHocPhan = cell.getStringCellValue();
 
 			cell = row.getCell(2);
-			diem.setTenHP(cell.getStringCellValue());
+			String tenHP = cell.getStringCellValue();
 
 			cell = row.getCell(4);
-			diem.setTinChi((int) cell.getNumericCellValue());
+			int soTC = (int) cell.getNumericCellValue();
 
 			cell = row.getCell(5);
+			String diemChu = "";
 			if (cell != null)
-				diem.setDiemChu(cell.getStringCellValue());
+				diemChu = cell.getStringCellValue();
 
 			cell = row.getCell(6);
+			double diemThang4 = 0;
 			if (cell != null)
-				diem.setDiemThang4(cell.getNumericCellValue());
+				diemThang4 = cell.getNumericCellValue();
 
 			cell = row.getCell(7);
-			vienKhoa[i - 1] = cell.getStringCellValue();
+			String vienKhoa = cell.getStringCellValue();
 
+			DiemHocPhan diem = new DiemHocPhan(hocKy, idHocPhan, tenHP, soTC, idHocPhan, 0, 0, diemChu, diemThang4);
+			diem.getHocPhan().setIdNganh(vienKhoa);
 			dsDiem.add(diem);
 
 		}

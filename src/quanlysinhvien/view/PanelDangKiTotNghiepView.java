@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 public class PanelDangKiTotNghiepView extends JPanel{
-	private JLabel labDiemTB, labTongSoTC, labSoTCNo, labTongSoKy, labDiemTB1, labHoTen, labHoTen1;
+	private JLabel labDiemTB, labTongSoTC, labSoTCNo, labTongSoKy, labDiemTB1, labHoTen, labHoTen1, labSoMonNo;
 	private JButton btnDangKy;
 	private JPanel panelSVTC, panelSVNC, panel;
 	
@@ -59,9 +59,11 @@ public class PanelDangKiTotNghiepView extends JPanel{
 		panelSVNC.add(createLabel("Họ tên SV:"));
 		panelSVNC.add(labHoTen1 = createLabel(""));
 		panelSVNC.add(createLabel("Điểm TB:"));
-		panelSVNC.add(labDiemTB1 = createLabel("3.21"));
+		panelSVNC.add(labDiemTB1 = createLabel(""));
 		panelSVNC.add(createLabel("Tổng số kỳ:"));
-		panelSVNC.add(labTongSoKy = createLabel("4"));
+		panelSVNC.add(labTongSoKy = createLabel(""));
+		panelSVNC.add(createLabel("Số môn nợ:"));
+		panelSVNC.add(labSoMonNo = createLabel(""));
 		
 		panel.add(panelSVNC, "svnc");
 		panel.add(panelSVTC, "svtc");
@@ -110,6 +112,14 @@ public class PanelDangKiTotNghiepView extends JPanel{
 
 	public JLabel getLabHoTen1() {
 		return labHoTen1;
+	}
+
+	public JLabel getLabSoMonNo() {
+		return labSoMonNo;
+	}
+
+	public void setLabSoMonNo(JLabel labSoMonNo) {
+		this.labSoMonNo = labSoMonNo;
 	}
 
 	public JPanel getPanelSVTC() {

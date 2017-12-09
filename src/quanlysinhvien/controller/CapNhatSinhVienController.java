@@ -57,6 +57,7 @@ public class CapNhatSinhVienController {
 		setAction();
 	}
 
+	//bắt sự kiện
 	private void setAction() {
 		btnThem.addActionListener(new ActionListener() {
 
@@ -108,6 +109,7 @@ public class CapNhatSinhVienController {
 							}
 						}
 						dsSinhVien.add(sv);
+						//thêm sinh viên vào bảng danh sách sinh viên của lớp
 						((DefaultTableModel) table.getModel()).addRow(new Object[] { sv.getIdSinhVien(), sv.getHoTen(),
 								sv.getKhoa(), sv.getTenLop(), sv.getNgaySinh(), sv.getGioiTinh(), sv.getEmail(),
 								sv.getSoDT(), sv.getDiaChi(), sv.getDiemTB() + "" });
@@ -175,6 +177,7 @@ public class CapNhatSinhVienController {
 									}
 								}
 								dsSinhVien.remove(i);
+								//xóa sinh viên khỏi bảng
 								((DefaultTableModel) table.getModel()).removeRow(row);
 								if (ck)
 									JOptionPane.showMessageDialog(null, "Xóa thành công");
@@ -192,10 +195,12 @@ public class CapNhatSinhVienController {
 		});
 	}
 
+	//reset input
 	private void cancel() {
 		tfIdSinhVien.setText("");
 	}
 
+	//kiểm tra trùng mã sinh viên
 	private boolean checkSV(String idSV) {
 		for (SinhVien sv : dsSinhVien) {
 			if (sv.getIdSinhVien().equals(idSV))
@@ -204,6 +209,7 @@ public class CapNhatSinhVienController {
 		return true;
 	}
 
+	//lấy dữ liệu sinh viên
 	private SinhVien getSinhVien(String loaiSinhVien, String idSV) throws IOException {
 		SinhVien sv = null;
 		String fileName = "";
@@ -218,7 +224,7 @@ public class CapNhatSinhVienController {
 		Sheet sheet = workbook.getSheetAt(0);
 		Iterator<Row> iterator = sheet.iterator();
 		Row nextRow;
-		if (iterator.hasNext()) {
+		if (iterator.hasNext()) {			//bỏ qua tiêu đề
 			nextRow = iterator.next();
 		}
 		while (iterator.hasNext()) {
@@ -254,6 +260,7 @@ public class CapNhatSinhVienController {
 		return sv;
 	}
 
+	//tạo tiêu đề cho file dsSinhVien
 	private void createHeader(Sheet sheet) {
 		CellStyle cellStyle = sheet.getWorkbook().createCellStyle();
 		Font font = sheet.getWorkbook().createFont();
@@ -303,6 +310,7 @@ public class CapNhatSinhVienController {
 		cellDiemTB.setCellValue("Điểm TB");
 	}
 
+	//ghi dòng dữ liệu sinh viên vào file dsSinhVien
 	private void writeSV(SinhVien sv, Row row) {
 		Cell cell = row.createCell(1);
 		cell.setCellValue(sv.getIdSinhVien());
@@ -326,6 +334,7 @@ public class CapNhatSinhVienController {
 		cell.setCellValue(sv.getDiemTB());
 	}
 
+	//thêm sinh viên vào file dsSinhVien của lớp
 	private void addSV(SinhVien sv, String fileName) throws IOException {
 		Workbook workbook = null;
 		Sheet sheet = null;
@@ -358,6 +367,7 @@ public class CapNhatSinhVienController {
 		fout.close();
 	}
 
+	//xóa sinh viên khỏi file dsSinhVien của lớp
 	private boolean deleteSV(SinhVien sv, String fileName) throws IOException {
 		boolean ck = false;
 		FileInputStream fin = new FileInputStream(new File(fileName));
@@ -400,6 +410,7 @@ public class CapNhatSinhVienController {
 		return ck;
 	}
 
+	//cập nhật tên lớp chuyên ngành cho sinh viên
 	private boolean updateLopSV(String idSinhVien, String tenLop, String loaiSV) throws IOException {
 		boolean ck = false;
 		String fileName = "";
@@ -435,6 +446,7 @@ public class CapNhatSinhVienController {
 		return ck;
 	}
 
+	//tạo tiêu đề tkb cho sinh viên niên chế
 	private void createHeaderTKB(Sheet sheet) {
 		CellStyle cellStyle = sheet.getWorkbook().createCellStyle();
 		Font font = sheet.getWorkbook().createFont();
@@ -488,6 +500,7 @@ public class CapNhatSinhVienController {
 		cellSoSVHT.setCellValue("Số SV hiện tại");
 	}
 
+	//ghi dòng dữ liệu tkb ứng với dòng row
 	private void writeLopTKB(LopHocPhan lopHP, Row row) {
 		Cell cell = row.createCell(1);
 		cell.setCellValue(lopHP.getHocKy());
@@ -513,6 +526,7 @@ public class CapNhatSinhVienController {
 		cell.setCellValue(lopHP.getSoSVHienTai());
 	}
 
+	//thêm lớp vào tkb của sinh viên niên chế
 	private void addLopTKB(String idSV, LopHocPhan lopHP) throws IOException {
 		String fileName = "quanlysinhvien\\sinhviennienche\\" + idSV + "\\tkb.xlsx";
 		Workbook workbook = null;
@@ -546,6 +560,7 @@ public class CapNhatSinhVienController {
 		fout.close();
 	}
 
+	//xóa lớp tkb sinh viên niên chế
 	private boolean deleteLopTKB(String idSV, String idLop) throws IOException {
 		boolean ck = false;
 		String fileName = "quanlysinhvien\\sinhviennienche\\" + idSV + "\\tkb.xlsx";

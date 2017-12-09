@@ -81,7 +81,7 @@ public class MainSinhVienTC extends JFrame implements ActionListener{
 		new DoiMatKhauController(doiMatKhau, tk);
 		
 		mainPanel.add(tkb = new PanelTKBView(), "tkb");
-		new ThoiKhoaBieuController(tkb, "quanlysinhvien\\sinhvientinchi\\" + tk.getTaiKhoan() + "\\dsLopHocDangKy.xlsx");
+		new ThoiKhoaBieuController(tkb, "quanlysinhvien\\sinhvientinchi\\" + tk.getTaiKhoan() + "\\dsLopHocDangKy_20172.xlsx");
 		
 		mainPanel.add(thongTinCaNhan = new PanelThongTinCaNhanView(), "thongTinCaNhan");
 		new ThongTinCaNhanController(thongTinCaNhan, tk);
@@ -99,7 +99,7 @@ public class MainSinhVienTC extends JFrame implements ActionListener{
 		mainPanel.add(dangKyHP = new PanelDangKiHocPhanView(), "dangKyHP");
 		new DangKiHocPhanController(dangKyHP, tk);
 		mainPanel.add(dangKyLopHoc = new PanelDangKiLopHocView(), "dangKyLopHoc");
-		new DangKiLopHocController(dangKyLopHoc, tk.getTaiKhoan());
+		new DangKiLopHocController(dangKyLopHoc, tk);
 		mainPanel.add(dangKyTotNghiep = new PanelDangKiTotNghiepView(), "dangKyTN");
 		new DangKiTotNghiepController(dangKyTotNghiep, tk);
 		

@@ -20,6 +20,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
 import quanlysinhvien.model.DiemHocPhan;
+import quanlysinhvien.model.HocPhan;
 
 public class CapNhatDiemSVView extends JDialog{
 	private JTable table;
@@ -144,10 +145,11 @@ public class CapNhatDiemSVView extends JDialog{
 		int size = dsDiem.size();
 		String data[][] = new String[size][titleCols.length];
 		for(int i = 0; i < size; i++) {
+			HocPhan hp = dsDiem.get(i).getHocPhan();
 			data[i][0] = dsDiem.get(i).getHocKy();
-			data[i][1] = dsDiem.get(i).getIdHocPhan();
-			data[i][2] = dsDiem.get(i).getTenHP();
-			data[i][3] = dsDiem.get(i).getTinChi() + "";
+			data[i][1] = hp.getIdHocPhan();
+			data[i][2] = hp.getTenHP();
+			data[i][3] = hp.getSoTinChi() + "";
 			data[i][4] = dsDiem.get(i).getIdLopHoc();
 			data[i][5] = dsDiem.get(i).getDiemQT() + "";
 			data[i][6] = dsDiem.get(i).getDiemThi() + "";

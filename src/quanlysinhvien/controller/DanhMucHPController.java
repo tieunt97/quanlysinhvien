@@ -48,6 +48,7 @@ public class DanhMucHPController {
 		setAction();
 	}
 
+	//bắt sự kiện
 	private void setAction() {
 		khoaVienCB.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -74,6 +75,8 @@ public class DanhMucHPController {
 		});
 	}
 
+	
+	//đọc file danh mục học phần
 	private ArrayList<HocPhan> readFile() throws IOException {
 		dsHocPhan = new ArrayList<HocPhan>();
 

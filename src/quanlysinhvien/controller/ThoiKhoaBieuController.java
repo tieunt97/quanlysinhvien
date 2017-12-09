@@ -20,6 +20,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import quanlysinhvien.model.LopHocPhan;
 import quanlysinhvien.view.PanelTKBView;
 
+
+//sắp xếp tkb
 class SapXepTKB implements Comparator<LopHocPhan>{
 
 	@Override
@@ -35,7 +37,6 @@ class SapXepTKB implements Comparator<LopHocPhan>{
 			   return -1;
 		}
 	}
-	
 }
 
 public class ThoiKhoaBieuController {
@@ -61,6 +62,7 @@ public class ThoiKhoaBieuController {
 		this.tkb.loadData(table, dsLopHP);
 	}
 	
+	//lấy danh sách lớp học của sinh viên trong kỳ học
 	private ArrayList<LopHocPhan> getDSLopHP(String fileName) throws IOException{
 		ArrayList<LopHocPhan> dsLopHP = new ArrayList<>();
 		FileInputStream inputStream = new FileInputStream(new File(fileName));
@@ -95,7 +97,7 @@ public class ThoiKhoaBieuController {
 			}
 			if(dataLopHP.size() > 0) {
 				LopHocPhan lopHocPhan = new LopHocPhan(dataLopHP.get(0), dataLopHP.get(1), dataLopHP.get(2), dataLopHP.get(3), dataLopHP.get(4), 
-						dataLopHP.get(5), dataLopHP.get(6), dataLopHP.get(7), null, dataLopHP.get(8), (int) Double.parseDouble(dataLopHP.get(9)), (int) Double.parseDouble(dataLopHP.get(10)));
+						dataLopHP.get(5), dataLopHP.get(6), dataLopHP.get(7), dataLopHP.get(8), (int) Double.parseDouble(dataLopHP.get(9)), (int) Double.parseDouble(dataLopHP.get(10)));
 				dsLopHP.add(lopHocPhan);
 			}
 		}

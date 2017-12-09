@@ -19,6 +19,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
+import quanlysinhvien.model.SinhVien;
 import quanlysinhvien.model.SinhVienNienChe;
 
 public class PanelSinhVienNienCheView extends JPanel{
@@ -184,23 +185,25 @@ public class PanelSinhVienNienCheView extends JPanel{
 		return label;
 	}
 	
-	public void loadData(JTable table, ArrayList<SinhVienNienChe> dsSVNC, String timKiem, String giaTri) {
+	public void loadData(JTable table, ArrayList<SinhVien> dsSVNC, String timKiem, String giaTri) {
 		String[][] data = convertData(dsSVNC, timKiem, giaTri);
 		DefaultTableModel model = new DefaultTableModel(data, titleCols);
 		table.setModel(model);
 		table.getColumnModel().getColumn(0).setPreferredWidth(90);
-		table.getColumnModel().getColumn(1).setPreferredWidth(140);
-		table.getColumnModel().getColumn(5).setPreferredWidth(140);
-		table.getColumnModel().getColumn(6).setPreferredWidth(140);
-		table.getColumnModel().getColumn(7).setPreferredWidth(145);
+		table.getColumnModel().getColumn(1).setPreferredWidth(135);
+		table.getColumnModel().getColumn(5).setPreferredWidth(135);
+		table.getColumnModel().getColumn(6).setPreferredWidth(135);
+		table.getColumnModel().getColumn(7).setPreferredWidth(135);
 	}
 	
-	private String[][] convertData(ArrayList<SinhVienNienChe> list, String timKiem, String giaTri) {
+	private String[][] convertData(ArrayList<SinhVien> list, String timKiem, String giaTri) {
 		int size = list.size();
 		String data[][] = new String[size][titleCols.length];
 		int index = 0;
 		for (int i = 0; i < size; i++) {
-			SinhVienNienChe svnc = list.get(i);
+			SinhVien sv = list.get(i);
+			if(!(sv instanceof SinhVienNienChe)) continue;
+			SinhVienNienChe svnc = (SinhVienNienChe) sv;
 			switch (timKiem) {
 			case "Mã sinh viên":
 				if(svnc.getIdSinhVien().toLowerCase().indexOf(giaTri) >= 0) {
@@ -315,7 +318,7 @@ public class PanelSinhVienNienCheView extends JPanel{
 				break;
 			}
 		}
-		if (!giaTri.equals("")) {
+		if (index < size) {
 			String[][] datatk = new String[index][titleCols.length];
 			for (int i = 0; i < index; i++) {
 				datatk[i] = data[i];

@@ -19,6 +19,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import quanlysinhvien.model.DiemHocPhan;
+import quanlysinhvien.model.HocPhan;
 import quanlysinhvien.view.PanelBangDiemHocPhanView;
 
 public class BangDiemHocPhanController {
@@ -126,41 +127,38 @@ public class BangDiemHocPhanController {
 		int rowCount = sheet.getLastRowNum();
 
 		for (int i = 1; i <= rowCount; i++) {
-
-			DiemHocPhan diem = new DiemHocPhan();
-
 			Row row = sheet.getRow(i);
 			Cell cell;
 
 			cell = row.getCell(1);
-			diem.setHocKy(cell.getStringCellValue());
+			String hocKy = cell.getStringCellValue();
 
 			cell = row.getCell(2);
-			diem.setIdHocPhan(cell.getStringCellValue());
+			String idHocPhan = cell.getStringCellValue();
 
 			cell = row.getCell(3);
-			diem.setTenHP(cell.getStringCellValue());
+			String tenHP = cell.getStringCellValue();
 
 			cell = row.getCell(4);
 			int tc = (int) cell.getNumericCellValue();
-			diem.setTinChi(tc);
 			sumTC += tc;
 
 			cell = row.getCell(5);
-			diem.setIdLopHoc(cell.getStringCellValue());
+			String idLopHP = cell.getStringCellValue();
 
 			cell = row.getCell(6);
-			diem.setDiemQT((double) cell.getNumericCellValue());
+			double diemQT = (double) cell.getNumericCellValue();
 
 			cell = row.getCell(7);
-			diem.setDiemThi((double) cell.getNumericCellValue());
+			double diemThi = (double) cell.getNumericCellValue();
 
 			cell = row.getCell(8);
-			diem.setDiemChu(cell.getStringCellValue());
+			String diemChu = cell.getStringCellValue();
 
 			cell = row.getCell(9);
-			diem.setDiemThang4(cell.getNumericCellValue());
+			double diemThang4 = cell.getNumericCellValue();
 
+			DiemHocPhan diem = new DiemHocPhan(hocKy, idHocPhan, tenHP, tc, idLopHP, diemQT, diemThi, diemChu, diemThang4);
 			dsDiem.add(diem);
 		}
 		labSumTC.setText(Integer.toString(sumTC));
@@ -186,10 +184,11 @@ public class BangDiemHocPhanController {
 	private void loadDataIntoPiece() {
 		data = new String[dsDiem.size()][5];
 		for (int i = 0; i < dsDiem.size(); i++) {
+			HocPhan hp = dsDiem.get(i).getHocPhan();
 			data[i][0] = dsDiem.get(i).getHocKy();
-			data[i][1] = dsDiem.get(i).getIdHocPhan();
-			data[i][2] = dsDiem.get(i).getTenHP();
-			data[i][3] = Integer.toString(dsDiem.get(i).getTinChi());
+			data[i][1] = hp.getIdHocPhan();
+			data[i][2] = hp.getTenHP();
+			data[i][3] = Integer.toString(hp.getSoTinChi());
 			data[i][4] = dsDiem.get(i).getDiemChu();
 		}
 	}

@@ -17,6 +17,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import quanlysinhvien.model.DiemHocPhan;
+import quanlysinhvien.model.HocPhan;
 
 public class PanelBangDiemCaNhanView extends JPanel{
 	private JLabel gtIdSinhVien, gtHoTen, gtNgaySinh, gtLop, gtHeHoc, gtTrangThai;
@@ -161,10 +162,11 @@ public class PanelBangDiemCaNhanView extends JPanel{
 	private String[][] convertData1(ArrayList<DiemHocPhan> dsDiem) {
 		String[][] data = new String[dsDiem.size()][8];
 		for (int i = 0; i < dsDiem.size(); i++) {
+			HocPhan hp = dsDiem.get(i).getHocPhan();
 			data[i][0] = dsDiem.get(i).getHocKy()+"";
-			data[i][1] = dsDiem.get(i).getIdHocPhan();
-			data[i][2] = dsDiem.get(i).getTenHP();
-			data[i][3] = dsDiem.get(i).getTinChi()+"";
+			data[i][1] = hp.getIdHocPhan();
+			data[i][2] = hp.getTenHP();
+			data[i][3] = hp.getSoTinChi()+"";
 			data[i][4] = dsDiem.get(i).getIdLopHoc();
 			data[i][5] = dsDiem.get(i).getDiemQT()+"";
 			data[i][6] = dsDiem.get(i).getDiemThi()+"";
@@ -184,45 +186,47 @@ public class PanelBangDiemCaNhanView extends JPanel{
 	
 	private void updateModel(DefaultTableModel tableModel, ArrayList<DiemHocPhan> dsDiem) {
 		int i = 0;
-		float tong = 0;
+		double tong = 0;
 		int TCTichLuy = 0;
 		int TCNo = 0;
 		int TCDK = 0;
-		float trinhDo = 1;
+		int trinhDo = 1;
 		while (true) {
 			if (i >= dsDiem.size()) break;
 			int begin = i;
 			trinhDo += 1;
 			String hocky = dsDiem.get(i).getHocKy();
-			float GPA = 0;
+			double GPA = 0;
 			int TCQua = 0;
 			
 			for (int j = i+1; j < dsDiem.size(); j++) {
 				if (dsDiem.get(j).getHocKy().equals(dsDiem.get(i).getHocKy())) i++; 
 			}
 			for (int j = begin; j <= i; j++) {
+				int soTC = dsDiem.get(j).getHocPhan().getSoTinChi();
+				double diemThang4 = dsDiem.get(j).getDiemThang4();
 				if (dsDiem.get(j).getHocKy().equals(hocky)) {
-					GPA += dsDiem.get(j).getDiemThang4()*dsDiem.get(j).getTinChi();
-					tong += dsDiem.get(j).getDiemThang4()*dsDiem.get(j).getTinChi();
-					TCQua += dsDiem.get(j).getTinChi();
-					TCTichLuy += dsDiem.get(j).getTinChi();
-					TCDK += dsDiem.get(j).getTinChi();
+					GPA += diemThang4*soTC;
+					tong += diemThang4*soTC;
+					TCQua += soTC;
+					TCTichLuy += soTC;
+					TCDK += soTC;
 				}
 				else {
-					tong += dsDiem.get(j).getDiemThang4()*dsDiem.get(j).getTinChi();
-					TCTichLuy += dsDiem.get(j).getTinChi();
-					TCDK += dsDiem.get(j).getTinChi();
+					tong += diemThang4*soTC;
+					TCTichLuy += soTC;
+					TCDK += soTC;
 				}
 
 			}
 			
-			GPA = GPA/TCQua;
-			float CPA = tong/TCTichLuy;
+			GPA = (double)Math.round(GPA/TCQua*100)/100;
+			double CPA = (double)Math.round(tong/TCTichLuy*100)/100;
 			
 			String[] rows = new String[12];
 			rows[0] = hocky;
-			rows[1] = Float.toString(GPA);
-			rows[2] = Float.toString(CPA);
+			rows[1] = Double.toString(GPA);
+			rows[2] = Double.toString(CPA);
 			rows[3] = Integer.toString(TCQua);
 			rows[4] = Integer.toString(TCTichLuy);
 			rows[5] = Integer.toString(TCNo);

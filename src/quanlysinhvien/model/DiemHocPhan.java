@@ -1,8 +1,8 @@
 package quanlysinhvien.model;
 
 public class DiemHocPhan {
-	private String hocKy, idHocPhan, tenHP, idLopHoc, diemChu;
-	private int tinChi;
+	private String hocKy, idLopHoc, diemChu;
+	private HocPhan hocPhan;
 	private double diemQT, diemThi, diemThang4;
 	
 	public DiemHocPhan() {
@@ -11,21 +11,20 @@ public class DiemHocPhan {
 	
 	public DiemHocPhan(String hocKy,  HocPhan hocPhan, String idLopHoc, double diemQT, double diemThi) {
 		this.hocKy = hocKy;
-		this.idHocPhan = hocPhan.getIdHocPhan();
-		this.tenHP = hocPhan.getTenHP();
-		this.tinChi = hocPhan.getSoTinChi();
+		this.hocPhan = hocPhan;
 		this.idLopHoc = idLopHoc;
 		this.diemQT = diemQT;
 		this.diemThi = diemThi;
-		this.diemChu = tinhDiemChu(hocPhan);
+		this.diemChu = tinhDiemChu();
 		this.diemThang4 = tinhDiemThang4(this.diemChu);
 	}
 	
 	public DiemHocPhan(String hocKy,  String idHocPhan, String tenHP, int tinChi, String idLopHoc, double diemQT, double diemThi, String diemChu, double diemThang4) {
 		this.hocKy = hocKy;
-		this.idHocPhan = idHocPhan;
-		this.tenHP = tenHP;
-		this.tinChi = tinChi;
+		this.hocPhan = new HocPhan();
+		this.hocPhan.setIdHocPhan(idHocPhan);
+		this.hocPhan.setTenHP(tenHP);
+		this.hocPhan.setSoTinChi(tinChi);
 		this.idLopHoc = idLopHoc;
 		this.diemQT = diemQT;
 		this.diemThi = diemThi;
@@ -33,8 +32,8 @@ public class DiemHocPhan {
 		this.diemThang4 = diemThang4;
 	}
 	
-	private String tinhDiemChu(HocPhan hp) {
-		double trongSo = hp.getTrongSo();
+	private String tinhDiemChu() {
+		double trongSo = hocPhan.getTrongSo();
 		double diem = (double)Math.round(((this.diemThi * trongSo + this.diemQT * (1 - trongSo))*10))/10;
 		if(diem < 4.0) return "F";
 		else if(diem >= 4.0 && diem < 5.0) return "D";
@@ -58,28 +57,21 @@ public class DiemHocPhan {
 		else return 4.0;
 	}
 	
+	
+	public HocPhan getHocPhan() {
+		return hocPhan;
+	}
+
+	public void setHocPhan(HocPhan hocPhan) {
+		this.hocPhan = hocPhan;
+	}
+
 	public String getHocKy() {
 		return hocKy;
 	}
 
 	public void setHocKy(String hocKy) {
 		this.hocKy = hocKy;
-	}
-
-	public String getIdHocPhan() {
-		return idHocPhan;
-	}
-
-	public void setIdHocPhan(String idHocPhan) {
-		this.idHocPhan = idHocPhan;
-	}
-
-	public String getTenHP() {
-		return tenHP;
-	}
-
-	public void setTenHP(String tenHP) {
-		this.tenHP = tenHP;
 	}
 
 	public String getIdLopHoc() {
@@ -96,14 +88,6 @@ public class DiemHocPhan {
 
 	public void setDiemChu(String diemChu) {
 		this.diemChu = diemChu;
-	}
-
-	public int getTinChi() {
-		return tinChi;
-	}
-
-	public void setTinChi(int tinChi) {
-		this.tinChi = tinChi;
 	}
 
 	public double getDiemQT() {

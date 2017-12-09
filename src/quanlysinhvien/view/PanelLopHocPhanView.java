@@ -119,7 +119,9 @@ public class PanelLopHocPhanView extends  JPanel{
 		panelR.add(tfLoaiLop = new JTextField());
 		panelR.add(tfTenGV = new JTextField());
 		panelR.add(tfSoSVMax = new JTextField());
-		panelR.add(tfSoSVHienTai = new JTextField());
+                tfSoSVHienTai = new JTextField("0");
+                tfSoSVHienTai.setEditable(false);
+		panelR.add(tfSoSVHienTai);
 		
 		panel.add(panelL, BorderLayout.WEST);
 		panel.add(panelR, BorderLayout.CENTER);
