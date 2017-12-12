@@ -49,9 +49,6 @@ public class MainSinhVienTC extends JFrame implements ActionListener{
 	private JPanel mainPanel;
 	private JButton btnLogout;
 	
-	
-	
-	
 	private PanelHeThongView heThong;
 	
 	private PanelDoiMatKhauView doiMatKhau;

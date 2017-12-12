@@ -211,24 +211,25 @@ public class LopChuyenNganhController {
                     JOptionPane.showMessageDialog(null, "Cần chọn lớp học phần để cập nhật dssv", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-                CapNhatSinhVienLCNView capNhatSV = new CapNhatSinhVienLCNView(new ArrayList<SinhVien>(), (String) table.getValueAt(row, 1));
-                ArrayList<SinhVien> dsSinhVien = null;
+                LopChuyenNganh lopCN = null;
                 String idLop = (String) table.getValueAt(row, 0);
-                String tenLop = (String) table.getValueAt(row, 1);
+//                String tenLop = (String) table.getValueAt(row, 1);
                 for (int i = 0; i < khoa_Vien.getDsLopChuyenNganh().size(); i++) {
                     if (khoa_Vien.getDsLopChuyenNganh().get(i).getIdLopChuyenNganh().equals(idLop)) {
-                        try {
-                            dsSinhVien = khoa_Vien.getDsLopChuyenNganh().get(i).getDsSinhVien();
-                            break;
-                        } catch (Exception e1) {
-                            // TODO: handle exception
-                            System.out.println("Error lopCN: " + e1);
-                            dsSinhVien = new ArrayList<>();
-                            break;
-                        }
+                    	lopCN = khoa_Vien.getDsLopChuyenNganh().get(i);
+//                        try {
+//                            dsSinhVien = khoa_Vien.getDsLopChuyenNganh().get(i).getDsSinhVien();
+//                            break;
+//                        } catch (Exception e1) {
+//                            // TODO: handle exception
+//                            System.out.println("Error lopCN: " + e1);
+//                            dsSinhVien = new ArrayList<>();
+//                            break;
+//                        }
                     }
                 }
-                new CapNhatSinhVienController(capNhatSV, dsSinhVien, "quanlysinhvien\\danhsachchuyennganh\\lopchuyennganh\\" + idLop + "_dsSV.xlsx", tenLop, null);
+                CapNhatSinhVienLCNView capNhatSV = new CapNhatSinhVienLCNView(idLop);
+                new CapNhatSinhVienController(capNhatSV, lopCN, null, "quanlysinhvien\\danhsachchuyennganh\\lopchuyennganh\\" + idLop + "_dsSV.xlsx");
             }
         });
     }

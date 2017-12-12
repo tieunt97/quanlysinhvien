@@ -24,8 +24,11 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import quanlysinhvien.model.LopChuyenNganh;
 import quanlysinhvien.model.LopHocPhan;
 import quanlysinhvien.model.SinhVien;
+import quanlysinhvien.model.SinhVienNienChe;
+import quanlysinhvien.model.SinhVienTinChi;
 import quanlysinhvien.view.CapNhatSinhVienLCNView;
 
 public class CapNhatSinhVienController {
@@ -34,23 +37,26 @@ public class CapNhatSinhVienController {
 	private JButton btnThem, btnXoa;
 	private JTextField tfIdSinhVien;
 	private JComboBox<String> loaiSVCB;
-	private ArrayList<SinhVien> dsSinhVien;
+	private LopChuyenNganh lopCN;
 	private LopHocPhan lopHP;
 	private String fileName;
-	private String tenLop = "";
 
-	public CapNhatSinhVienController(CapNhatSinhVienLCNView capNhatSV, ArrayList<SinhVien> dsSinhVien, String fileName,
-			String tenLopCN, LopHocPhan lopHP) {
+	public CapNhatSinhVienController(CapNhatSinhVienLCNView capNhatSV, LopChuyenNganh lopCN, LopHocPhan lopHP, String fileName) {
 		this.capNhatSV = capNhatSV;
 		this.fileName = fileName;
-		this.tenLop = tenLopCN;
-		this.dsSinhVien = dsSinhVien;
 		this.table = capNhatSV.getTable();
 		this.btnThem = capNhatSV.getBtnThem();
 		this.btnXoa = capNhatSV.getBtnXoa();
 		this.tfIdSinhVien = capNhatSV.getTfIdSinhVien();
 		this.loaiSVCB = capNhatSV.getLoaiSVCB();
-		this.capNhatSV.loadData(table, dsSinhVien);
+		if(lopCN != null) {
+			this.lopCN = lopCN;
+			this.capNhatSV.loadData(table, lopCN.getDsSinhVien());
+		}
+		if(lopHP != null) {
+			this.lopHP = lopHP;
+			this.capNhatSV.loadData(table, lopHP.getDsSinhVien());
+		}
 		if (lopHP != null)
 			this.lopHP = lopHP;
 
@@ -83,45 +89,62 @@ public class CapNhatSinhVienController {
 							JOptionPane.ERROR_MESSAGE);
 					return;
 				} else {
-					if (checkSV(idSV)) {
-						if (!tenLop.equals("") && sv.getTenLop().equals("null")) {
-							sv.setTenLop(tenLop);
-							try {
-								updateLopSV(idSV, tenLop, loaiSinhVien);
+					boolean ck = false;
+					if (lopCN != null) {
+						//thêm sinh viên lớp chuyên ngành
+						 if(sv.getTenLop().equals("null")) {
+							 ck = lopCN.themSinhVien(sv);
+							 sv.setTenLop(lopCN.getTenLop());
+							 try {
+								 //thêm sinh viên vào file
+								addSV(sv, fileName);
+								//cập nhật lớp sinh viên
+								updateLopSV(idSV, lopCN.getTenLop(), loaiSinhVien);
 							} catch (IOException e1) {
 								// TODO Auto-generated catch block
-								System.out.println("Error cập nhật lớp CN: " + e1);
-								// e1.printStackTrace();
+								e1.printStackTrace();
 							}
-						} else if (!sv.getTenLop().equals("null") && !tenLop.equals("")) {
-							JOptionPane.showMessageDialog(null,
-									"Sinh viên đang thuộc lớp: " + sv.getTenLop()
-											+ "\nCần xóa sinh viên khỏi lớp trước khi thêm vào lớp mới",
-									"Warning", JOptionPane.WARNING_MESSAGE);
-							return;
-						}
-						if (tenLop.equals("") && loaiSinhVien.equals("Sinh viên niên chế")) {
+						 }else {
+							 JOptionPane.showMessageDialog(null,
+										"Sinh viên đang thuộc lớp: " + sv.getTenLop()
+												+ "\nCần xóa sinh viên khỏi lớp trước khi thêm vào lớp mới",
+										"Warning", JOptionPane.WARNING_MESSAGE);
+								return;
+						 }
+						 if(ck) {
+							//thêm sinh viên vào bảng danh sách sinh viên của lớp
+								((DefaultTableModel) table.getModel()).addRow(new Object[] { sv.getIdSinhVien(), sv.getHoTen(),
+										sv.getKhoa(), sv.getTenLop(), sv.getNgaySinh(), sv.getGioiTinh(), sv.getEmail(),
+										sv.getSoDT(), sv.getDiaChi(), sv.getDiemTB() + "" });
+							 JOptionPane.showMessageDialog(null, "Thêm thành công");
+						 }else
+							 JOptionPane.showMessageDialog(null, "Trùng mã sinh viên");
+						 return;
+					} 
+					if(lopHP != null) {
+						ck = lopHP.themSinhVien(sv, ""); 	//thêm sinh viên ko quan tâm max SV của lớp học phần
+						if(ck) {
 							try {
-								addLopTKB(idSV, lopHP);
-							} catch (IOException e1) {
+								//thêm sinh viên vào file dsSinhVien của lớp
+								addSV(sv, fileName);
+							} catch (IOException e2) {
 								// TODO Auto-generated catch block
-								// e1.printStackTrace();
+								e2.printStackTrace();
 							}
-						}
-						dsSinhVien.add(sv);
-						//thêm sinh viên vào bảng danh sách sinh viên của lớp
-						((DefaultTableModel) table.getModel()).addRow(new Object[] { sv.getIdSinhVien(), sv.getHoTen(),
-								sv.getKhoa(), sv.getTenLop(), sv.getNgaySinh(), sv.getGioiTinh(), sv.getEmail(),
-								sv.getSoDT(), sv.getDiaChi(), sv.getDiemTB() + "" });
-						try {
-							addSV(sv, fileName);
+							//thêm sinh viên vào bảng danh sách sinh viên của lớp
+							((DefaultTableModel) table.getModel()).addRow(new Object[] { sv.getIdSinhVien(), sv.getHoTen(),
+									sv.getKhoa(), sv.getTenLop(), sv.getNgaySinh(), sv.getGioiTinh(), sv.getEmail(),
+									sv.getSoDT(), sv.getDiaChi(), sv.getDiemTB() + "" });
+							if(loaiSinhVien.equalsIgnoreCase("Sinh viên niên chế"))
+								try {
+									addLopTKB(idSV, lopHP);		//thêm lớp vào tkb svnc
+								} catch (IOException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
 							JOptionPane.showMessageDialog(null, "Thêm thành công");
-						} catch (IOException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
 						}
-					} else {
-						JOptionPane.showMessageDialog(null, "Trùng mã sinh viên", "Error", JOptionPane.ERROR_MESSAGE);
+						return;
 					}
 				}
 			}
@@ -141,54 +164,48 @@ public class CapNhatSinhVienController {
 							JOptionPane.YES_NO_OPTION);
 					if (select == 0) {
 						String id = (String) table.getValueAt(row, 0);
-						for (int i = 0; i < dsSinhVien.size(); i++) {
-							if (dsSinhVien.get(i).getIdSinhVien().equals(id)) {
-								boolean ck = false;
+						boolean ck = false;
+						if(lopCN != null) {
+							ck = lopCN.xoaSinhVien(id);
+							if(ck) {
 								try {
-									ck = deleteSV(dsSinhVien.get(i), fileName);
+									//xóa sinh viên trong file dsSinhVien của lớp
+									deleteSV(id, fileName);
+									//cập nhật lại lớp SV
+									if(!updateLopSV(id, "null", "Sinh viên tín chỉ"))
+										updateLopSV(id, "null", "Sinh viên niên chế");
 								} catch (IOException e1) {
 									// TODO Auto-generated catch block
 									e1.printStackTrace();
 								}
-								if (!tenLop.equals("")) {
-									dsSinhVien.get(i).setTenLop("null");
-									try {
-										boolean ck1 = false;
-										ck1 = updateLopSV(dsSinhVien.get(i).getIdSinhVien(), "null",
-												"Sinh viên tín chỉ");
-										if (ck1)
-											;
-										else {
-											updateLopSV(dsSinhVien.get(i).getIdSinhVien(), "null",
-													"Sinh viên niên chế");
-										}
-									} catch (IOException e1) {
-										// TODO Auto-generated catch block
-										System.out.println("Error cập nhật lớp CN: " + e1);
-									}
-								}
-								if (tenLop.equals("")) {
-									try {
-										deleteLopTKB(id, lopHP.getIdLop());
-									} catch (IOException e1) {
-										// TODO Auto-generated catch block
-										System.out.println("Sinh vien tin chi: ");
-										e1.printStackTrace();
-									}
-								}
-								dsSinhVien.remove(i);
 								//xóa sinh viên khỏi bảng
 								((DefaultTableModel) table.getModel()).removeRow(row);
-								if (ck)
-									JOptionPane.showMessageDialog(null, "Xóa thành công");
-								else {
-									JOptionPane.showMessageDialog(null, "Xóa lỗi", "Error delete",
-											JOptionPane.ERROR_MESSAGE);
-								}
-								cancel();
-								return;
+								JOptionPane.showMessageDialog(null, "Xóa thành công");
+							}else {
+								JOptionPane.showMessageDialog(null, "Xóa lỗi", "Error delete", JOptionPane.ERROR_MESSAGE);
 							}
+							
+							return;
 						}
+						if(lopHP != null) {
+							ck = lopHP.xoaSinhVien(id);
+							if(ck) {
+								try {
+									deleteSV(id, fileName);
+									deleteLopTKB(id, lopHP.getIdLop());
+								} catch (IOException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
+								//xóa sinh viên khỏi bảng
+								((DefaultTableModel) table.getModel()).removeRow(row);
+								JOptionPane.showMessageDialog(null, "Xóa thành công");
+							}else {
+								JOptionPane.showMessageDialog(null, "Xóa lỗi", "Error delete", JOptionPane.ERROR_MESSAGE);
+							}
+							return;
+						}
+						cancel();
 					}
 				}
 			}
@@ -198,15 +215,6 @@ public class CapNhatSinhVienController {
 	//reset input
 	private void cancel() {
 		tfIdSinhVien.setText("");
-	}
-
-	//kiểm tra trùng mã sinh viên
-	private boolean checkSV(String idSV) {
-		for (SinhVien sv : dsSinhVien) {
-			if (sv.getIdSinhVien().equals(idSV))
-				return false;
-		}
-		return true;
 	}
 
 	//lấy dữ liệu sinh viên
@@ -229,29 +237,33 @@ public class CapNhatSinhVienController {
 		}
 		while (iterator.hasNext()) {
 			nextRow = iterator.next();
-			Cell cell = nextRow.getCell(1);
-			String idSinhVien = cell.getStringCellValue();
-			if (idSinhVien.equals(idSV)) {
-				cell = nextRow.getCell(2);
-				String hoTen = cell.getStringCellValue();
-				cell = nextRow.getCell(3);
-				String khoa = cell.getStringCellValue();
-				cell = nextRow.getCell(4);
-				String tenLop = cell.getStringCellValue();
-				cell = nextRow.getCell(5);
-				String ngaySinh = cell.getStringCellValue();
-				cell = nextRow.getCell(6);
-				String gioiTinh = cell.getStringCellValue();
-				cell = nextRow.getCell(7);
-				String email = cell.getStringCellValue();
-				cell = nextRow.getCell(8);
-				String soDT = cell.getStringCellValue();
-				cell = nextRow.getCell(9);
-				String diaChi = cell.getStringCellValue();
-				cell = nextRow.getCell(10);
-				double diemTB = Double.parseDouble(Double.toString(cell.getNumericCellValue()));
-				sv = new SinhVien(idSinhVien, hoTen, khoa, tenLop, ngaySinh, gioiTinh, email, soDT, diaChi, diemTB);
-				break;
+			ArrayList<String> dataSV = new ArrayList<>();
+			Iterator<Cell> itrCell = nextRow.iterator();
+			while(itrCell.hasNext()){
+				Cell cell = itrCell.next();
+				String data = "";
+				switch (cell.getCellType()) {
+				case Cell.CELL_TYPE_STRING:
+					data = cell.getStringCellValue();
+					break;
+				case Cell.CELL_TYPE_NUMERIC:
+					data = Double.toString(cell.getNumericCellValue());
+					break;
+				default:
+					data = "";
+					break;
+				}
+				dataSV.add(data);
+				if(dataSV.size() < 1) return null;
+			}
+			
+			if(dataSV.get(0).equalsIgnoreCase(idSV)){
+				if(loaiSinhVien.equalsIgnoreCase("Sinh viên tín chỉ")){
+					sv = new SinhVienTinChi(dataSV.get(0), dataSV.get(1), dataSV.get(2), dataSV.get(3), dataSV.get(4), dataSV.get(5), dataSV.get(6), dataSV.get(7), dataSV.get(8), Double.parseDouble(dataSV.get(9)), (int) Double.parseDouble(dataSV.get(10)), (int) Double.parseDouble(dataSV.get(11)));
+				}else if(loaiSinhVien.equalsIgnoreCase("Sinh viên niên chế")){
+					sv = new SinhVienNienChe(dataSV.get(0), dataSV.get(1), dataSV.get(2), dataSV.get(3), dataSV.get(4), dataSV.get(5), dataSV.get(6), dataSV.get(7), dataSV.get(8), Double.parseDouble(dataSV.get(9)), (int) Double.parseDouble(dataSV.get(10)), (int) Double.parseDouble(dataSV.get(11)));
+				}
+				return sv;
 			}
 		}
 		workbook.close();
@@ -368,7 +380,7 @@ public class CapNhatSinhVienController {
 	}
 
 	//xóa sinh viên khỏi file dsSinhVien của lớp
-	private boolean deleteSV(SinhVien sv, String fileName) throws IOException {
+	private boolean deleteSV(String idSinhVien, String fileName) throws IOException {
 		boolean ck = false;
 		FileInputStream fin = new FileInputStream(new File(fileName));
 		Workbook workbook = new XSSFWorkbook(fin);
@@ -385,7 +397,7 @@ public class CapNhatSinhVienController {
 			i++;
 			Cell cell = nextRow.getCell(1);
 			String idSV = cell.getStringCellValue();
-			if (idSV.equalsIgnoreCase(sv.getIdSinhVien())) {
+			if (idSV.equalsIgnoreCase(idSinhVien)) {
 				int lastRow = sheet.getLastRowNum();
 				if (i < lastRow) {
 					sheet.shiftRows(i + 1, lastRow, -1);

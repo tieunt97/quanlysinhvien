@@ -104,12 +104,12 @@ public class CapNhatDiemSVController {
 						diemHP.getDiemThi() + "", diemHP.getDiemChu(), diemHP.getDiemThang4() + "" });
 						try {
 							addDiemSV(diemHP);
-							updateDiemCTDT(diemHP);
 							if (loaiSV.equals("svnc") && diemHP.getDiemThang4() == 0.0) {
 								//thêm học phần vào danh sách học phần nợ của sinh viên
 								addHocPhanNo("quanlysinhvien\\sinhviennienche\\" + idSV + "\\hocPhanNo.xlsx",
 										idHocPhan);
 							}
+							updateDiemCTDT(diemHP);
 							JOptionPane.showMessageDialog(null, "Thêm thành công");
 						} catch (IOException e1) {
 							// TODO Auto-generated catch block
@@ -157,12 +157,12 @@ public class CapNhatDiemSVController {
 					boolean ck = false;
 					try {
 						ck = updateDiemHP(diemHP);
-						updateDiemCTDT(diemHP);
-						if(diemThang4 == 0 && diemHP.getDiemThang4() != 0) {
+						if(loaiSV.equals("svnc") && diemThang4 == 0 && diemHP.getDiemThang4() != 0) {
 							//xóa học phần nợ khi đã qua
 							deleteHocPhanNo("quanlysinhvien\\sinhviennienche\\" + idSV + "\\hocPhanNo.xlsx",
-										diemHP.getHocPhan().getIdHocPhan());
+									diemHP.getHocPhan().getIdHocPhan());
 						}
+						updateDiemCTDT(diemHP);
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -197,12 +197,11 @@ public class CapNhatDiemSVController {
 								boolean ck = false;
 								try {
 									ck = deleteDiemHP(id);
-									updateDiemCTDT(new DiemHocPhan("", id, "", 0, "", 0, 0, "", -1));
 									if (diemTB == 0.0)
 										if (deleteHocPhanNo(
 												"quanlysinhvien\\sinhviennienche\\" + idSV + "\\hocPhanNo.xlsx", id))
 											System.out.println("delete hocPhanNo");
-									;
+									updateDiemCTDT(new DiemHocPhan("", id, "", -1, "", 0, 0, "", -1));
 								} catch (IOException e1) {
 									// TODO Auto-generated catch block
 									e1.printStackTrace();

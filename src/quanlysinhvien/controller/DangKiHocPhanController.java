@@ -586,7 +586,10 @@ public class DangKiHocPhanController {
 	//kiểm tra học phần có trong danh sách học phần nợ của sinh viên niên chế ko
 	private boolean checkHPNo(ArrayList<String> dsHPNo, String idHP) {
 		for(String idHocPhan: dsHPNo)
-			if(idHocPhan.equals(idHocPhan)) return true;
+			if(idHocPhan.equalsIgnoreCase(idHP)) {
+				System.out.println(idHocPhan);
+				return true;
+			}
 		
 		return false;
 	}

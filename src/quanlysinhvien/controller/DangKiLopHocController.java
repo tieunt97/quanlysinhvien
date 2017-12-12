@@ -655,7 +655,7 @@ public class DangKiLopHocController {
 						return false;
 					}
 					System.out.println("add");
-					return dsLopHP.get(i).themSinhVien(sinhVien);
+					return dsLopHP.get(i).themSinhVien(sinhVien, "max");
 				}
 
 				if (mode.equalsIgnoreCase("sub")) {

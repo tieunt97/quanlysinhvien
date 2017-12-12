@@ -134,7 +134,7 @@ public class DanhSachHPController {
                     HocPhan hocPhan = quanlyHP.getHocPhan(hp.getIdHocPhan());
                     quanlyHP.xoaHocPhan(hocPhan);
                     quanlyHP.themHocPhan(hp);
-                    updateRowTable(hocPhan, row);  //cập nhật dữ liệu học phần trên bảng
+                    updateRowTable(hp, row);  //cập nhật dữ liệu học phần trên bảng
                     boolean ck = false;
                     try {
                         ck = updateHP(hp, fileName); //cập nhật dữ liệu học phần trong file

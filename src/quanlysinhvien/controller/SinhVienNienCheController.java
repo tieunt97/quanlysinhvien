@@ -134,7 +134,7 @@ public class SinhVienNienCheController {
 				SinhVienNienChe svnc = getSinhVienNC();
 				if (svnc != null) {
 					String idSV = svnc.getIdSinhVien();
-					if (dsSinhVien.addSV(svnc)) {
+					if (dsSinhVien.themSinhVien(svnc)) {
 						//thêm sinh viên vào bảng
 						((DefaultTableModel) table.getModel())
 								.addRow(new Object[] { svnc.getIdSinhVien(), svnc.getHoTen(), svnc.getKhoa(),
@@ -235,7 +235,7 @@ public class SinhVienNienCheController {
 									// TODO Auto-generated catch block
 									e1.printStackTrace();
 								}
-								dsSinhVien.deleteSV(id);
+								dsSinhVien.xoaSinhVien(id);
 								//xóa sinh viên trên bảng
 								((DefaultTableModel) table.getModel()).removeRow(row);
 								if (ck)
@@ -517,7 +517,7 @@ public class SinhVienNienCheController {
 						Integer.toString((int) Double.parseDouble(dataSV.get(2))), dataSV.get(3), dataSV.get(4),
 						dataSV.get(5), dataSV.get(6), dataSV.get(7), dataSV.get(8), Double.parseDouble(dataSV.get(9)),
 						(int) (Double.parseDouble(dataSV.get(10))), (int) (Double.parseDouble(dataSV.get(11))));
-				dsSinhVien.addSV(sv);
+				dsSinhVien.themSinhVien(sv);
 			}
 		}
 

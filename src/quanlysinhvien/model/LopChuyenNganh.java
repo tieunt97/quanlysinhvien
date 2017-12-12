@@ -26,8 +26,14 @@ public class LopChuyenNganh {
 		this.tenKhoaVien = tenKhoaVien;
 	}
 
-	public void themSinhVien(SinhVien sv) {
+	public boolean themSinhVien(SinhVien sv) {
+		for(SinhVien sv1: dsSinhVien) {
+			if(sv1.getIdSinhVien().equalsIgnoreCase(sv.getIdSinhVien())) {
+				return false;
+			}
+		}
 		this.dsSinhVien.add(sv);
+		return true;
 	}
 	
 	public boolean xoaSinhVien(String idSinhVien) {

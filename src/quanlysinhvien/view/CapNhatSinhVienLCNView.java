@@ -27,10 +27,8 @@ public class CapNhatSinhVienLCNView extends JDialog{
 	private JComboBox<String> loaiSVCB;
 	private String[] titleCols = {"Mã sinh viên", "Họ tên", "Khóa", "Tên lớp", "Ngày sinh", "Giới tính", "Email", "Địa chỉ"};
 	private String[] loaiSV = {"Sinh viên tín chỉ", "Sinh viên niên chế"};
-	private ArrayList<SinhVien> dsSinhVien;
 	
-	public CapNhatSinhVienLCNView(ArrayList<SinhVien> dsSinhVien, String idLop) {
-		this.dsSinhVien = dsSinhVien;
+	public CapNhatSinhVienLCNView(String idLop) {
 		setSize(950, 650);
 		setLocationRelativeTo(null);
 		add(createTitlePanel(idLop), BorderLayout.NORTH);
@@ -137,10 +135,6 @@ public class CapNhatSinhVienLCNView extends JDialog{
 
 	public JComboBox<String> getLoaiSVCB() {
 		return loaiSVCB;
-	}
-
-	public ArrayList<SinhVien> getDsSinhVien() {
-		return dsSinhVien;
 	}
 	
 }

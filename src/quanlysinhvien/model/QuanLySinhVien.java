@@ -9,7 +9,7 @@ public class QuanLySinhVien {
 		dsSinhVien = new ArrayList<SinhVien>();
 	}
 	
-	public boolean addSV(SinhVien sinhVien) {
+	public boolean themSinhVien(SinhVien sinhVien) {
 		for(SinhVien sv: dsSinhVien)
 			if(sv.getIdSinhVien().equalsIgnoreCase(sinhVien.getIdSinhVien()))
 				return false;
@@ -17,7 +17,7 @@ public class QuanLySinhVien {
 		return true;
 	}
 	
-	public boolean deleteSV(String idSV) {
+	public boolean xoaSinhVien(String idSV) {
 		for(int i = 0; i < dsSinhVien.size(); i++) {
 			if(dsSinhVien.get(i).getIdSinhVien().equalsIgnoreCase(idSV)) {
 				dsSinhVien.remove(i);

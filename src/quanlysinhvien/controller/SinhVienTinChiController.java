@@ -134,7 +134,7 @@ public class SinhVienTinChiController {
 				SinhVienTinChi svtc = getSinhVienTC();
 				if (svtc != null) {
 					String idSV = svtc.getIdSinhVien();
-					if (dsSinhVien.addSV(svtc)) {
+					if (dsSinhVien.themSinhVien(svtc)) {
 						//thêm sinh viên vào bảng
 						((DefaultTableModel) table.getModel()).addRow(new Object[] { svtc.getIdSinhVien(),
 								svtc.getHoTen(), svtc.getKhoa(), svtc.getNgaySinh(), svtc.getGioiTinh(),
@@ -236,7 +236,7 @@ public class SinhVienTinChiController {
 									// TODO Auto-generated catch block
 									e1.printStackTrace();
 								}
-								dsSinhVien.deleteSV(sv.getIdSinhVien());
+								dsSinhVien.xoaSinhVien(sv.getIdSinhVien());
 								//xóa sinh viên trên bảng
 								((DefaultTableModel) table.getModel()).removeRow(row);
 								if (ck)

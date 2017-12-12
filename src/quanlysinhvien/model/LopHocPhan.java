@@ -56,17 +56,21 @@ public class LopHocPhan {
 		this.soSVHienTai = dsSinhVien.size();
 	}
 	
-	public boolean themSinhVien(SinhVien sv) {
+	public boolean themSinhVien(SinhVien sv, String max) {
 		if(kiemTraTrungSV(sv) == true){
 			return false;
 		}
-		
-		if(soSVHienTai < soSVMax) {
+		if(max.equals("max"))
+			if(soSVHienTai < soSVMax) {
+				this.dsSinhVien.add(sv);
+				soSVHienTai = dsSinhVien.size();
+				return true;
+			}else {
+				return false;
+			}
+		else {
 			this.dsSinhVien.add(sv);
-			soSVHienTai = dsSinhVien.size();
 			return true;
-		}else {
-			return false;
 		}
 	}
 	
