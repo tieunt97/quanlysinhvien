@@ -4,12 +4,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator;
 
 import javax.swing.JButton;
@@ -28,8 +26,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import quanlysinhvien.model.Khoa_Vien;
-import quanlysinhvien.model.LopChuyenNganh;
-import quanlysinhvien.model.QuanLyKhoa_Vien;
+import quanlysinhvien.model.QuanLy;
 import quanlysinhvien.view.PanelDanhSachNganhView;
 import quanlysinhvien.view.XemDanhSachLopCNView;
 
@@ -40,22 +37,12 @@ public class DanhSachNganhController {
     private JTextField tfIdKhoa_Vien, tfTenKhoa_Vien, tfTimKiem;
     private JButton btnThem, btnSua, btnXoa, btnTimKiem, btnHuy, btnXemDSNganh;
     private JComboBox<String> timKiemCB;
-//	private ArrayList<Khoa_Vien> dsKhoa_Vien;
-    private QuanLyKhoa_Vien quanlyKhoa_Vien;
     private String fileName;
+    private QuanLy quanLy;
 
-    public DanhSachNganhController(PanelDanhSachNganhView danhSachNganh) {
+    public DanhSachNganhController(PanelDanhSachNganhView danhSachNganh, QuanLy quanLy) {
         this.danhSachNganh = danhSachNganh;
-        ArrayList<Khoa_Vien> dsKhoa_Vien;
         this.fileName = "quanlysinhvien\\danhsachchuyennganh\\dsNganh.xlsx";
-        try {
-            dsKhoa_Vien = readFile(fileName);
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            dsKhoa_Vien = new ArrayList<>();
-            System.out.println("Error DanhSachKhoaVien: " + e);
-        }
-        quanlyKhoa_Vien = new QuanLyKhoa_Vien(dsKhoa_Vien);
         this.table = danhSachNganh.getTable();
         this.btnThem = danhSachNganh.getBtnThem();
         this.btnSua = danhSachNganh.getBtnSua();
@@ -67,7 +54,7 @@ public class DanhSachNganhController {
         this.tfIdKhoa_Vien = danhSachNganh.getTfIdKhoa_Vien();
         this.tfTenKhoa_Vien = danhSachNganh.getTfTenKhoa_Vien();
         this.tfTimKiem = danhSachNganh.getTfTimKiem();
-        this.danhSachNganh.loadData(table, quanlyKhoa_Vien.getDsKhoa_Vien(), "", "");
+        this.danhSachNganh.loadData(table, quanLy.getDsKhoa_Vien(), "", "");
 
         setAction();
     }
@@ -93,7 +80,7 @@ public class DanhSachNganhController {
                 // TODO Auto-generated method stub
                 Khoa_Vien khoa_vien = getKhoa_Vien();
                 if (khoa_vien != null) {
-                    if (quanlyKhoa_Vien.themKhoa_Vien(khoa_vien)) {
+                    if (quanLy.themKhoa_Vien(khoa_vien)) {
                     	//thêm dữ liệu khoa viện vào bảng
                         ((DefaultTableModel)table.getModel()).addRow(new Object[] {khoa_vien.getIdKhoa_Vien(), khoa_vien.getTenKhoa_Vien()});
                         try {
@@ -124,8 +111,8 @@ public class DanhSachNganhController {
                 }
                 Khoa_Vien khoa_vien = getKhoa_Vien();
                 if (khoa_vien != null) {
-                    quanlyKhoa_Vien.xoaKhoa_Vien(khoa_vien.getIdKhoa_Vien());
-                    quanlyKhoa_Vien.themKhoa_Vien(khoa_vien);
+                    quanLy.xoaKhoa_Vien(khoa_vien.getIdKhoa_Vien());
+                    quanLy.themKhoa_Vien(khoa_vien);
                     updateRowTable(khoa_vien, row); 	//cập nhật lại dữ liệu khoa viện khoa_vien trên bảng
                     boolean ck = false;
                     try {
@@ -157,7 +144,7 @@ public class DanhSachNganhController {
                             JOptionPane.YES_NO_OPTION);
                     if (select == 0) {
                         String idKhoa_Vien = (String) table.getValueAt(row, 0);
-                        if (quanlyKhoa_Vien.xoaKhoa_Vien(idKhoa_Vien)) {
+                        if (quanLy.xoaKhoa_Vien(idKhoa_Vien)) {
                         	//xóa khoa viện ứng với row trên bảng
                         	((DefaultTableModel) table.getModel()).removeRow(row);
                             boolean ck = false;
@@ -187,7 +174,7 @@ public class DanhSachNganhController {
             public void actionPerformed(ActionEvent e) {
                 // TODO Auto-generated method stub
                 cancel();
-                danhSachNganh.loadData(table, quanlyKhoa_Vien.getDsKhoa_Vien(), "", "");
+                danhSachNganh.loadData(table, quanLy.getDsKhoa_Vien(), "", "");
             }
         });
         btnTimKiem.addActionListener(new ActionListener() {
@@ -197,7 +184,7 @@ public class DanhSachNganhController {
                 // TODO Auto-generated method stub
                 String timKiem = timKiemCB.getSelectedItem().toString();
                 String giaTri = tfTimKiem.getText().trim().toLowerCase();
-                danhSachNganh.loadData(table, quanlyKhoa_Vien.getDsKhoa_Vien(), timKiem, giaTri);
+                danhSachNganh.loadData(table, quanLy.getDsKhoa_Vien(), timKiem, giaTri);
             }
         });
         btnXemDSNganh.addActionListener(new ActionListener() {
@@ -213,7 +200,7 @@ public class DanhSachNganhController {
                 String idKhoa_Vien = (String) table.getValueAt(row, 0);
                 String tenKhoa_Vien = (String) table.getValueAt(row, 1);
                 XemDanhSachLopCNView xemDSLopCN = new XemDanhSachLopCNView(idKhoa_Vien, tenKhoa_Vien);
-                new XemDSLopCNController(xemDSLopCN, idKhoa_Vien);
+                new XemDSLopCNController(xemDSLopCN, quanLy);
             }
         });
     }
@@ -223,60 +210,6 @@ public class DanhSachNganhController {
     	table.setValueAt(kv.getTenKhoa_Vien(), row, 1);
     }
     
-    
-    //lấy danh sách khoa viện từ file
-    private ArrayList<Khoa_Vien> readFile(String fileName) throws IOException {
-        ArrayList<Khoa_Vien> dsKhoa_Vien = new ArrayList<>();
-        FileInputStream inputStream = new FileInputStream(new File(fileName));
-
-        Workbook workbook = new XSSFWorkbook(inputStream);
-        Sheet firstSheet = workbook.getSheetAt(0);
-        Iterator<Row> iterator = firstSheet.iterator();
-
-        Row nextRow;
-        if (iterator.hasNext()) {
-            nextRow = iterator.next(); // loại bỏ dòng tiêu đề
-        }
-        while (iterator.hasNext()) {
-            nextRow = iterator.next();
-            Iterator<Cell> cellIterator = nextRow.cellIterator();
-            ArrayList<String> dataNganh = new ArrayList<>();
-            while (cellIterator.hasNext()) {
-                Cell cell = cellIterator.next();
-                String data = "";
-                switch (cell.getCellType()) {
-                    case Cell.CELL_TYPE_STRING:
-                        data = cell.getStringCellValue();
-                        break;
-                    case Cell.CELL_TYPE_NUMERIC:
-                        data = Double.toString(cell.getNumericCellValue());
-                        break;
-                    default:
-                        data = "";
-                        break;
-                }
-                dataNganh.add(data);
-                if (dataNganh.size() < 1) {
-                    return null;
-                }
-            }
-            if (dataNganh.size() > 0) {
-                ArrayList<LopChuyenNganh> dsLopChuyenNganh;
-                try {
-                    dsLopChuyenNganh = getDSLopChuyenNganh(dataNganh.get(0));
-                } catch (Exception exc) {
-                    dsLopChuyenNganh = new ArrayList<>();
-                    System.out.println("Error DanhSachNganhController:" + exc);
-                }
-                Khoa_Vien khoa_vien = new Khoa_Vien(null, dataNganh.get(0), dataNganh.get(1));
-                dsKhoa_Vien.add(khoa_vien);
-            }
-        }
-
-        workbook.close();
-        inputStream.close();
-        return dsKhoa_Vien;
-    }
 
     //tạo tiêu đề file dsKhoaVien
     private void createHeader(Sheet sheet) {
@@ -413,58 +346,6 @@ public class DanhSachNganhController {
         return ck;
     }
 
-    //lấy danh sách lớp chuyên ngành của khoa viên tương ứng
-    private ArrayList<LopChuyenNganh> getDSLopChuyenNganh(String idNganh) throws IOException {
-        ArrayList<LopChuyenNganh> dsLopChuyenNganh = new ArrayList<>();
-        String fileName = "quanlysinhvien\\danhsachchuyennganh\\lopchuyennganh\\dsLopCN.xlsx";
-        FileInputStream inputStream = new FileInputStream(new File(fileName));
-
-        Workbook workbook = new XSSFWorkbook(inputStream);
-        Sheet firstSheet = workbook.getSheetAt(0);
-        Iterator<Row> iterator = firstSheet.iterator();
-
-        Row nextRow;
-        if (iterator.hasNext()) {
-            nextRow = iterator.next(); // loại bỏ dòng tiêu đề
-        }
-        while (iterator.hasNext()) {
-            nextRow = iterator.next();
-            Iterator<Cell> cellIterator = nextRow.cellIterator();
-            ArrayList<String> dataLopChuyenNganh = new ArrayList<>();
-            while (cellIterator.hasNext()) {
-                Cell cellCK = nextRow.getCell(1);
-                if (!cellCK.equals(idNganh)) {
-                    break; //bỏ qua lớp ngành khác
-                }
-                Cell cell = cellIterator.next();
-                String data = "";
-                switch (cell.getCellType()) {
-                    case Cell.CELL_TYPE_STRING:
-                        data = cell.getStringCellValue();
-                        break;
-                    case Cell.CELL_TYPE_NUMERIC:
-                        data = Double.toString(cell.getNumericCellValue());
-                        break;
-                    default:
-                        data = "";
-                        break;
-                }
-                dataLopChuyenNganh.add(data);
-                if (dataLopChuyenNganh.size() < 1) {
-                    return null;
-                }
-            }
-            if (dataLopChuyenNganh.size() > 0) {
-                LopChuyenNganh lopCN = new LopChuyenNganh(null, dataLopChuyenNganh.get(0), dataLopChuyenNganh.get(1), dataLopChuyenNganh.get(2), dataLopChuyenNganh.get(3), dataLopChuyenNganh.get(4));
-                dsLopChuyenNganh.add(lopCN);
-            }
-        }
-
-        workbook.close();
-        inputStream.close();
-        return dsLopChuyenNganh;
-    }
-
     //lấy dữ liệu khoa viện từ input
     private Khoa_Vien getKhoa_Vien() {
         String idNganh = tfIdKhoa_Vien.getText().toUpperCase();
@@ -473,7 +354,7 @@ public class DanhSachNganhController {
             JOptionPane.showMessageDialog(null, "Có trường dữ liệu trống", "Error", JOptionPane.ERROR_MESSAGE);
             return null;
         }
-        Khoa_Vien khoa_vien = new Khoa_Vien(null, idNganh, tenNganh);
+        Khoa_Vien khoa_vien = new Khoa_Vien(idNganh, tenNganh);
         return khoa_vien;
     }
 

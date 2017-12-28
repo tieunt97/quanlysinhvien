@@ -2,16 +2,22 @@ package quanlysinhvien.view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+
+import org.apache.xmlbeans.impl.jam.JField;
 
 import quanlysinhvien.model.LopHocPhan;
 
@@ -19,6 +25,8 @@ public class PanelTKBView extends JPanel{
 	private String titleCols[] = {"Thời gian", "Tuần học", "Phòng học", "Mã lớp", "Loại lớp", "Mã HP", "Tên lớp"};
 	private JTable table;
 	private JLabel labStatus;
+	private JTextField tfHocKy;
+	private JButton btnTraCuu;
 	
 	public PanelTKBView() {
 		setLayout(new BorderLayout(10, 10));
@@ -29,22 +37,28 @@ public class PanelTKBView extends JPanel{
 	}
 	
 	private JPanel createTitlePanel() {
-		JPanel panel = new JPanel();
+		FlowLayout layout = new FlowLayout(FlowLayout.LEFT, 5, 5);
+		JPanel panelTraCuuTKB = new JPanel(layout);
+		panelTraCuuTKB.add(new JLabel("Nhập học kỳ:"));
+		panelTraCuuTKB.add(tfHocKy = new JTextField(10));
+		panelTraCuuTKB.add(btnTraCuu = new JButton("Tra cứu"));
+		
+		return panelTraCuuTKB;
+	}
+	
+	private JPanel createMainPanel() {
+		JPanel panel = new JPanel(new BorderLayout(10, 10));
+		JPanel panelTitle = new JPanel();
 		JLabel label = new JLabel("Thời khóa biểu");
 		label.setFont(new Font("Caribli", Font.BOLD, 18));
 		label.setForeground(Color.YELLOW);
 		label.setIcon(new ImageIcon(this.getClass().getResource("/tkb.png")));
-		panel.setBackground(new Color(0x009999));
-		panel.add(label, BorderLayout.CENTER);
-		
-		return panel;
-	}
-	
-	private JPanel createMainPanel() {
-		JPanel panel = new JPanel(new BorderLayout());
+		panelTitle.setBackground(new Color(0x009999));
+		panelTitle.add(label, BorderLayout.CENTER);
 		table = new JTable();
 		JScrollPane scroll = new JScrollPane(table);
-		panel.add(scroll);
+		panel.add(panelTitle, BorderLayout.NORTH);
+		panel.add(scroll, BorderLayout.CENTER);
 		
 		return panel;
 	}
@@ -76,8 +90,8 @@ public class PanelTKBView extends JPanel{
 			data[i][2] = lopHP.getPhongHoc();
 			data[i][3] = lopHP.getIdLop();
 			data[i][4] = lopHP.getLoaiLop();
-			data[i][5] = lopHP.getIdHocPhan();
-			data[i][6] = lopHP.getTenLop();
+			data[i][5] = lopHP.getHocPhan().getIdHocPhan();
+			data[i][6] = lopHP.getHocPhan().getTenHP();
 		}
 		
 		return data;
@@ -90,5 +104,21 @@ public class PanelTKBView extends JPanel{
 	public JLabel getLabStatus() {
 		return labStatus;
 	}
+
+	public JTextField getTfHocKy() {
+		return tfHocKy;
+	}
+
+	public JButton getBtnTraCuu() {
+		return btnTraCuu;
+	}
 	
+//	public static void main(String[] args) {
+//		JFrame frame = new JFrame();
+//		frame.add(new PanelTKBView());
+//		frame.setSize(1200, 700);
+//		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		frame.setLocationRelativeTo(null);
+//		frame.setVisible(true);
+//	}
 }

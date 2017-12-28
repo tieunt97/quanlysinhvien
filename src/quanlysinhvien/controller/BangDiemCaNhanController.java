@@ -183,7 +183,7 @@ public class BangDiemCaNhanController {
 	private void setThongTin() {
 		gtHoTen.setText(sv.getHoTen());
 		gtIdSinhVien.setText(sv.getIdSinhVien());
-		gtLop.setText(sv.getTenLop());
+		gtLop.setText(sv.getLopCN().getTenLop());
 		gtNgaySinh.setText(sv.getNgaySinh());
 	}
 

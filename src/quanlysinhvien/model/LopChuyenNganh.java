@@ -7,8 +7,7 @@ public class LopChuyenNganh {
 	private String idLopChuyenNganh;
 	private String tenLop;
 	private String tenChuNhiem;
-	private String idKhoaVien;
-	private String tenKhoaVien;
+	private String idKhoa_Vien;
 	
 
 	
@@ -16,14 +15,20 @@ public class LopChuyenNganh {
 		dsSinhVien = new ArrayList<>();
 	}
 	
-	public LopChuyenNganh(ArrayList<SinhVien> dsSinhVien, String idLopChuyenNganh, String tenLop,
-			String tenChuNhiem, String idKhoaVien, String tenKhoaVien) {
+	public LopChuyenNganh(String idLopCN, String tenLop, String tenChunhiem, String idKhoa_Vien) {
+		this.idLopChuyenNganh = idLopCN;
+		this.tenLop = tenLop;
+		this.tenChuNhiem = tenChunhiem;
+		this.idKhoa_Vien = idKhoa_Vien;
+		this.dsSinhVien = new ArrayList<>();
+	}
+	
+	public LopChuyenNganh(ArrayList<SinhVien> dsSinhVien, String idLopChuyenNganh, String tenLop, String tenChuNhiem, String idKhoa_Vien) {
 		this.dsSinhVien = dsSinhVien;
 		this.idLopChuyenNganh = idLopChuyenNganh;
 		this.tenLop = tenLop;
+		this.idKhoa_Vien = idKhoa_Vien;
 		this.tenChuNhiem = tenChuNhiem;
-		this.idKhoaVien = idKhoaVien;
-		this.tenKhoaVien = tenKhoaVien;
 	}
 
 	public boolean themSinhVien(SinhVien sv) {
@@ -70,28 +75,20 @@ public class LopChuyenNganh {
 		this.tenChuNhiem = tenChuNhiem;
 	}
 
-	public String getIdKhoaVien() {
-		return idKhoaVien;
-	}
-
-	public void setIdKhoaVien(String idKhoaVien) {
-		this.idKhoaVien = idKhoaVien;
-	}
-
-	public String getTenKhoaVien() {
-		return tenKhoaVien;
-	}
-
-	public void setTenKhoaVien(String tenNganh) {
-		this.tenKhoaVien = tenNganh;
-	}
-
 	public String getTenLop() {
 		return tenLop;
 	}
 
 	public void setTenLop(String tenLop) {
 		this.tenLop = tenLop;
+	}
+
+	public String getIdKhoa_Vien() {
+		return idKhoa_Vien;
+	}
+
+	public void setIdKhoa_Vien(String idKhoa_Vien) {
+		this.idKhoa_Vien = idKhoa_Vien;
 	}
 	
 }

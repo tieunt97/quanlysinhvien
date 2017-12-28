@@ -143,9 +143,9 @@ public class ChuongTrinhDaoTaoSVController {
 
 		int rowCount = sheet.getLastRowNum();
 		for (int i = 1; i <= rowCount; i++) {
+			System.out.println(i);
 			Row row = sheet.getRow(i);
 			Cell cell;
-
 			cell = row.getCell(3);
 			String hocKy = (int) cell.getNumericCellValue() + "";
 
@@ -156,7 +156,9 @@ public class ChuongTrinhDaoTaoSVController {
 			String tenHP = cell.getStringCellValue();
 
 			cell = row.getCell(4);
-			int soTC = (int) cell.getNumericCellValue();
+			int soTC = 0;
+			if(!cell.getStringCellValue().equals(""))
+				soTC = (int) Double.parseDouble(cell.getStringCellValue());
 
 			cell = row.getCell(5);
 			String diemChu = "";

@@ -19,7 +19,9 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import quanlysinhvien.model.QuanLy;
 import quanlysinhvien.model.SinhVien;
+import quanlysinhvien.model.SinhVienTinChi;
 import quanlysinhvien.model.TaiKhoan;
 import quanlysinhvien.view.PanelThongTinCaNhanView;
 
@@ -31,8 +33,10 @@ public class ThongTinCaNhanController {
 	private String fileName;
 	private SinhVien sv;
 
-	public ThongTinCaNhanController(PanelThongTinCaNhanView thongTinCaNhan, TaiKhoan tk) {
+	public ThongTinCaNhanController(PanelThongTinCaNhanView thongTinCaNhan, SinhVien sv) {
 		this.thongTinCaNhan = thongTinCaNhan;
+		fileName = (sv instanceof SinhVienTinChi)?"quanlysinhvien\\sinhvientinchi\\dsSinhVienTC.xlsx":
+			"quanlysinhvien\\sinhviennienche\\dsSinhVienNC.xlsx";
 		this.gtIdSinhVien = thongTinCaNhan.getGtIdSinhVien();
 		this.gtHoTen = thongTinCaNhan.getGtHoTen();
 		this.gtNgaySinh = thongTinCaNhan.getGtNgaySinh();
@@ -41,20 +45,6 @@ public class ThongTinCaNhanController {
 		this.tfSoDT = thongTinCaNhan.getTfSoDT();
 		this.tfDiaChi = thongTinCaNhan.getTfDiaChi();
 		this.btnCapNhat = thongTinCaNhan.getBtnCapNhat();
-		if (tk.getLoaiTK().equals("svtc")) {
-			fileName = "quanlysinhvien\\sinhvientinchi\\dsSinhVienTC.xlsx";
-		}
-		if (tk.getLoaiTK().equals("svnc")) {
-			fileName = "quanlysinhvien\\sinhviennienche\\dsSinhVienNC.xlsx";
-		}
-
-		try {
-			sv = getSinhVien(tk, fileName);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			sv = new SinhVien();
-			System.out.println("Error updateThongTin: " + e);
-		}
 
 		setThongTin();
 		setAction();
@@ -69,20 +59,18 @@ public class ThongTinCaNhanController {
 	}
 
 	//lấy dữ liệu cập nhật của sinh viên
-	private String[] getCapNhat() {
-		String[] capNhat = new String[3];
+	private boolean getCapNhat() {
 		String email = tfEmail.getText();
 		String soDT = tfSoDT.getText();
 		String diaChi = tfDiaChi.getText();
 		if (email.equals("") || soDT.equals("") || diaChi.equals("")) {
 			JOptionPane.showMessageDialog(null, "Có trường dữ liệu trống", "Error", JOptionPane.ERROR_MESSAGE);
-			return null;
+			return false;
 		}
-		capNhat[0] = email;
-		capNhat[1] = soDT;
-		capNhat[2] = diaChi;
-
-		return capNhat;
+		sv.setEmail(email);
+		sv.setDiaChi(diaChi);
+		sv.setSoDT(soDT);
+		return true;
 	}
 
 	//bắt sự kiện
@@ -92,64 +80,25 @@ public class ThongTinCaNhanController {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// TODO Auto-generated method stub
-				String[] capNhat = getCapNhat();
-				if (capNhat == null)
-					return;
-				boolean ck = false;
-				try {
-					ck = updateSV(capNhat);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				if(getCapNhat()) {
+					boolean ck = false;
+					try {
+						ck = updateSV(sv);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					if (ck)
+						JOptionPane.showMessageDialog(null, "Cập nhật thành công");
 				}
-				if (ck)
-					JOptionPane.showMessageDialog(null, "Cập nhật thành công");
 				cancel();
 			}
 		});
 	}
 
-	//lấy dữ liệu sinh viên trong file
-	public static SinhVien getSinhVien(TaiKhoan tk, String fileName) throws IOException {
-		FileInputStream fin = new FileInputStream(new File(fileName));
-		Workbook workbook = new XSSFWorkbook(fin);
-		Sheet sheet = workbook.getSheetAt(0);
-		Iterator<Row> iterator = sheet.iterator();
-		Row nextRow;
-		if (iterator.hasNext())
-			nextRow = iterator.next();
-		while (iterator.hasNext()) {
-			nextRow = iterator.next();
-			Cell cell = nextRow.getCell(1);
-			String idSV = cell.getStringCellValue();
-			if (idSV.equals(tk.getTaiKhoan())) {
-				cell = nextRow.getCell(2);
-				String hoTen = cell.getStringCellValue();
-				cell = nextRow.getCell(3);
-				String khoa = cell.getStringCellValue();
-				cell = nextRow.getCell(4);
-				String tenLop = cell.getStringCellValue();
-				cell = nextRow.getCell(5);
-				String ngaySinh = cell.getStringCellValue();
-				cell = nextRow.getCell(6);
-				String gioiTinh = cell.getStringCellValue();
-				cell = nextRow.getCell(7);
-				String email = cell.getStringCellValue();
-				cell = nextRow.getCell(8);
-				String soDT = cell.getStringCellValue();
-				cell = nextRow.getCell(9);
-				String diaChi = cell.getStringCellValue();
-				cell = nextRow.getCell(10);
-				double diemTB = Double.parseDouble(Double.toString(cell.getNumericCellValue()));
-				SinhVien sv = new SinhVien(idSV, hoTen, khoa, tenLop, ngaySinh, gioiTinh, email, soDT, diaChi, diemTB);
-				return sv;
-			}
-		}
-		return null;
-	}
 
 	//cập nhật dữ liêu sinh viên trong file
-	private boolean updateSV(String gt[]) throws IOException {
+	private boolean updateSV(SinhVien sv) throws IOException {
 		boolean ck = false;
 		String id = gtIdSinhVien.getText();
 		FileInputStream fin = new FileInputStream(new File(fileName));
@@ -165,11 +114,11 @@ public class ThongTinCaNhanController {
 			String idSV = cell.getStringCellValue();
 			if (idSV.equals(id)) {
 				cell = nextRow.createCell(7);
-				cell.setCellValue(gt[0]);
+				cell.setCellValue(sv.getEmail());
 				cell = nextRow.createCell(8);
-				cell.setCellValue(gt[1]);
+				cell.setCellValue(sv.getSoDT());
 				cell = nextRow.createCell(9);
-				cell.setCellValue(gt[2]);
+				cell.setCellValue(sv.getDiaChi());
 				ck = true;
 				break;
 			}

@@ -1,15 +1,16 @@
 package quanlysinhvien.model;
 
 public class DiemHocPhan {
-	private String hocKy, idLopHoc, diemChu;
+	private String hocKy, diemChu;
 	private HocPhan hocPhan;
-	private double diemQT, diemThi, diemThang4;
+	private String idLopHoc;
+	private double diemQT, diemThi, diemThang4, diemThang10;
 	
 	public DiemHocPhan() {
 		
 	}
 	
-	public DiemHocPhan(String hocKy,  HocPhan hocPhan, String idLopHoc, double diemQT, double diemThi) {
+	public DiemHocPhan(String hocKy,  HocPhan hocPhan, String idLopHoc, double diemQT, double diemThi, String svtc) {
 		this.hocKy = hocKy;
 		this.hocPhan = hocPhan;
 		this.idLopHoc = idLopHoc;
@@ -19,17 +20,32 @@ public class DiemHocPhan {
 		this.diemThang4 = tinhDiemThang4(this.diemChu);
 	}
 	
-	public DiemHocPhan(String hocKy,  String idHocPhan, String tenHP, int tinChi, String idLopHoc, double diemQT, double diemThi, String diemChu, double diemThang4) {
+	public DiemHocPhan(String hocKy,  HocPhan hocPhan, String idLopHoc, double diemQT, double diemThi) {
 		this.hocKy = hocKy;
-		this.hocPhan = new HocPhan();
-		this.hocPhan.setIdHocPhan(idHocPhan);
-		this.hocPhan.setTenHP(tenHP);
-		this.hocPhan.setSoTinChi(tinChi);
+		this.hocPhan = hocPhan;
+		this.idLopHoc = idLopHoc;
+		this.diemQT = diemQT;
+		this.diemThi = diemThi;
+		this.diemThang10 = tinhDiemThang10(diemQT, diemThi);
+	}
+	
+	public DiemHocPhan(String hocKy,  HocPhan hocPhan, String idLopHoc, double diemQT, double diemThi, String diemChu, double diemThang4) {
+		this.hocKy = hocKy;
+		this.hocPhan = hocPhan;
 		this.idLopHoc = idLopHoc;
 		this.diemQT = diemQT;
 		this.diemThi = diemThi;
 		this.diemChu = diemChu;
 		this.diemThang4 = diemThang4;
+	}
+	
+	public DiemHocPhan(String hocKy, HocPhan hocPhan, String idLopHoc, double diemQT, double diemThi, double diemThang10) {
+		this.hocKy = hocKy;
+		this.hocPhan = hocPhan;
+		this.idLopHoc = idLopHoc;
+		this.diemQT = diemQT;
+		this.diemThi = diemThi;
+		this.diemThang10 = diemThang10;
 	}
 	
 	private String tinhDiemChu() {
@@ -46,6 +62,17 @@ public class DiemHocPhan {
 		else return "A+";
 	}
 	
+	private double tinhDiemThang10(double diemQT, double diemThi) {
+		double trongSo = hocPhan.getTrongSo();
+		double diem = (double)Math.round(((this.diemThi * trongSo + this.diemQT*(1 - trongSo))*10))/10;
+		double du1 = diem%1;
+		if(du1 <= 0.3) return diem/1;
+		else if(du1 < 0.5) return diem/1 + 0.5;
+		else if(du1 == 0.5) return diem;
+		else if(du1 < 0.7) return diem/1 + 0.5;
+		else return diem/1 + 1;
+	}
+	
 	private double tinhDiemThang4(String diemChu) {
 		if(diemChu.equals("F")) return 0;
 		else if(diemChu.equals("D")) return 1.0;
@@ -56,7 +83,6 @@ public class DiemHocPhan {
 		else if(diemChu.equals("B+")) return 3.5;
 		else return 4.0;
 	}
-	
 	
 	public HocPhan getHocPhan() {
 		return hocPhan;
@@ -78,8 +104,8 @@ public class DiemHocPhan {
 		return idLopHoc;
 	}
 
-	public void setIdLopHoc(String lopHoc) {
-		this.idLopHoc = lopHoc;
+	public void setIdLopHoc(String idLopHoc) {
+		this.idLopHoc = idLopHoc;
 	}
 
 	public String getDiemChu() {
@@ -112,6 +138,14 @@ public class DiemHocPhan {
 
 	public void setDiemThang4(double diemThang4) {
 		this.diemThang4 = diemThang4;
+	}
+
+	public double getDiemThang10() {
+		return diemThang10;
+	}
+
+	public void setDiemThang10(double diemThang10) {
+		this.diemThang10 = diemThang10;
 	}
 	
 }

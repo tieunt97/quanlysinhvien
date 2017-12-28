@@ -24,7 +24,7 @@ import quanlysinhvien.controller.LopChuyenNganhController;
 import quanlysinhvien.controller.LopHocPhanController;
 import quanlysinhvien.controller.SinhVienNienCheController;
 import quanlysinhvien.controller.SinhVienTinChiController;
-import quanlysinhvien.model.QuanLySinhVien;
+import quanlysinhvien.model.QuanLy;
 import quanlysinhvien.view.PanelDanhSachHPView;
 import quanlysinhvien.view.PanelDanhSachNganhView;
 import quanlysinhvien.view.PanelHeThongView;
@@ -51,33 +51,30 @@ public class MainQuanLy extends JFrame implements ActionListener{
 	
 	private PanelDanhSachNganhView dsNganh;
 	private PanelLopChuyenNganhView lopCN;
-	
-	private QuanLySinhVien dsSinhVien;
-	
+	QuanLy quanLy;
 	
 	
-	public MainQuanLy() {
+	public MainQuanLy(QuanLy quanLy) {
 		conter = this.getContentPane();
 		mainPanel = new JPanel();
 		mainPanel.setLayout(carLayout = new CardLayout());
 		
 		mainPanel.add(trangChu = new PanelHeThongView());
-		
-		dsSinhVien = new QuanLySinhVien();
+		this.quanLy = quanLy;
 		mainPanel.add(SVTC = new PanelSinhVienTinChiView(), "SVTC");
-		new SinhVienTinChiController(SVTC, dsSinhVien);
+		new SinhVienTinChiController(SVTC, quanLy);
 		mainPanel.add(SVNC = new PanelSinhVienNienCheView(), "SVNC");
-		new SinhVienNienCheController(SVNC, dsSinhVien);
+		new SinhVienNienCheController(SVNC, quanLy);
 		
 		mainPanel.add(dsHP = new PanelDanhSachHPView(), "dsHP");
-		new DanhSachHPController(dsHP);
+		new DanhSachHPController(dsHP, quanLy);
 		mainPanel.add(lopHP = new PanelLopHocPhanView(), "lopHP");
-		new LopHocPhanController(lopHP);
+		new LopHocPhanController(lopHP, quanLy);
 		
 		mainPanel.add(dsNganh = new PanelDanhSachNganhView(), "dsNganh");
-		new DanhSachNganhController(dsNganh);
+		new DanhSachNganhController(dsNganh, quanLy);
 		mainPanel.add(lopCN = new PanelLopChuyenNganhView(), "lopCN");
-		new LopChuyenNganhController(lopCN);
+		new LopChuyenNganhController(lopCN, quanLy);
 		conter.setLayout(new BorderLayout(0, 0));
 		conter.add(createHeaderPanel(), BorderLayout.NORTH);
 		conter.add(mainPanel, BorderLayout.CENTER);

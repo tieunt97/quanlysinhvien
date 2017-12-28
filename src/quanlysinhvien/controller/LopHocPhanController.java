@@ -27,8 +27,9 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import quanlysinhvien.model.HocPhan;
 import quanlysinhvien.model.LopHocPhan;
-import quanlysinhvien.model.QuanLyLopHocPhan;
+import quanlysinhvien.model.QuanLy;
 import quanlysinhvien.model.SinhVien;
 import quanlysinhvien.view.CapNhatSinhVienLCNView;
 import quanlysinhvien.view.PanelLopHocPhanView;
@@ -40,21 +41,14 @@ public class LopHocPhanController {
     private JButton btnThem, btnSua, btnXoa, btnHuy, btnTimKiem, btnCapNhatSV;
     private JComboBox<String> timKiemCB, hocKyCB;
     private PanelLopHocPhanView lopHocPhan;
-    private QuanLyLopHocPhan quanlyLopHP;
     private String fileName;
+    private QuanLy quanLy;
 
-    public LopHocPhanController(PanelLopHocPhanView lopHocPhan) {
+    public LopHocPhanController(PanelLopHocPhanView lopHocPhan, QuanLy quanLy) {
         this.lopHocPhan = lopHocPhan;
+        this.quanLy = quanLy;
         ArrayList<LopHocPhan> dsLopHP;
         fileName = "quanlysinhvien\\danhsachhocphan\\lophocphan\\dsLopHP.xlsx";
-        try {
-            dsLopHP = readFile(fileName);
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            dsLopHP = new ArrayList<>();
-            System.out.println("Error LopHocPhan: " + e);
-        }
-        quanlyLopHP = new QuanLyLopHocPhan(dsLopHP);
         this.table = lopHocPhan.getTable();
         this.btnThem = lopHocPhan.getBtnThem();
         this.btnSua = lopHocPhan.getBtnSua();
@@ -74,7 +68,7 @@ public class LopHocPhanController {
         this.tfTimKiem = lopHocPhan.getTfTimKiem();
         this.timKiemCB = lopHocPhan.getTimKiemCB();
         this.hocKyCB = lopHocPhan.getHocKyCB();
-        this.lopHocPhan.loadData(table, quanlyLopHP.getDsLopHocPhan(), "", "");
+        this.lopHocPhan.loadData(table, quanLy.getDsLopHocPhan(), "", "");
 
         setAction();
     }
@@ -108,10 +102,10 @@ public class LopHocPhanController {
                 // TODO Auto-generated method stub
                 LopHocPhan lopHP = getLopHocPhan();
                 if (lopHP != null) {
-                    if (quanlyLopHP.themLopHocPhan(lopHP)) {
+                    if (quanLy.themLopHocPhan(lopHP)) {
                     	//thêm lopHP vào bảng
                     	((DefaultTableModel)table.getModel()).addRow(new Object[] {lopHP.getHocKy(), lopHP.getIdLop(), lopHP.getLoaiLop(),
-                    			lopHP.getIdHocPhan(), lopHP.getTenLop(), lopHP.getThoiGian(), lopHP.getTuanHoc(), lopHP.getPhongHoc(), 
+                    			lopHP.getHocPhan().getIdHocPhan(), lopHP.getHocPhan().getTenHP(), lopHP.getThoiGian(), lopHP.getTuanHoc(), lopHP.getPhongHoc(), 
                     			lopHP.getTenGiangVien(), lopHP.getSoSVMax() + "", lopHP.getSoSVHienTai() + ""});
                         try {
                             addLopHP(lopHP, fileName);
@@ -139,8 +133,16 @@ public class LopHocPhanController {
                 }
                 LopHocPhan lopHP = getLopHocPhan();
                 if (lopHP != null) {
-                    quanlyLopHP.xoaLopHocPhan(lopHP.getIdLop());
-                    quanlyLopHP.themLopHocPhan(lopHP);
+                	LopHocPhan lopHocPhan = quanLy.getLopHocPhan(lopHP.getIdLop());
+                	lopHocPhan.setHocKy(lopHP.getHocKy());
+                	lopHocPhan.setHocPhan(lopHP.getHocPhan());
+                	lopHocPhan.setLoaiLop(lopHP.getLoaiLop());
+                	lopHocPhan.setPhongHoc(lopHP.getPhongHoc());
+                	lopHocPhan.setThoiGian(lopHP.getThoiGian());
+                	lopHocPhan.setTuanHoc(lopHP.getTuanHoc());
+                	lopHocPhan.setTenGiangVien(lopHP.getTenGiangVien());
+                	lopHocPhan.setSoSVMax(lopHP.getSoSVMax());
+                	lopHocPhan.setSoSVHienTai(lopHP.getSoSVHienTai());
                     updateRowTable(lopHP, row);		//cập nhật lopHP trên bảng
                     boolean ck = false;
                     try {
@@ -173,7 +175,7 @@ public class LopHocPhanController {
                     if (select == 0) {
                         String idLop = (String) table.getValueAt(row, 1);
                         boolean ck = false;
-                        if (quanlyLopHP.xoaLopHocPhan(idLop)) {
+                        if (quanLy.xoaLopHocPhan(idLop)) {
                             ((DefaultTableModel)table.getModel()).removeRow(row);	//xóa lopHP trên bảng
                             try {
                                 ck = deleteLopHP(idLop, fileName);
@@ -201,7 +203,7 @@ public class LopHocPhanController {
             public void actionPerformed(ActionEvent e) {
                 // TODO Auto-generated method stub
                 cancel();
-                lopHocPhan.loadData(table, quanlyLopHP.getDsLopHocPhan(), "", "");
+                lopHocPhan.loadData(table, quanLy.getDsLopHocPhan(), "", "");
             }
         });
         btnTimKiem.addActionListener(new ActionListener() {
@@ -211,7 +213,7 @@ public class LopHocPhanController {
                 // TODO Auto-generated method stub
                 String timKiem = timKiemCB.getSelectedItem().toString();
                 String giaTri = tfTimKiem.getText().trim().toLowerCase();
-                lopHocPhan.loadData(table, quanlyLopHP.getDsLopHocPhan(), timKiem, giaTri);
+                lopHocPhan.loadData(table, quanLy.getDsLopHocPhan(), timKiem, giaTri);
             }
         });
         btnCapNhatSV.addActionListener(new ActionListener() {
@@ -226,8 +228,8 @@ public class LopHocPhanController {
                 }
                 String idLop = (String) table.getValueAt(row, 1);
                 CapNhatSinhVienLCNView capNhatSV = new CapNhatSinhVienLCNView(idLop);
-                LopHocPhan lopHP = quanlyLopHP.getLopHocPhan(idLop);
-                new CapNhatSinhVienController(capNhatSV, null, lopHP, "quanlysinhvien\\danhsachhocphan\\lophocphan\\" + idLop + "_dsSV.xlsx");
+                LopHocPhan lopHP = quanLy.getLopHocPhan(idLop);
+                new CapNhatSinhVienController(capNhatSV, null, lopHP, quanLy, "quanlysinhvien\\danhsachhocphan\\lophocphan\\" + idLop + "_dsSV.xlsx");
             }
         });
 
@@ -238,8 +240,8 @@ public class LopHocPhanController {
     	table.setValueAt(lopHP.getHocKy(), row, 0);
     	table.setValueAt(lopHP.getIdLop(), row, 1);
     	table.setValueAt(lopHP.getLoaiLop(), row, 2);
-    	table.setValueAt(lopHP.getIdHocPhan(), row, 3);
-    	table.setValueAt(lopHP.getTenLop(), row, 4);
+    	table.setValueAt(lopHP.getHocPhan().getIdHocPhan(), row, 3);
+    	table.setValueAt(lopHP.getHocPhan().getTenHP(), row, 4);
     	table.setValueAt(lopHP.getThoiGian(), row, 5);
     	table.setValueAt(lopHP.getTuanHoc(), row, 6);
     	table.setValueAt(lopHP.getPhongHoc(), row, 7);
@@ -248,61 +250,6 @@ public class LopHocPhanController {
     	table.setValueAt(lopHP.getSoSVHienTai() + "", row, 10);
     }
     
-    //lấy danh sách lớp học phần từ file
-    private ArrayList<LopHocPhan> readFile(String fileName) throws IOException {
-        ArrayList<LopHocPhan> dsLopHP = new ArrayList<>();
-        FileInputStream inputStream = new FileInputStream(new File(fileName));
-
-        Workbook workbook = new XSSFWorkbook(inputStream);
-        Sheet firstSheet = workbook.getSheetAt(0);
-        Iterator<Row> iterator = firstSheet.iterator();
-
-        Row nextRow;
-        if (iterator.hasNext()) {
-            nextRow = iterator.next(); // loại bỏ dòng tiêu đề
-        }
-        while (iterator.hasNext()) {
-            nextRow = iterator.next();
-            Iterator<Cell> cellIterator = nextRow.cellIterator();
-            ArrayList<String> dataLopHP = new ArrayList<>();
-            while (cellIterator.hasNext()) {
-                Cell cell = cellIterator.next();
-                String data = "";
-                switch (cell.getCellType()) {
-                    case Cell.CELL_TYPE_STRING:
-                        data = cell.getStringCellValue();
-                        break;
-                    case Cell.CELL_TYPE_NUMERIC:
-                        data = Double.toString(cell.getNumericCellValue());
-                        break;
-                    default:
-                        data = "";
-                        break;
-                }
-                dataLopHP.add(data);
-                if (dataLopHP.size() < 1) {
-                    return null;
-                }
-            }
-            if (dataLopHP.size() > 0) {
-                ArrayList<SinhVien> dsSinhVien;
-                try {
-                    dsSinhVien = getDSSinhVien(dataLopHP.get(1));
-                } catch (Exception exc) {
-                    dsSinhVien = new ArrayList<>();
-                    System.out.println("Error loadDSSVLopHP: " + exc);
-                }
-                LopHocPhan lopHocPhan = new LopHocPhan(dataLopHP.get(0), dataLopHP.get(1), dataLopHP.get(2), dataLopHP.get(3), dataLopHP.get(4),
-                        dataLopHP.get(5), dataLopHP.get(6), dataLopHP.get(7), dsSinhVien, dataLopHP.get(8), (int) Double.parseDouble(dataLopHP.get(9)), (int) Double.parseDouble(dataLopHP.get(10)));
-                dsLopHP.add(lopHocPhan);
-            }
-        }
-
-        workbook.close();
-        inputStream.close();
-        return dsLopHP;
-    }
-
     //tạo tiêu đề file dsLopHP
     private void createHeader(Sheet sheet) {
         CellStyle cellStyle = sheet.getWorkbook().createCellStyle();
@@ -366,16 +313,9 @@ public class LopHocPhanController {
         cell = row.createCell(3);
         cell.setCellValue(lopHP.getLoaiLop());
         cell = row.createCell(4);
-        cell.setCellValue(lopHP.getIdHocPhan());
+        cell.setCellValue(lopHP.getHocPhan().getIdHocPhan());
         cell = row.createCell(5);
-        String tenLop = "";
-        try {
-            tenLop = getTenLop(lopHP.getIdHocPhan());	//lấy tên lớp từ idHocPhan
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        cell.setCellValue(tenLop);
+        cell.setCellValue(lopHP.getHocPhan().getTenHP());
         cell = row.createCell(6);
         cell.setCellValue(lopHP.getThoiGian());
         cell = row.createCell(7);
@@ -445,16 +385,9 @@ public class LopHocPhanController {
                 cell = nextRow.createCell(3);
                 cell.setCellValue(lopHP.getLoaiLop());
                 cell = nextRow.createCell(4);
-                cell.setCellValue(lopHP.getIdHocPhan());
+                cell.setCellValue(lopHP.getHocPhan().getIdHocPhan());
                 cell = nextRow.createCell(5);
-                String tenLop = "";
-                try {
-                    tenLop = getTenLop(lopHP.getIdHocPhan());
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-                cell.setCellValue(tenLop);
+                cell.setCellValue(lopHP.getHocPhan().getTenHP());
                 cell = nextRow.createCell(6);
                 cell.setCellValue(lopHP.getThoiGian());
                 cell = nextRow.createCell(7);
@@ -522,54 +455,6 @@ public class LopHocPhanController {
         return ck;
     }
 
-    //lấy danh sách sinh viên từ file dsSinhVien
-    private ArrayList<SinhVien> getDSSinhVien(String idLop) throws IOException {
-        ArrayList<SinhVien> dsSV = new ArrayList<>();
-        String fileName = "quanlysinhvien\\danhsachhocphan\\lophocphan\\" + idLop + "_dsSV.xlsx";
-        FileInputStream inputStream = new FileInputStream(new File(fileName));
-
-        Workbook workbook = new XSSFWorkbook(inputStream);
-        Sheet firstSheet = workbook.getSheetAt(0);
-        Iterator<Row> iterator = firstSheet.iterator();
-
-        Row nextRow;
-        if (iterator.hasNext()) {
-            nextRow = iterator.next(); // loại bỏ dòng tiêu đề
-        }
-        while (iterator.hasNext()) {
-            nextRow = iterator.next();
-            Iterator<Cell> cellIterator = nextRow.cellIterator();
-            ArrayList<String> dataSV = new ArrayList<>();
-            while (cellIterator.hasNext()) {
-                Cell cell = cellIterator.next();
-                String data = "";
-                switch (cell.getCellType()) {
-                    case Cell.CELL_TYPE_STRING:
-                        data = cell.getStringCellValue();
-                        break;
-                    case Cell.CELL_TYPE_NUMERIC:
-                        data = Double.toString(cell.getNumericCellValue());
-                        break;
-                    default:
-                        data = "";
-                        break;
-                }
-                dataSV.add(data);
-                if (dataSV.size() < 1) {
-                    return null;
-                }
-            }
-            if (dataSV.size() > 0) {
-                SinhVien sv = new SinhVien(dataSV.get(0), dataSV.get(1), dataSV.get(2), dataSV.get(3), dataSV.get(4), dataSV.get(5), dataSV.get(6), dataSV.get(7), dataSV.get(8), Double.parseDouble(dataSV.get(9)));
-                dsSV.add(sv);
-            }
-        }
-
-        workbook.close();
-        inputStream.close();
-        return dsSV;
-    }
-
     //lấy dữ liệu lớp học phần từu input
     private LopHocPhan getLopHocPhan() {
         LopHocPhan lopHP;
@@ -577,17 +462,7 @@ public class LopHocPhanController {
         String idLop = tfIdLop.getText().toUpperCase().trim();
         String loaiLop = tfLoaiLop.getText().trim();
         String idHocPhan = tfIdHocPhan.getText().trim().toUpperCase();
-        String tenLop = "";
-        try {
-            tenLop = getTenLop(idHocPhan);
-            if (tenLop.equals("")) {
-                JOptionPane.showMessageDialog(null, "Mã học phần không tồn tại", "Error", JOptionPane.ERROR_MESSAGE);
-                return null;
-            }
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        HocPhan hocPhan = this.quanLy.getHocPhan(idHocPhan);
         String thoiGian = tfThoiGian.getText().trim();
         String tuanHoc = tfTuanHoc.getText().trim();
         String phongHoc = tfPhongHoc.getText().trim();
@@ -605,34 +480,8 @@ public class LopHocPhanController {
             JOptionPane.showMessageDialog(null, "Hãy kiểm tra các giá trị: Số SV max, Số SV hiện tại", "Error", JOptionPane.ERROR_MESSAGE);
             return null;
         }
-        lopHP = new LopHocPhan(hocKy, idLop, loaiLop, idHocPhan, tenLop, thoiGian, tuanHoc, phongHoc, new ArrayList<SinhVien>(), tenGiangVien, soSVMax, soSVHienTai);
+        lopHP = new LopHocPhan(hocKy, idLop, loaiLop, hocPhan, thoiGian, tuanHoc, phongHoc, new ArrayList<SinhVien>(), tenGiangVien, soSVMax, soSVHienTai);
         return lopHP;
-    }
-
-    //lấy tên lớp từ idHocPhan trong file dsHocPhan
-    private String getTenLop(String idHocPhan) throws IOException {
-        String tenHP = "";
-        FileInputStream fin = new FileInputStream(new File("quanlysinhvien\\danhsachhocphan\\dsHocPhan.xlsx"));
-        Workbook workbook = new XSSFWorkbook(fin);
-        Sheet sheet = workbook.getSheetAt(0);
-        Iterator<Row> iterator = sheet.iterator();
-        Row nextRow;
-        if (iterator.hasNext()) {
-            nextRow = iterator.next();
-        }
-        while (iterator.hasNext()) {
-            nextRow = iterator.next();
-            Cell cell = nextRow.getCell(1);
-            String idHP = cell.getStringCellValue();
-            if (idHP.equals(idHocPhan)) {
-                cell = nextRow.getCell(2);
-                tenHP = cell.getStringCellValue();
-                break;
-            }
-        }
-        workbook.close();
-        fin.close();
-        return tenHP;
     }
 
     //reset input

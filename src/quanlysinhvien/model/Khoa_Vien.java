@@ -12,8 +12,10 @@ public class Khoa_Vien {
         this.dsLopChuyenNganh = new ArrayList<>();
     }
 
-    public Khoa_Vien(ArrayList<LopChuyenNganh> dsLopChuyenNganh) {
-        this.dsLopChuyenNganh = dsLopChuyenNganh;
+    public Khoa_Vien(String idKhoa_Vien, String tenKhoa_Vien) {
+    	this.idKhoa_Vien = idKhoa_Vien;
+    	this.tenKhoa_Vien = tenKhoa_Vien;
+        this.dsLopChuyenNganh = new ArrayList<>();
     }
 
     public Khoa_Vien(ArrayList<LopChuyenNganh> dsLopChuyenNganh, String idKhoa_Vien, String tenKhoaVien) {

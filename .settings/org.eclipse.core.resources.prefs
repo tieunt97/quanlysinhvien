@@ -2,7 +2,6 @@ eclipse.preferences.version=1
 encoding//src/quanlysinhvien/controller/DanhSachHPController.java=UTF-8
 encoding//src/quanlysinhvien/controller/DoiMatKhauController.java=UTF-8
 encoding//src/quanlysinhvien/controller/SinhVienTinChiController.java=UTF-8
-encoding//src/quanlysinhvien/view/PanelBangDiemCaNhanView.java=UTF-8
 encoding//src/quanlysinhvien/view/PanelBangDiemHocPhanView.java=UTF-8
 encoding//src/quanlysinhvien/view/PanelCapNhatDiemSVView.java=UTF-8
 encoding//src/quanlysinhvien/view/PanelChuongTrinhDaoTaoSVView.java=UTF-8

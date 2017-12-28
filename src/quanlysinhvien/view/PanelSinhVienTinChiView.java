@@ -29,9 +29,9 @@ public class PanelSinhVienTinChiView extends JPanel {
 	private ButtonGroup bg;
 	private JRadioButton radNam, radNu;
 	private JTextField tfIdSV, tfHoTen, tfKhoa, tfNgaySinh, tfEmail, tfSoDT, tfDiaChi, tfDiemTB, tfSoTCQua, tfSoTCNo,
-			tfTimKiem;
+			tfSoTCMax, tfTimKiem;
 	private String[] titleCols = { "Mã sinh viên", "Họ tên", "Khóa", "Ngày sinh", "Giới tính", "Email", "Số ĐT",
-			"Địa chỉ", "Điểm TB", "Số TC qua", "Số TC nợ" };
+			"Địa chỉ", "Điểm TB", "Số TC Max", "Số TC qua", "Số TC nợ" };
 	private String[] timKiemVals = { "Mã sinh viên", "Họ tên", "Khóa", "Địa chỉ", "Điểm TB", "Số TC nợ" };
 
 	public PanelSinhVienTinChiView() {
@@ -114,6 +114,7 @@ public class PanelSinhVienTinChiView extends JPanel {
 		panelL.add(new JLabel("Số ĐT:"));
 		panelL.add(new JLabel("Địa chỉ:"));
 		panelL.add(new JLabel("Số TC nợ:"));
+		panelL.add(new JLabel("Số TC Max:"));
 
 		JPanel panelR = new JPanel(new GridLayout(6, 1, 5, 5));
 		panelR.add(panelGioiTinh());
@@ -121,6 +122,7 @@ public class PanelSinhVienTinChiView extends JPanel {
 		panelR.add(tfSoDT = new JTextField());
 		panelR.add(tfDiaChi = new JTextField());
 		panelR.add(tfSoTCNo = new JTextField("0"));
+		panelR.add(tfSoTCMax = new JTextField("24"));
 
 		panel.add(panelL, BorderLayout.WEST);
 		panel.add(panelR, BorderLayout.CENTER);
@@ -218,8 +220,9 @@ public class PanelSinhVienTinChiView extends JPanel {
 					data[index][6] = svtc.getSoDT();
 					data[index][7] = svtc.getDiaChi();
 					data[index][8] = svtc.getDiemTB() + "";
-					data[index][9] = svtc.getSoTCQua() + "";
-					data[index][10] = svtc.getSoTCNo() + "";
+					data[index][9] = svtc.getSoTCMax() + "";
+					data[index][10] = svtc.getSoTCQua() + "";
+					data[index][11] = svtc.getSoTCNo() + "";
 					index++;
 				}
 				break;
@@ -234,8 +237,9 @@ public class PanelSinhVienTinChiView extends JPanel {
 					data[index][6] = svtc.getSoDT();
 					data[index][7] = svtc.getDiaChi();
 					data[index][8] = svtc.getDiemTB() + "";
-					data[index][9] = svtc.getSoTCQua() + "";
-					data[index][10] = svtc.getSoTCNo() + "";
+					data[index][9] = svtc.getSoTCMax() + "";
+					data[index][10] = svtc.getSoTCQua() + "";
+					data[index][11] = svtc.getSoTCNo() + "";
 					index++;
 				}
 				break;
@@ -250,8 +254,9 @@ public class PanelSinhVienTinChiView extends JPanel {
 					data[index][6] = svtc.getSoDT();
 					data[index][7] = svtc.getDiaChi();
 					data[index][8] = svtc.getDiemTB() + "";
-					data[index][9] = svtc.getSoTCQua() + "";
-					data[index][10] = svtc.getSoTCNo() + "";
+					data[index][9] = svtc.getSoTCMax() + "";
+					data[index][10] = svtc.getSoTCQua() + "";
+					data[index][11] = svtc.getSoTCNo() + "";
 					index++;
 				}
 				break;
@@ -266,8 +271,9 @@ public class PanelSinhVienTinChiView extends JPanel {
 					data[index][6] = svtc.getSoDT();
 					data[index][7] = svtc.getDiaChi();
 					data[index][8] = svtc.getDiemTB() + "";
-					data[index][9] = svtc.getSoTCQua() + "";
-					data[index][10] = svtc.getSoTCNo() + "";
+					data[index][9] = svtc.getSoTCMax() + "";
+					data[index][10] = svtc.getSoTCQua() + "";
+					data[index][11] = svtc.getSoTCNo() + "";
 					index++;
 				}
 				break;
@@ -282,8 +288,9 @@ public class PanelSinhVienTinChiView extends JPanel {
 					data[index][6] = svtc.getSoDT();
 					data[index][7] = svtc.getDiaChi();
 					data[index][8] = svtc.getDiemTB() + "";
-					data[index][9] = svtc.getSoTCQua() + "";
-					data[index][10] = svtc.getSoTCNo() + "";
+					data[index][9] = svtc.getSoTCMax() + "";
+					data[index][10] = svtc.getSoTCQua() + "";
+					data[index][11] = svtc.getSoTCNo() + "";
 					index++;
 				}
 				break;
@@ -298,8 +305,9 @@ public class PanelSinhVienTinChiView extends JPanel {
 					data[index][6] = svtc.getSoDT();
 					data[index][7] = svtc.getDiaChi();
 					data[index][8] = svtc.getDiemTB() + "";
-					data[index][9] = svtc.getSoTCQua() + "";
-					data[index][10] = svtc.getSoTCNo() + "";
+					data[index][9] = svtc.getSoTCMax() + "";
+					data[index][10] = svtc.getSoTCQua() + "";
+					data[index][11] = svtc.getSoTCNo() + "";
 					index++;
 				}
 				break;
@@ -313,8 +321,9 @@ public class PanelSinhVienTinChiView extends JPanel {
 				data[index][6] = svtc.getSoDT();
 				data[index][7] = svtc.getDiaChi();
 				data[index][8] = svtc.getDiemTB() + "";
-				data[index][9] = svtc.getSoTCQua() + "";
-				data[index][10] = svtc.getSoTCNo() + "";
+				data[index][9] = svtc.getSoTCMax() + "";
+				data[index][10] = svtc.getSoTCQua() + "";
+				data[index][11] = svtc.getSoTCNo() + "";
 				index++;
 			}
 				break;
@@ -396,6 +405,10 @@ public class PanelSinhVienTinChiView extends JPanel {
 
 	public JTextField getTfSoTCNo() {
 		return tfSoTCNo;
+	}
+	
+	public JTextField getTfSoTCMax() {
+		return tfSoTCMax;
 	}
 
 	public JTextField getTfTimKiem() {

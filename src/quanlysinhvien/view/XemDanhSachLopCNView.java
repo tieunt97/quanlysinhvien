@@ -18,7 +18,8 @@ import quanlysinhvien.model.LopChuyenNganh;
 
 public class XemDanhSachLopCNView extends JDialog{
 	private JTable table;
-	private String[] titleCols = {"Mã lớp", "Tên lớp", "Chủ nhiệm", "Mã Khoa/Viện", "Tên Khoa/Viện"};
+	private String[] titleCols = {"Mã lớp", "Tên lớp", "Chủ nhiệm", "Mã Khoa/Viện"};
+//	private String[] titleCols = {"Mã lớp", "Tên lớp", "Chủ nhiệm", "Mã Khoa/Viện", "Tên Khoa/Viện"};
 	public XemDanhSachLopCNView(String idNganh, String tenNganh) {
 		setSize(1000, 650);
 		setLocationRelativeTo(null);
@@ -69,8 +70,7 @@ public class XemDanhSachLopCNView extends JDialog{
 			data[i][0] = dsLopCN.get(i).getIdLopChuyenNganh();
 			data[i][1] = dsLopCN.get(i).getTenLop();
 			data[i][2] = dsLopCN.get(i).getTenChuNhiem();
-			data[i][3] = dsLopCN.get(i).getIdKhoaVien();
-			data[i][4] = dsLopCN.get(i).getTenKhoaVien();
+			data[i][3] = dsLopCN.get(i).getIdKhoa_Vien();
 		}
 		
 		return data;

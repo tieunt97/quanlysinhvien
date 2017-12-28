@@ -1,13 +1,12 @@
 package quanlysinhvien.model;
 
 public class HocPhan {
-	private String idHocPhan, ngayDangKy;
+	private String idHocPhan;
 	private String tenHP;
 	private int soTinChi;
 	private double soTCHocPhi;
 	private String idNganh;
 	private double trongSo;
-	
 	
 	
 	public HocPhan() {
@@ -21,23 +20,6 @@ public class HocPhan {
 		this.soTCHocPhi = soTCHocPhi;
 		this.idNganh = idNganh;
 		this.trongSo = trongSo;
-	}
-	
-	public HocPhan(String idHocPhan, String tenHP, int soTinChi, double soTCHocPhi, String idNganh, double trongSo, String ngayDangKy) {
-		this.idHocPhan = idHocPhan;
-		this.tenHP = tenHP;
-		this.soTinChi = soTinChi;
-		this.soTCHocPhi = soTCHocPhi;
-		this.idNganh = idNganh;
-		this.trongSo = trongSo;
-		this.ngayDangKy = ngayDangKy;
-	}
-	
-	public HocPhan(String idHocPhan, String tenHP, int soTinChi, String ngayDangKy) {
-		this.idHocPhan = idHocPhan;
-		this.tenHP = tenHP;
-		this.soTinChi = soTinChi;
-		this.ngayDangKy = ngayDangKy;
 	}
 	
 
@@ -88,13 +70,4 @@ public class HocPhan {
 	public void setTrongSo(double trongSo) {
 		this.trongSo = trongSo;
 	}
-
-	public String getNgayDangKy() {
-		return ngayDangKy;
-	}
-
-	public void setNgayDangKy(String ngayDangKy) {
-		this.ngayDangKy = ngayDangKy;
-	}
-	
 }

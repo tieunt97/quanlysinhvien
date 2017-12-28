@@ -1,8 +1,10 @@
 package quanlysinhvien.model;
 
+import java.util.ArrayList;
+
 public class SinhVienNienChe extends SinhVien{
 	private int tongSoKy;
-	private int soMonNo;
+	private ArrayList<HocPhan> dsHocPhanNo;
 	
 	
 	public SinhVienNienChe() {
@@ -10,12 +12,50 @@ public class SinhVienNienChe extends SinhVien{
 	}
 	
 	public SinhVienNienChe(String idSinhVien, String hoTen, String khoa, String tenLop, String ngaySinh, String gioiTinh, String email,
-			String soDT, String diaChi, double diemTB, int tongSoKy, int soMonNo) {
+			String soDT, String diaChi, double diemTB, int tongSoKy) {
 		super(idSinhVien, hoTen, khoa, tenLop, ngaySinh, gioiTinh, email, soDT, diaChi, diemTB);
+		this.taiKhoan = new TaiKhoan(idSinhVien, idSinhVien, "svnc");
 		this.tongSoKy = tongSoKy;
-		this.soMonNo = soMonNo;
+		this.dsHocPhanNo = new ArrayList<>();
 	}
-
+	
+	public SinhVienNienChe(String idSinhVien, String hoTen, String khoa, String tenLop, String ngaySinh, String gioiTinh, String email,
+			String soDT, String diaChi, double diemTB, TaiKhoan taiKhoan, int tongSoKy) {
+		super(idSinhVien, hoTen, khoa, tenLop, ngaySinh, gioiTinh, email, soDT, diaChi, diemTB);
+		this.taiKhoan = taiKhoan;
+		this.tongSoKy = tongSoKy;
+		this.dsHocPhanNo = new ArrayList<>();
+	}
+	
+	public SinhVienNienChe(String idSinhVien, String hoTen, String khoa, String tenLop, String ngaySinh, String gioiTinh, String email,
+			String soDT, String diaChi, double diemTB, ArrayList<DiemHocPhan> dsDiemHP, ArrayList<String> dsLopHPDangKy, ArrayList<DangKyHocPhan> dsHPDangKy,
+			TaiKhoan taiKhoan, int tongSoKy, ArrayList<HocPhan> dsHPNo) {
+		super(idSinhVien, hoTen, khoa, tenLop, ngaySinh, gioiTinh, email, soDT, diaChi, diemTB, dsDiemHP, dsLopHPDangKy, dsHPDangKy);
+		this.taiKhoan = taiKhoan;
+		this.tongSoKy = tongSoKy;
+		this.dsHocPhanNo = dsHPNo;
+	}
+	
+	public boolean themHocPhanNo(HocPhan hp) {
+		for(int i = 0; i < dsHocPhanNo.size(); i++) {
+			if(dsHocPhanNo.get(i).getIdHocPhan().equals(hp.getIdHocPhan()))
+				return false;
+		}
+		
+		dsHocPhanNo.add(hp);
+		return true;
+	}
+	
+	public boolean xoaHocPhanNo(String idHocPhan) {
+		for(int i = 0; i < dsHocPhanNo.size(); i++) {
+			if(dsHocPhanNo.get(i).getIdHocPhan().equals(idHocPhan)) {
+				dsHocPhanNo.remove(i);
+				return true;
+			}
+		}
+		
+		return false;
+	}
 	
 	public int getTongSoKy() {
 		return tongSoKy;
@@ -25,12 +65,12 @@ public class SinhVienNienChe extends SinhVien{
 		this.tongSoKy = tongSoKy;
 	}
 
-	public int getSoMonNo() {
-		return soMonNo;
+	public ArrayList<HocPhan> getDsHocPhanNo() {
+		return dsHocPhanNo;
 	}
 
-	public void setSoMonNo(int soMonNo) {
-		this.soMonNo = soMonNo;
+	public void setDsHocPhanNo(ArrayList<HocPhan> dsHocPhanNo) {
+		this.dsHocPhanNo = dsHocPhanNo;
 	}
 	
 }

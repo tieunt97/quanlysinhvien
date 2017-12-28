@@ -217,7 +217,7 @@ public class PanelSinhVienNienCheView extends JPanel{
 					data[index][7] = svnc.getDiaChi();
 					data[index][8] = svnc.getDiemTB() + "";
 					data[index][9] = svnc.getTongSoKy() + "";
-					data[index][10] = svnc.getSoMonNo() + "";
+					data[index][10] = svnc.getDsHocPhanNo().size() + "";
 					index++;
 				}
 				break;
@@ -233,7 +233,7 @@ public class PanelSinhVienNienCheView extends JPanel{
 					data[index][7] = svnc.getDiaChi();
 					data[index][8] = svnc.getDiemTB() + "";
 					data[index][9] = svnc.getTongSoKy() + "";
-					data[index][10] = svnc.getSoMonNo() + "";
+					data[index][10] = svnc.getDsHocPhanNo().size() + "";
 					index++;
 				}
 				break;
@@ -249,7 +249,7 @@ public class PanelSinhVienNienCheView extends JPanel{
 					data[index][7] = svnc.getDiaChi();
 					data[index][8] = svnc.getDiemTB() + "";
 					data[index][9] = svnc.getTongSoKy() + "";
-					data[index][10] = svnc.getSoMonNo() + "";
+					data[index][10] = svnc.getDsHocPhanNo().size() + "";
 					index++;
 				}
 				break;
@@ -265,7 +265,7 @@ public class PanelSinhVienNienCheView extends JPanel{
 					data[index][7] = svnc.getDiaChi();
 					data[index][8] = svnc.getDiemTB() + "";
 					data[index][9] = svnc.getTongSoKy() + "";
-					data[index][10] = svnc.getSoMonNo() + "";
+					data[index][10] = svnc.getDsHocPhanNo().size() + "";
 					index++;
 				}
 				break;
@@ -281,7 +281,7 @@ public class PanelSinhVienNienCheView extends JPanel{
 					data[index][7] = svnc.getDiaChi();
 					data[index][8] = svnc.getDiemTB() + "";
 					data[index][9] = svnc.getTongSoKy() + "";
-					data[index][10] = svnc.getSoMonNo() + "";
+					data[index][10] = svnc.getDsHocPhanNo().size() + "";
 					index++;
 				}
 				break;
@@ -297,7 +297,7 @@ public class PanelSinhVienNienCheView extends JPanel{
 					data[index][7] = svnc.getDiaChi();
 					data[index][8] = svnc.getDiemTB() + "";
 					data[index][9] = svnc.getTongSoKy() + "";
-					data[index][10] = svnc.getSoMonNo() + "";
+					data[index][10] = svnc.getDsHocPhanNo().size() + "";
 					index++;
 				}
 				break;
@@ -312,7 +312,7 @@ public class PanelSinhVienNienCheView extends JPanel{
 				data[index][7] = svnc.getDiaChi();
 				data[index][8] = svnc.getDiemTB() + "";
 				data[index][9] = svnc.getTongSoKy() + "";
-				data[index][10] = svnc.getSoMonNo() + "";
+				data[index][10] = svnc.getDsHocPhanNo().size() + "";
 				index++;
 			}
 				break;

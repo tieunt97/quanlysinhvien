@@ -1,19 +1,14 @@
 package quanlysinhvien.controller;
 
-import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -31,7 +26,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import quanlysinhvien.model.HocPhan;
-import quanlysinhvien.model.QuanLyHocPhan;
+import quanlysinhvien.model.QuanLy;
 import quanlysinhvien.view.PanelDanhSachHPView;
 
 public class DanhSachHPController {
@@ -41,22 +36,13 @@ public class DanhSachHPController {
     private JButton btnThem, btnSua, btnXoa, btnHuy, btnTimKiem;
     private JComboBox<String> timKiemCB;
     private JTextField tfIdHocPhan, tfTenHP, tfSoTC, tfIdNganh, tfTrongSo, tfTimKiem, tfSoTCHocPhi;
-    private QuanLyHocPhan quanlyHP;
     private String fileName;
+    private QuanLy quanLy;
 
-    public DanhSachHPController(PanelDanhSachHPView danhSachHP) {
+    public DanhSachHPController(PanelDanhSachHPView danhSachHP, QuanLy quanLy) {
         this.danhSachHP = danhSachHP;
-        ArrayList<HocPhan> dsHP;
+        this.quanLy = quanLy;
         fileName = "quanlysinhvien\\danhsachhocphan\\dsHocPhan.xlsx";
-        try {
-            dsHP = readFile(fileName);
-            System.out.println("Success readFile.");
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            dsHP = new ArrayList<>();
-            System.out.println("Error DanhSachHP: "+e);
-        }
-        quanlyHP = new QuanLyHocPhan(dsHP);
         this.table = danhSachHP.getTable();
         this.btnThem = danhSachHP.getBtnThem();
         this.btnSua = danhSachHP.getBtnSua();
@@ -71,7 +57,7 @@ public class DanhSachHPController {
         this.tfTrongSo = danhSachHP.getTfTrongSo();
         this.tfTimKiem = danhSachHP.getTfTimKiem();
         this.timKiemCB = danhSachHP.getTimKiemCB();
-        this.danhSachHP.loadData(table, quanlyHP.getDsHocPhan(), "", ""); //load danh sách học phần lên bảng
+        this.danhSachHP.loadData(table, quanLy.getDsHocPhan(), "", ""); //load danh sách học phần lên bảng
 
         setAction();
     }
@@ -100,7 +86,7 @@ public class DanhSachHPController {
             public void actionPerformed(ActionEvent e) {
                 HocPhan hp = getHocPhan();  //lấy dữ liệu học phần từ input
                 if (hp != null) {
-                    if (quanlyHP.themHocPhan(hp)) {
+                    if (quanLy.themHocPhan(hp)) {
                     	//thêm học phần hp vào bảng
                     	((DefaultTableModel) table.getModel()).addRow(new Object[] {hp.getIdHocPhan(), hp.getTenHP(), hp.getSoTinChi() + "", 
                     			hp.getSoTCHocPhi() + "", hp.getIdNganh(), hp.getTrongSo() + ""});
@@ -131,9 +117,9 @@ public class DanhSachHPController {
                 }
                 HocPhan hp = getHocPhan();
                 if (hp != null) {
-                    HocPhan hocPhan = quanlyHP.getHocPhan(hp.getIdHocPhan());
-                    quanlyHP.xoaHocPhan(hocPhan);
-                    quanlyHP.themHocPhan(hp);
+                    HocPhan hocPhan = quanLy.getHocPhan(hp.getIdHocPhan());
+                    quanLy.xoaHocPhan(hocPhan.getIdHocPhan());
+                    quanLy.themHocPhan(hp);
                     updateRowTable(hp, row);  //cập nhật dữ liệu học phần trên bảng
                     boolean ck = false;
                     try {
@@ -166,9 +152,9 @@ public class DanhSachHPController {
                             JOptionPane.YES_NO_OPTION);
                     if (select == 0) {
                         String id = (String) table.getValueAt(row, 0);
-                        HocPhan hocPhan = quanlyHP.getHocPhan(id);
+                        HocPhan hocPhan = quanLy.getHocPhan(id);
                         boolean ck = false;
-                        if (quanlyHP.xoaHocPhan(hocPhan)) {
+                        if (quanLy.xoaHocPhan(id)) {
                             //xóa hàng tương ứng row
                             ((DefaultTableModel) table.getModel()).removeRow(row);
                             try {
@@ -199,7 +185,7 @@ public class DanhSachHPController {
             public void actionPerformed(ActionEvent e) {
                 // TODO Auto-generated method stub
                 cancel();
-                danhSachHP.loadData(table, quanlyHP.getDsHocPhan(), "", "");
+                danhSachHP.loadData(table, quanLy.getDsHocPhan(), "", "");
             }
         });
 
@@ -210,7 +196,7 @@ public class DanhSachHPController {
                 // TODO Auto-generated method stub
                 String timKiem = timKiemCB.getSelectedItem().toString();
                 String giaTri = tfTimKiem.getText().trim().toLowerCase();
-                danhSachHP.loadData(table, quanlyHP.getDsHocPhan(), timKiem, giaTri);
+                danhSachHP.loadData(table, quanLy.getDsHocPhan(), timKiem, giaTri);
             }
         });
 
@@ -251,17 +237,9 @@ public class DanhSachHPController {
             JOptionPane.showMessageDialog(null, "Có trường dữ liệu trống", "Error", JOptionPane.ERROR_MESSAGE);
             return null;
         }
-        try {
-            if (!checkNganh(idNganh)) {
-                JOptionPane.showMessageDialog(null, "Mã ngành không tồn tại", "Error", JOptionPane.ERROR_MESSAGE);
-                return null;
-            }
-        } catch (HeadlessException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        } catch (IOException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
+        if (quanLy.getKhoa_Vien(idNganh) == null) {
+            JOptionPane.showMessageDialog(null, "Mã ngành không tồn tại", "Error", JOptionPane.ERROR_MESSAGE);
+            return null;
         }
         try {
             soTinChi = Integer.parseInt(tfSoTC.getText().trim());
@@ -275,72 +253,6 @@ public class DanhSachHPController {
 
         HocPhan hp = new HocPhan(idHocPhan, tenHP, soTinChi, soTCHocPhi, idNganh, trongSo);
         return hp;
-    }
-
-    //kiểm tra mã ngành có tồn tại?
-    private boolean checkNganh(String idNganh) throws IOException {
-        boolean ck = false;
-        FileInputStream fin = new FileInputStream(new File("quanlysinhvien\\danhsachchuyennganh\\dsNganh.xlsx"));
-        Workbook workbook = new XSSFWorkbook(fin);
-        Sheet sheet = workbook.getSheetAt(0);
-        Iterator<Row> iterator = sheet.iterator();
-        Row nextRow;
-        if (iterator.hasNext()) {
-            nextRow = iterator.next();
-        }
-        while (iterator.hasNext()) {
-            nextRow = iterator.next();
-            Cell cell = nextRow.getCell(1);
-            String idN = cell.getStringCellValue();
-            if (idN.equals(idNganh)) {
-                ck = true;
-                break;
-            }
-        }
-
-        return ck;
-    }
-
-    //lấy danh sách học phần từ file
-    private ArrayList<HocPhan> readFile(String fileName) throws IOException {
-        ArrayList<HocPhan> dsHocPhan = new ArrayList<>();
-        FileInputStream inputStream = new FileInputStream(new File(fileName));
-
-        Workbook workbook = new XSSFWorkbook(inputStream);
-        Sheet firstSheet = workbook.getSheetAt(0);
-        Iterator<Row> iterator = firstSheet.iterator();
-
-        Row nextRow;
-        if (iterator.hasNext()) {
-            nextRow = iterator.next();  //loại bỏ dòng tiêu đề
-        }
-        while (iterator.hasNext()) {
-            nextRow = iterator.next();
-            Iterator<Cell> cellIterator = nextRow.cellIterator();
-            ArrayList<String> dataHP = new ArrayList<>();
-            while (cellIterator.hasNext()) {
-                Cell cell = cellIterator.next();
-                String data = "";
-                switch (cell.getCellType()) {
-                    case Cell.CELL_TYPE_STRING:
-                        data = cell.getStringCellValue();
-                        break;
-                    case Cell.CELL_TYPE_NUMERIC:
-                        data = Double.toString(cell.getNumericCellValue());
-                        break;
-                    default:
-                        data = "";
-                        break;
-                }
-                dataHP.add(data);
-            }
-            HocPhan hp = new HocPhan(dataHP.get(0), dataHP.get(1), (int) (Double.parseDouble(dataHP.get(2))), (int) (Double.parseDouble(dataHP.get(3))), dataHP.get(4), Double.parseDouble(dataHP.get(5)));
-            dsHocPhan.add(hp);
-        }
-
-        workbook.close();
-        inputStream.close();
-        return dsHocPhan;
     }
 
     //tạo tiêu đề file danh sách học phần
@@ -485,8 +397,8 @@ public class DanhSachHPController {
             nextRow = iterator.next();
             i++;
             Cell cell = nextRow.getCell(1);
-            String idSV = cell.getStringCellValue();
-            if (idSV.equalsIgnoreCase(hp.getIdHocPhan())) {
+            String idHP = cell.getStringCellValue();
+            if (idHP.equalsIgnoreCase(hp.getIdHocPhan())) {
                 int lastRow = sheet.getLastRowNum();
                 if (i < lastRow) {
                     sheet.shiftRows(i + 1, lastRow, -1);
@@ -499,7 +411,6 @@ public class DanhSachHPController {
                         ck = true;
                     }
                 }
-                //hate you 
                 break;
             }
         }

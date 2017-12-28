@@ -26,6 +26,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import quanlysinhvien.model.LopChuyenNganh;
 import quanlysinhvien.model.LopHocPhan;
+import quanlysinhvien.model.QuanLy;
 import quanlysinhvien.model.SinhVien;
 import quanlysinhvien.model.SinhVienNienChe;
 import quanlysinhvien.model.SinhVienTinChi;
@@ -36,19 +37,19 @@ public class CapNhatSinhVienController {
 	private JTable table;
 	private JButton btnThem, btnXoa;
 	private JTextField tfIdSinhVien;
-	private JComboBox<String> loaiSVCB;
 	private LopChuyenNganh lopCN;
 	private LopHocPhan lopHP;
 	private String fileName;
+	private QuanLy quanLy;
 
-	public CapNhatSinhVienController(CapNhatSinhVienLCNView capNhatSV, LopChuyenNganh lopCN, LopHocPhan lopHP, String fileName) {
+	public CapNhatSinhVienController(CapNhatSinhVienLCNView capNhatSV, LopChuyenNganh lopCN, LopHocPhan lopHP, QuanLy quanLy, String fileName) {
 		this.capNhatSV = capNhatSV;
 		this.fileName = fileName;
+		this.quanLy = quanLy;
 		this.table = capNhatSV.getTable();
 		this.btnThem = capNhatSV.getBtnThem();
 		this.btnXoa = capNhatSV.getBtnXoa();
 		this.tfIdSinhVien = capNhatSV.getTfIdSinhVien();
-		this.loaiSVCB = capNhatSV.getLoaiSVCB();
 		if(lopCN != null) {
 			this.lopCN = lopCN;
 			this.capNhatSV.loadData(table, lopCN.getDsSinhVien());
@@ -71,19 +72,12 @@ public class CapNhatSinhVienController {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				String idSV = tfIdSinhVien.getText().toUpperCase().trim();
-				String loaiSinhVien = (String) loaiSVCB.getSelectedItem();
 				if (idSV.equals("")) {
 					JOptionPane.showMessageDialog(null, "Mã sinh viên trống", "Error insert",
 							JOptionPane.ERROR_MESSAGE);
 					return;
 				}
-				SinhVien sv = null;
-				try {
-					sv = getSinhVien(loaiSinhVien, idSV);
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				SinhVien sv = quanLy.getSinhVien(idSV);
 				if (sv == null) {
 					JOptionPane.showMessageDialog(null, "Sinh viên không tồn tại", "Error insert",
 							JOptionPane.ERROR_MESSAGE);
@@ -99,7 +93,7 @@ public class CapNhatSinhVienController {
 								 //thêm sinh viên vào file
 								addSV(sv, fileName);
 								//cập nhật lớp sinh viên
-								updateLopSV(idSV, lopCN.getTenLop(), loaiSinhVien);
+								updateLopSV(idSV, lopCN.getTenLop(), sv instanceof SinhVienTinChi);
 							} catch (IOException e1) {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
@@ -135,9 +129,9 @@ public class CapNhatSinhVienController {
 							((DefaultTableModel) table.getModel()).addRow(new Object[] { sv.getIdSinhVien(), sv.getHoTen(),
 									sv.getKhoa(), sv.getTenLop(), sv.getNgaySinh(), sv.getGioiTinh(), sv.getEmail(),
 									sv.getSoDT(), sv.getDiaChi(), sv.getDiemTB() + "" });
-							if(loaiSinhVien.equalsIgnoreCase("Sinh viên niên chế"))
+							if(sv != null)
 								try {
-									addLopTKB(idSV, lopHP);		//thêm lớp vào tkb svnc
+									addLopTKB(sv, lopHP);		//thêm lớp vào tkb svnc
 								} catch (IOException e1) {
 									// TODO Auto-generated catch block
 									e1.printStackTrace();
@@ -164,6 +158,7 @@ public class CapNhatSinhVienController {
 							JOptionPane.YES_NO_OPTION);
 					if (select == 0) {
 						String id = (String) table.getValueAt(row, 0);
+						SinhVien sv = quanLy.getSinhVien(id);
 						boolean ck = false;
 						if(lopCN != null) {
 							ck = lopCN.xoaSinhVien(id);
@@ -172,8 +167,8 @@ public class CapNhatSinhVienController {
 									//xóa sinh viên trong file dsSinhVien của lớp
 									deleteSV(id, fileName);
 									//cập nhật lại lớp SV
-									if(!updateLopSV(id, "null", "Sinh viên tín chỉ"))
-										updateLopSV(id, "null", "Sinh viên niên chế");
+									if(!updateLopSV(id, "null", (sv instanceof SinhVienTinChi)?false:true))
+										updateLopSV(id, "null", true);
 								} catch (IOException e1) {
 									// TODO Auto-generated catch block
 									e1.printStackTrace();
@@ -192,7 +187,7 @@ public class CapNhatSinhVienController {
 							if(ck) {
 								try {
 									deleteSV(id, fileName);
-									deleteLopTKB(id, lopHP.getIdLop());
+									deleteLopTKB(sv, lopHP.getIdLop());
 								} catch (IOException e1) {
 									// TODO Auto-generated catch block
 									e1.printStackTrace();
@@ -215,61 +210,6 @@ public class CapNhatSinhVienController {
 	//reset input
 	private void cancel() {
 		tfIdSinhVien.setText("");
-	}
-
-	//lấy dữ liệu sinh viên
-	private SinhVien getSinhVien(String loaiSinhVien, String idSV) throws IOException {
-		SinhVien sv = null;
-		String fileName = "";
-		if (loaiSinhVien.equals("Sinh viên tín chỉ")) {
-			fileName = "quanlysinhvien\\sinhvientinchi\\dsSinhVienTC.xlsx";
-		}
-		if (loaiSinhVien.equals("Sinh viên niên chế")) {
-			fileName = "quanlysinhvien\\sinhviennienche\\dsSinhVienNC.xlsx";
-		}
-		FileInputStream fin = new FileInputStream(new File(fileName));
-		Workbook workbook = new XSSFWorkbook(fin);
-		Sheet sheet = workbook.getSheetAt(0);
-		Iterator<Row> iterator = sheet.iterator();
-		Row nextRow;
-		if (iterator.hasNext()) {			//bỏ qua tiêu đề
-			nextRow = iterator.next();
-		}
-		while (iterator.hasNext()) {
-			nextRow = iterator.next();
-			ArrayList<String> dataSV = new ArrayList<>();
-			Iterator<Cell> itrCell = nextRow.iterator();
-			while(itrCell.hasNext()){
-				Cell cell = itrCell.next();
-				String data = "";
-				switch (cell.getCellType()) {
-				case Cell.CELL_TYPE_STRING:
-					data = cell.getStringCellValue();
-					break;
-				case Cell.CELL_TYPE_NUMERIC:
-					data = Double.toString(cell.getNumericCellValue());
-					break;
-				default:
-					data = "";
-					break;
-				}
-				dataSV.add(data);
-				if(dataSV.size() < 1) return null;
-			}
-			
-			if(dataSV.get(0).equalsIgnoreCase(idSV)){
-				if(loaiSinhVien.equalsIgnoreCase("Sinh viên tín chỉ")){
-					sv = new SinhVienTinChi(dataSV.get(0), dataSV.get(1), dataSV.get(2), dataSV.get(3), dataSV.get(4), dataSV.get(5), dataSV.get(6), dataSV.get(7), dataSV.get(8), Double.parseDouble(dataSV.get(9)), (int) Double.parseDouble(dataSV.get(10)), (int) Double.parseDouble(dataSV.get(11)));
-				}else if(loaiSinhVien.equalsIgnoreCase("Sinh viên niên chế")){
-					sv = new SinhVienNienChe(dataSV.get(0), dataSV.get(1), dataSV.get(2), dataSV.get(3), dataSV.get(4), dataSV.get(5), dataSV.get(6), dataSV.get(7), dataSV.get(8), Double.parseDouble(dataSV.get(9)), (int) Double.parseDouble(dataSV.get(10)), (int) Double.parseDouble(dataSV.get(11)));
-				}
-				return sv;
-			}
-		}
-		workbook.close();
-		fin.close();
-
-		return sv;
 	}
 
 	//tạo tiêu đề cho file dsSinhVien
@@ -423,12 +363,12 @@ public class CapNhatSinhVienController {
 	}
 
 	//cập nhật tên lớp chuyên ngành cho sinh viên
-	private boolean updateLopSV(String idSinhVien, String tenLop, String loaiSV) throws IOException {
+	private boolean updateLopSV(String idSinhVien, String tenLop, boolean svtc) throws IOException {
 		boolean ck = false;
 		String fileName = "";
-		if (loaiSV.equals("Sinh viên tín chỉ"))
+		if (svtc)
 			fileName = "quanlysinhvien\\sinhvientinchi\\dsSinhVienTC.xlsx";
-		else if (loaiSV.equals("Sinh viên niên chế"))
+		else
 			fileName = "quanlysinhvien\\sinhviennienche\\dsSinhVienNC.xlsx";
 		FileInputStream fin = new FileInputStream(new File(fileName));
 		Workbook workbook = new XSSFWorkbook(fin);
@@ -521,9 +461,9 @@ public class CapNhatSinhVienController {
 		cell = row.createCell(3);
 		cell.setCellValue(lopHP.getLoaiLop());
 		cell = row.createCell(4);
-		cell.setCellValue(lopHP.getIdHocPhan());
+		cell.setCellValue(lopHP.getHocPhan().getIdHocPhan());
 		cell = row.createCell(5);
-		cell.setCellValue(lopHP.getTenLop());
+		cell.setCellValue(lopHP.getHocPhan().getTenHP());
 		cell = row.createCell(6);
 		cell.setCellValue(lopHP.getThoiGian());
 		cell = row.createCell(7);
@@ -539,8 +479,9 @@ public class CapNhatSinhVienController {
 	}
 
 	//thêm lớp vào tkb của sinh viên niên chế
-	private void addLopTKB(String idSV, LopHocPhan lopHP) throws IOException {
-		String fileName = "quanlysinhvien\\sinhviennienche\\" + idSV + "\\tkb.xlsx";
+	private void addLopTKB(SinhVien sv, LopHocPhan lopHP) throws IOException {
+		String fileName = (sv instanceof SinhVienNienChe)?"quanlysinhvien\\sinhviennienche\\" + sv.getIdSinhVien() + "\\tkb.xlsx":
+			"quanlysinhvien\\sinhvientinchi\\" + sv.getIdSinhVien() + "\\tkb.xlsx";
 		Workbook workbook = null;
 		Sheet sheet = null;
 		int lastRow = -1;
@@ -573,9 +514,10 @@ public class CapNhatSinhVienController {
 	}
 
 	//xóa lớp tkb sinh viên niên chế
-	private boolean deleteLopTKB(String idSV, String idLop) throws IOException {
+	private boolean deleteLopTKB(SinhVien sv, String idLop) throws IOException {
 		boolean ck = false;
-		String fileName = "quanlysinhvien\\sinhviennienche\\" + idSV + "\\tkb.xlsx";
+		String fileName = (sv instanceof SinhVienNienChe)?"quanlysinhvien\\sinhviennienche\\" + sv.getIdSinhVien() + "\\tkb.xlsx":
+			"quanlysinhvien\\sinhvientinchi\\" + sv.getIdSinhVien() + "\\tkb.xlsx";
 		FileInputStream fin = new FileInputStream(new File(fileName));
 		Workbook workbook = new XSSFWorkbook(fin);
 		Sheet sheet = workbook.getSheetAt(0);

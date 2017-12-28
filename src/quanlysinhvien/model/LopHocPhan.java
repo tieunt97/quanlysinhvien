@@ -6,8 +6,7 @@ public class LopHocPhan {
 	private String hocKy;
 	private String idLop;
 	private String loaiLop;
-	private String idHocPhan;
-	private String tenLop;
+	private HocPhan hocPhan;
 	private String thoiGian;
 	private String tuanHoc;
 	private String phongHoc;
@@ -24,12 +23,11 @@ public class LopHocPhan {
 		this.soSVHienTai = dsSinhVien.size();
 	}
 	
-	public LopHocPhan(String hocKy, String idLop, String loaiLop, String idHocPhan, String tenLop, String thoiGian, String tuanHoc, String phongHoc, String tenGiangVien, int soSVMax, int soSVHienTai) {
+	public LopHocPhan(String hocKy, String idLop, String loaiLop, HocPhan hocPhan, String thoiGian, String tuanHoc, String phongHoc, String tenGiangVien, int soSVMax, int soSVHienTai) {
 		this.hocKy = hocKy;
 		this.idLop = idLop;
 		this.loaiLop = loaiLop;
-		this.idHocPhan = idHocPhan;
-		this.tenLop = tenLop;
+		this.hocPhan = hocPhan;
 		this.thoiGian = thoiGian;
 		this.tuanHoc = tuanHoc;
 		this.phongHoc = phongHoc;
@@ -41,12 +39,11 @@ public class LopHocPhan {
 	}
 	
 	
-	public LopHocPhan(String hocKy, String idLop, String loaiLop, String idHocPhan, String tenLop, String thoiGian, String tuanHoc, String phongHoc, ArrayList<SinhVien> dsSinhVien, String tenGiangVien, int soSVMax, int soSVHienTai) {
+	public LopHocPhan(String hocKy, String idLop, String loaiLop, HocPhan hocPhan, String thoiGian, String tuanHoc, String phongHoc, ArrayList<SinhVien> dsSinhVien, String tenGiangVien, int soSVMax, int soSVHienTai) {
 		this.hocKy = hocKy;
 		this.idLop = idLop;
 		this.loaiLop = loaiLop;
-		this.idHocPhan = idHocPhan;
-		this.tenLop = tenLop;
+		this.hocPhan = hocPhan;
 		this.thoiGian = thoiGian;
 		this.tuanHoc = tuanHoc;
 		this.phongHoc = phongHoc;
@@ -162,12 +159,12 @@ public class LopHocPhan {
 		this.phongHoc = phongHoc;
 	}
 
-	public String getIdHocPhan() {
-		return idHocPhan;
+	public HocPhan getHocPhan() {
+		return hocPhan;
 	}
 
-	public void setIdHocPhan(String idHocPhan) {
-		this.idHocPhan = idHocPhan;
+	public void setHocPhan(HocPhan hocPhan) {
+		this.hocPhan = hocPhan;
 	}
 
 	public String getHocKy() {
@@ -184,14 +181,6 @@ public class LopHocPhan {
 
 	public void setLoaiLop(String loaiLop) {
 		this.loaiLop = loaiLop;
-	}
-
-	public String getTenLop() {
-		return tenLop;
-	}
-
-	public void setTenLop(String tenLop) {
-		this.tenLop = tenLop;
 	}
 	
 }

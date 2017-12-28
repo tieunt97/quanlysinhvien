@@ -19,6 +19,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import quanlysinhvien.model.SinhVien;
 import quanlysinhvien.model.TaiKhoan;
 import quanlysinhvien.view.PanelDoiMatKhauView;
 
@@ -27,23 +28,23 @@ public class DoiMatKhauController {
 	private JTextField tfTaiKhoan;
 	private JPasswordField pwMatKhauCu, pwMatKhauMoi, pwXacNhan;
 	private JButton btnThayDoi;
-	private TaiKhoan tk;
+	private SinhVien sv;
 	
-	public DoiMatKhauController(PanelDoiMatKhauView doiMatKhau, TaiKhoan tk) {
+	public DoiMatKhauController(PanelDoiMatKhauView doiMatKhau, SinhVien sv) {
 		this.doiMatKhau = doiMatKhau;
 		this.tfTaiKhoan = doiMatKhau.getTfTaiKhoan();
-		tfTaiKhoan.setText(tk.getTaiKhoan());
+		tfTaiKhoan.setText(sv.getIdSinhVien());
 		tfTaiKhoan.setEnabled(false);
 		this.pwMatKhauCu = doiMatKhau.getPwMatKhauCu();
 		this.pwMatKhauMoi = doiMatKhau.getPwMatKhauMoi();
 		this.pwXacNhan = doiMatKhau.getPwXacNhan();
 		this.btnThayDoi = doiMatKhau.getBtnThayDoi();
-		this.tk = tk;
+		this.sv = sv;
 		
-		setAction(tk);
+		setAction(sv);
 	}
 	
-	private void setAction(TaiKhoan tk) {
+	private void setAction(SinhVien sv) {
 		btnThayDoi.addActionListener(new ActionListener() {
 			
 			@Override
@@ -51,16 +52,16 @@ public class DoiMatKhauController {
 				String matKhauCu = pwMatKhauCu.getText().trim();
 				String matKhauMoi = pwMatKhauMoi.getText().trim();
 				String xacNhan  = pwXacNhan.getText().trim();
-				if(matKhauCu.equals(tk.getMatKhau())) {
+				if(matKhauCu.equals(sv.getTaiKhoan().getMatKhau())) {
 					if(matKhauMoi.length() < 8) {
 						JOptionPane.showMessageDialog(null, "Mật khẩu mới tối thiểu 8 ký tự", "Warning", JOptionPane.WARNING_MESSAGE);
 						return;
 					}
 					if(matKhauMoi.equals(xacNhan)) {
-						tk.setMatKhau(matKhauMoi);
+						sv.getTaiKhoan().setMatKhau(matKhauMoi);
 						boolean ck;
 						try {
-							ck = changePW(tk.getTaiKhoan(), matKhauMoi);
+							ck = changePW(sv.getTaiKhoan().getTaiKhoan(), matKhauMoi);
 							if(ck) {
 								JOptionPane.showMessageDialog(null, "Thay đổi mật khẩu thành công.");
 							}

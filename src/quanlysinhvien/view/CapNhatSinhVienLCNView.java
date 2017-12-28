@@ -24,7 +24,6 @@ public class CapNhatSinhVienLCNView extends JDialog{
 	private JTable table;
 	private JButton btnThem, btnXoa;
 	private JTextField tfIdSinhVien;
-	private JComboBox<String> loaiSVCB;
 	private String[] titleCols = {"Mã sinh viên", "Họ tên", "Khóa", "Tên lớp", "Ngày sinh", "Giới tính", "Email", "Địa chỉ"};
 	private String[] loaiSV = {"Sinh viên tín chỉ", "Sinh viên niên chế"};
 	
@@ -63,18 +62,15 @@ public class CapNhatSinhVienLCNView extends JDialog{
 	}
 	private JPanel createBottomPanel() {
 		JPanel panel = new JPanel(new GridLayout(1, 2, 20, 20));
-		panel.setBorder(new EmptyBorder(0, 200, 0, 200));
+		panel.setBorder(new EmptyBorder(0, 200, 40, 200));
 		JPanel panel1 = new JPanel(new BorderLayout(5, 5));
-		JPanel panelL = new JPanel(new GridLayout(2, 1, 5, 5));
+		JPanel panelL = new JPanel(new BorderLayout());
 		panelL.add(new JLabel("Mã sinh viên:"));
-		panelL.add(new JLabel("Loại sinh viên:"));
-		JPanel panelR = new JPanel(new GridLayout(2, 1, 5, 5));
+		JPanel panelR = new JPanel(new BorderLayout());
 		panelR.add(tfIdSinhVien = new JTextField());
-		panelR.add(loaiSVCB = new JComboBox<>(loaiSV));
 		panel1.add(panelL, BorderLayout.WEST);
 		panel1.add(panelR, BorderLayout.CENTER);
 		JPanel panel2 = new JPanel(new GridLayout(1, 2, 5, 5));
-		panel2.setBorder(new EmptyBorder(0, 0, 25, 0));
 		panel2.add(btnThem = new JButton("Thêm"));
 		panel2.add(btnXoa = new JButton("Xóa"));
 		
@@ -132,9 +128,4 @@ public class CapNhatSinhVienLCNView extends JDialog{
 	public JTextField getTfIdSinhVien() {
 		return tfIdSinhVien;
 	}
-
-	public JComboBox<String> getLoaiSVCB() {
-		return loaiSVCB;
-	}
-	
 }

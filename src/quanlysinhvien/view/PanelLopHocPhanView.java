@@ -190,8 +190,8 @@ public class PanelLopHocPhanView extends  JPanel{
 					data[index][0] = lopHP.getHocKy();
 					data[index][1] = lopHP.getIdLop();
 					data[index][2] = lopHP.getLoaiLop();
-					data[index][3] = lopHP.getIdHocPhan();
-					data[index][4] = lopHP.getTenLop();
+					data[index][3] = lopHP.getHocPhan().getIdHocPhan();
+					data[index][4] = lopHP.getHocPhan().getTenHP();
 					data[index][5] = lopHP.getThoiGian();
 					data[index][6] = lopHP.getTuanHoc();
 					data[index][7] = lopHP.getPhongHoc();
@@ -206,8 +206,8 @@ public class PanelLopHocPhanView extends  JPanel{
 					data[index][0] = lopHP.getHocKy();
 					data[index][1] = lopHP.getIdLop();
 					data[index][2] = lopHP.getLoaiLop();
-					data[index][3] = lopHP.getIdHocPhan();
-					data[index][4] = lopHP.getTenLop();
+					data[index][3] = lopHP.getHocPhan().getIdHocPhan();
+					data[index][4] = lopHP.getHocPhan().getTenHP();
 					data[index][5] = lopHP.getThoiGian();
 					data[index][6] = lopHP.getTuanHoc();
 					data[index][7] = lopHP.getPhongHoc();
@@ -222,8 +222,8 @@ public class PanelLopHocPhanView extends  JPanel{
 					data[index][0] = lopHP.getHocKy();
 					data[index][1] = lopHP.getIdLop();
 					data[index][2] = lopHP.getLoaiLop();
-					data[index][3] = lopHP.getIdHocPhan();
-					data[index][4] = lopHP.getTenLop();
+					data[index][3] = lopHP.getHocPhan().getIdHocPhan();
+					data[index][4] = lopHP.getHocPhan().getTenHP();
 					data[index][5] = lopHP.getThoiGian();
 					data[index][6] = lopHP.getTuanHoc();
 					data[index][7] = lopHP.getPhongHoc();
@@ -238,8 +238,8 @@ public class PanelLopHocPhanView extends  JPanel{
 					data[index][0] = lopHP.getHocKy();
 					data[index][1] = lopHP.getIdLop();
 					data[index][2] = lopHP.getLoaiLop();
-					data[index][3] = lopHP.getIdHocPhan();
-					data[index][4] = lopHP.getTenLop();
+					data[index][3] = lopHP.getHocPhan().getIdHocPhan();
+					data[index][4] = lopHP.getHocPhan().getTenHP();
 					data[index][5] = lopHP.getThoiGian();
 					data[index][6] = lopHP.getTuanHoc();
 					data[index][7] = lopHP.getPhongHoc();
@@ -253,8 +253,8 @@ public class PanelLopHocPhanView extends  JPanel{
 				data[index][0] = lopHP.getHocKy();
 				data[index][1] = lopHP.getIdLop();
 				data[index][2] = lopHP.getLoaiLop();
-				data[index][3] = lopHP.getIdHocPhan();
-				data[index][4] = lopHP.getTenLop();
+				data[index][3] = lopHP.getHocPhan().getIdHocPhan();
+				data[index][4] = lopHP.getHocPhan().getTenHP();
 				data[index][5] = lopHP.getThoiGian();
 				data[index][6] = lopHP.getTuanHoc();
 				data[index][7] = lopHP.getPhongHoc();

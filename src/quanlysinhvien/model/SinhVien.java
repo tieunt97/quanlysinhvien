@@ -1,5 +1,7 @@
 package quanlysinhvien.model;
 
+import java.util.ArrayList;
+
 public class SinhVien {
 	protected String idSinhVien;
 	protected String hoTen;
@@ -11,7 +13,10 @@ public class SinhVien {
 	protected String soDT;
 	protected String diaChi;
 	protected double diemTB;
-	
+	protected TaiKhoan taiKhoan;
+	protected ArrayList<DiemHocPhan> dsDiemHP;
+	protected ArrayList<String> dsLopHPDangKy;
+	protected ArrayList<DangKyHocPhan> dsHPDangKy;
 	
 	
 	public SinhVien() {
@@ -30,8 +35,27 @@ public class SinhVien {
 		this.soDT = soDT;
 		this.diaChi = diaChi;
 		this.diemTB = diemTB;
+		this.dsDiemHP = new ArrayList<>();
+		this.dsLopHPDangKy = new ArrayList<>();
+		this.dsHPDangKy = new ArrayList<>();
 	}
 
+	public SinhVien(String idSinhVien, String hoTen, String khoa, String tenLop, String ngaySinh, String gioiTinh, String email,
+			String soDT, String diaChi, double diemTB, ArrayList<DiemHocPhan> dsDiemHP, ArrayList<String> dsLopHPDangKy, ArrayList<DangKyHocPhan> dsHPDangKy) {
+		this.idSinhVien = idSinhVien;
+		this.hoTen = hoTen;
+		this.khoa = khoa;
+		this.tenLop = tenLop;
+		this.ngaySinh = ngaySinh;
+		this.gioiTinh = gioiTinh;
+		this.email = email;
+		this.soDT = soDT;
+		this.diaChi = diaChi;
+		this.diemTB = diemTB;
+		this.dsDiemHP = dsDiemHP;
+		this.dsLopHPDangKy = dsLopHPDangKy;
+		this.dsHPDangKy = dsHPDangKy;
+	}
 	
 	public String getIdSinhVien() {
 		return idSinhVien;
@@ -111,6 +135,38 @@ public class SinhVien {
 
 	public void setDiemTB(double diemTB) {
 		this.diemTB = diemTB;
+	}
+
+	public ArrayList<DiemHocPhan> getDsDiemHP() {
+		return dsDiemHP;
+	}
+
+	public void setDsDiemHP(ArrayList<DiemHocPhan> dsDiemHP) {
+		this.dsDiemHP = dsDiemHP;
+	}
+
+	public ArrayList<String> getDsLopHPDangKy() {
+		return dsLopHPDangKy;
+	}
+
+	public void setDsLopHPDangKy(ArrayList<String> dsLopHPDangKy) {
+		this.dsLopHPDangKy = dsLopHPDangKy;
+	}
+
+	public ArrayList<DangKyHocPhan> getDsHPDangKy() {
+		return dsHPDangKy;
+	}
+
+	public void setDsHPDangKy(ArrayList<DangKyHocPhan> dsHPDangKy) {
+		this.dsHPDangKy = dsHPDangKy;
+	}
+
+	public TaiKhoan getTaiKhoan() {
+		return taiKhoan;
+	}
+
+	public void setTaiKhoan(TaiKhoan taiKhoan) {
+		this.taiKhoan = taiKhoan;
 	}
 	
 }
