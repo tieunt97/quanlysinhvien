@@ -6,7 +6,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -25,6 +24,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import quanlysinhvien.main.MainQuanLy;
 import quanlysinhvien.main.MainSinhVienNC;
 import quanlysinhvien.main.MainSinhVienTC;
+import quanlysinhvien.model.ChuongTrinhDaoTao;
 import quanlysinhvien.model.DangKyHocPhan;
 import quanlysinhvien.model.DiemHocPhan;
 import quanlysinhvien.model.HocPhan;
@@ -242,26 +242,29 @@ public class LoginController {
 				SinhVienTinChi sv = new SinhVienTinChi(dataSV.get(0), dataSV.get(1),Integer.toString((int) Double.parseDouble(dataSV.get(2))), 
 						dataSV.get(3), dataSV.get(4),dataSV.get(5), dataSV.get(6), dataSV.get(7), dataSV.get(8), Double.parseDouble(dataSV.get(9)), tk,
 						(int) (Double.parseDouble(dataSV.get(10))), (int) (Double.parseDouble(dataSV.get(11))), (int) Double.parseDouble(dataSV.get(12)));
+				//lấy danh sách điểm của sinh viên
 				try {
 					getDSDiemHP(sv);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
-//					e.printStackTrace();
 					System.out.println("Danh sách điểm " + sv.getIdSinhVien() + " trống: " + e);
 				}
+				//lấy danh sách học phần đăng ký của sinh viên
 				try {
 					getDSHocPhanDangKy(sv);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
-//					e.printStackTrace();
-					System.out.println("Danh sách học phần đăng ký " + sv.getIdSinhVien() + " trống:" + e);
+					System.out.println("Danh sách học phần đăng ký " + sv.getIdSinhVien() + " trống: " + e);
 				}
+				//lấy danh sách lớp học đăng ký của sinh viên
 				try {
 					getDSLopHPDangKy(sv);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
-//					e.printStackTrace();
-					System.out.println("Danh sách lớp học đăng ký " + sv.getIdSinhVien() + " trống:" + e);
+					System.out.println("Danh sách lớp học đăng ký " + sv.getIdSinhVien() + " trống: " + e);
+				}
+				//lấy chương trình đào tạo của sinh viên
+				try {
+					getChuongTrinhDT(sv);
+				}catch(IOException e) {
+					System.out.println("Chương trình đào tạo " + sv.getIdSinhVien() + " trống: " + e);
 				}
 				System.out.println();
 				
@@ -271,6 +274,41 @@ public class LoginController {
 
 		workbook.close();
 		inputStream.close();
+	}
+	
+	private void getChuongTrinhDT(SinhVien sv) throws IOException {
+		String fileName = (sv instanceof SinhVienTinChi)?"quanlysinhvien/sinhvientinchi/" + sv.getIdSinhVien() + "/ctdt.xlsx":
+			"quanlysinhvien/sinhviennienche/" + sv.getIdSinhVien() + "/ctdt.xlsx";
+		FileInputStream fin = new FileInputStream(new File(fileName));
+		Workbook workbook = new XSSFWorkbook(fin);
+		Sheet sheet = workbook.getSheetAt(0);
+		Iterator<Row> iterator = sheet.iterator();
+		Row nextRow;
+		if(iterator.hasNext()) nextRow = iterator.next();
+		while(iterator.hasNext()) {
+			nextRow = iterator.next();
+			ChuongTrinhDaoTao ctdt;
+			Cell cell = nextRow.getCell(1);
+			String idHP = cell.getStringCellValue();
+			cell = nextRow.getCell(2);
+			int kyHoc = (int) cell.getNumericCellValue();
+			if(sv instanceof SinhVienTinChi) {
+				cell = nextRow.getCell(3);
+				String diemChu = cell.getStringCellValue();
+				cell = nextRow.getCell(4);
+				double diemSo = cell.getNumericCellValue();
+				ctdt = new ChuongTrinhDaoTao(quanLy.getHocPhan(idHP), kyHoc, diemSo, diemChu);
+				
+			}else {
+				cell = nextRow.getCell(3);
+				double diemSo = cell.getNumericCellValue();
+				ctdt = new ChuongTrinhDaoTao(quanLy.getHocPhan(idHP), kyHoc, diemSo);
+			}
+			sv.getCtdt().add(ctdt);
+		}
+		
+		workbook.close();
+		fin.close();
 	}
 	
 	private ArrayList<TaiKhoan> getAllTaiKhoan() throws IOException {
@@ -345,33 +383,35 @@ public class LoginController {
 				SinhVienNienChe sv = new SinhVienNienChe(dataSV.get(0), dataSV.get(1),Integer.toString((int) Double.parseDouble(dataSV.get(2))), 
 						dataSV.get(3), dataSV.get(4),dataSV.get(5), dataSV.get(6), dataSV.get(7), dataSV.get(8), Double.parseDouble(dataSV.get(9)), tk,
 						(int) (Double.parseDouble(dataSV.get(10))));
+				//lấy danh sách điểm của sinh viên
 				try {
 					getDSDiemHP(sv);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
-//					e.printStackTrace();
 					System.out.println("Danh sách điểm " + sv.getIdSinhVien() + " trống: " + e);
 				}
+				//lấy danh sách học phần đăng ký của sinh viên
 				try {
 					getDSHocPhanDangKy(sv);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
-//					e.printStackTrace();
-					System.out.println("Danh sách học phần đăng ký " + sv.getIdSinhVien() + " trống:" + e);
+					System.out.println("Danh sách học phần đăng ký " + sv.getIdSinhVien() + " trống: " + e);
 				}
+				//lấy danh sách lớp học đăng ký của sinh viên
 				try {
 					getDSLopHPDangKy(sv);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
-//					e.printStackTrace();
-					System.out.println("Danh sách lớp học đăng ký " + sv.getIdSinhVien() + " trống:" + e);
+					System.out.println("Danh sách lớp học đăng ký " + sv.getIdSinhVien() + " trống: " + e);
 				}
+				//lấy danh sách học phần nợ của sinh viên
 				try {
 					getDSHocPhanNo(sv);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
-//					e.printStackTrace();
-					System.out.println("Danh sách học phần nợ trống " + sv.getIdSinhVien() + " trống:" + e);
+					System.out.println("Danh sách học phần nợ trống " + sv.getIdSinhVien() + " trống: " + e);
+				}
+				//lấy chương trình đào tạo của sinh viên
+				try {
+					getChuongTrinhDT(sv);
+				}catch(IOException e) {
+					System.out.println("Chương trình đào tạo " + sv.getIdSinhVien() + " trống: " + e);
 				}
 				System.out.println();
 				
@@ -403,8 +443,8 @@ public class LoginController {
 	}
 	
 	private void getDSLopHPDangKy(SinhVien sv) throws IOException {
-		String fileName = (sv instanceof SinhVienTinChi)?"quanlysinhvien/sinhvientinchi/" + sv.getIdSinhVien() + "/dsHPDangKy.xlsx"
-				:"quanlysinhvien/sinhviennienche/" + sv.getIdSinhVien() + "/dsHPDangKy.xlsx";
+		String fileName = (sv instanceof SinhVienTinChi)?"quanlysinhvien/sinhvientinchi/" + sv.getIdSinhVien() + "/dsLopHPDangKy.xlsx"
+				:"quanlysinhvien/sinhviennienche/" + sv.getIdSinhVien() + "/dsLopHPDangKy.xlsx";
 		FileInputStream fin = new FileInputStream(new File(fileName));
 		Workbook workbook = new XSSFWorkbook(fin);
 		Sheet sheet = workbook.getSheetAt(0);
@@ -415,7 +455,7 @@ public class LoginController {
 		while(iterator.hasNext()) {
 			nextRow = iterator.next();
 			Cell cellIdLop = nextRow.getCell(1);
-			sv.getDsLopHPDangKy().add(cellIdLop.getStringCellValue());
+			sv.getDsLopHPDangKy().add(quanLy.getLopHocPhan(cellIdLop.getStringCellValue()));
 		}
 		
 		workbook.close();

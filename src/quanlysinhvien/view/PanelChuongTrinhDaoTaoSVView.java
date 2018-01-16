@@ -16,20 +16,25 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-import quanlysinhvien.model.DiemHocPhan;
+import quanlysinhvien.model.ChuongTrinhDaoTao;
 import quanlysinhvien.model.HocPhan;
+import quanlysinhvien.model.SinhVien;
+import quanlysinhvien.model.SinhVienTinChi;
 
-public class PanelChuongTrinhDaoTaoSVView extends JPanel{
+public class PanelChuongTrinhDaoTaoSVView extends JPanel {
 	private JTextField tfIdSinhVien, tfIdHP, tfTenHP, tfKyHoc, tfTinChi, tfDiemChu, tfDiemSo, tfVien_Khoa;
 	private JTable table;
-	private String[] titleCols = {"Mã HP", "Tên HP", "Kỳ học", "Tín chỉ", "Điểm chữ", "Điểm số", "Viện/Khoa"};
-	
-	public PanelChuongTrinhDaoTaoSVView() {
+	private String[] titleCols = { "Mã HP", "Tên HP", "Kỳ học", "Tín chỉ", "Điểm chữ", "Điểm số", "Viện/Khoa" };
+	private String[] titleCols1 = { "Mã HP", "Tên HP", "Kỳ học", "Tín chỉ", "Điểm TB", "Viện/Khoa" };
+	private SinhVien sv;
+
+	public PanelChuongTrinhDaoTaoSVView(SinhVien sv) {
+		this.sv = sv;
 		setLayout(new BorderLayout(15, 15));
 		add(createTitlePanel(), BorderLayout.NORTH);
 		add(createMainPanel(), BorderLayout.CENTER);
 	}
-	
+
 	private JPanel createTitlePanel() {
 		JPanel panel = new JPanel(new BorderLayout());
 		panel.setBorder(new EmptyBorder(5, 10, 5, 10));
@@ -39,19 +44,19 @@ public class PanelChuongTrinhDaoTaoSVView extends JPanel{
 		label.setIcon(new ImageIcon("images/list.png"));
 		panel.add(label);
 		panel.setBackground(new Color(0x009999));
-		
+
 		return panel;
 	}
-	
+
 	private JPanel createMainPanel() {
 		JPanel panel = new JPanel(new BorderLayout(15, 15));
 		panel.setBorder(new EmptyBorder(0, 35, 20, 35));
 		panel.add(createHeaderMain(), BorderLayout.NORTH);
 		panel.add(createTablePanel(), BorderLayout.CENTER);
-		
+
 		return panel;
 	}
-	
+
 	private JPanel createHeaderMain() {
 		JPanel panel = new JPanel(new BorderLayout(5, 5));
 		panel.setBorder(new EmptyBorder(0, 0, 0, 900));
@@ -59,29 +64,28 @@ public class PanelChuongTrinhDaoTaoSVView extends JPanel{
 		panel.add(tfIdSinhVien = new JTextField(20), BorderLayout.CENTER);
 		tfIdSinhVien.setText("20153752");
 		tfIdSinhVien.setEditable(false);
-		
+
 		return panel;
 	}
-	
+
 	private JPanel createTablePanel() {
 		JPanel panel = new JPanel(new BorderLayout());
 		panel.add(createTitle(), BorderLayout.NORTH);
 		panel.add(createTable(), BorderLayout.CENTER);
 		return panel;
 	}
-	
+
 	private JPanel createTitle() {
 		JPanel panel = new JPanel();
 		panel.add(createLabel("Chương trình đào tạo sinh viên", 18));
 		panel.setBackground(Color.LIGHT_GRAY);
-		
+
 		return panel;
 	}
-	
+
 	private JPanel createTable() {
 		JPanel panel = new JPanel(new BorderLayout(5, 5));
-		table = new JTable();
-		JScrollPane scroll = new JScrollPane(table);
+		JScrollPane scroll = new JScrollPane(table = new JTable());
 		panel.add(scroll, BorderLayout.CENTER);
 		JPanel panelB = new JPanel(new GridLayout(1, 7, 5, 5));
 		tfIdHP = new JTextField();
@@ -92,174 +96,240 @@ public class PanelChuongTrinhDaoTaoSVView extends JPanel{
 		panelB.add(createtfTimKiem(tfKyHoc));
 		tfTinChi = new JTextField();
 		panelB.add(createtfTimKiem(tfTinChi));
-		tfDiemChu = new JTextField();
-		panelB.add(createtfTimKiem(tfDiemChu));
+		if (sv instanceof SinhVienTinChi) {
+			tfDiemChu = new JTextField();
+			panelB.add(createtfTimKiem(tfDiemChu));
+		}
 		tfDiemSo = new JTextField();
 		panelB.add(createtfTimKiem(tfDiemSo));
 		tfVien_Khoa = new JTextField();
 		panelB.add(createtfTimKiem(tfVien_Khoa));
 		panel.add(panelB, BorderLayout.SOUTH);
-		
+
 		return panel;
 	}
-	
+
 	private JPanel createtfTimKiem(JTextField tf) {
 		JPanel panel = new JPanel(new BorderLayout(0, 0));
 		panel.add(tf, BorderLayout.CENTER);
-		
+
 		panel.add(new JLabel(new ImageIcon("/key.png")), BorderLayout.EAST);
 		return panel;
 	}
-	
+
 	private JLabel createLabel(String name, int kickThuoc) {
 		JLabel lb = new JLabel(name);
 		lb.setFont(new Font("Caribli", Font.PLAIN, kickThuoc));
-		
+
 		return lb;
 	}
-	
-	public void loadData(JTable table, ArrayList<DiemHocPhan> dsDiem, String timKiem, String giaTri) {
-		SwingUtilities.invokeLater(new Runnable(){public void run(){
-			String data[][] = convertData(dsDiem, timKiem,  giaTri);
-		    //Update the model here
-			DefaultTableModel tableModel = new DefaultTableModel(data, titleCols) {
-				@Override
-				public boolean isCellEditable(int row, int column) {
-					// TODO Auto-generated method stub
-					return false;
-				}
-			};
-			table.setModel(tableModel);
-			table.getColumnModel().getColumn(1).setPreferredWidth(200);
-		}});
+
+	public void loadData(JTable table, String timKiem, String giaTri) {
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				String data[][] = convertData(timKiem, giaTri);
+				// Update the model here
+
+				DefaultTableModel tableModel;
+				if (sv instanceof SinhVienTinChi)
+					tableModel = new DefaultTableModel(data, titleCols) {
+						@Override
+						public boolean isCellEditable(int row, int column) {
+							// TODO Auto-generated method stub
+							return false;
+						}
+					};
+				else
+					tableModel = new DefaultTableModel(data, titleCols1) {
+						@Override
+						public boolean isCellEditable(int row, int column) {
+							// TODO Auto-generated method stub
+							return false;
+						}
+					};
+				table.setModel(tableModel);
+				table.getColumnModel().getColumn(1).setPreferredWidth(200);
+			}
+		});
 	}
-	
-	private String[][] convertData(ArrayList<DiemHocPhan> dsDiem, String timKiem, String giaTri) {
-		String[][] data = new String[dsDiem.size()][7];
+
+	private String[][] convertData(String timKiem, String giaTri) {
+		ArrayList<ChuongTrinhDaoTao> ctdt = sv.getCtdt();
+		int size = ctdt.size();
+		String[][] data = (sv instanceof SinhVienTinChi)?new String[size][7]:new String[size][6];
 		int index = 0;
-		int size = dsDiem.size();
 		for (int i = 0; i < size; i++) {
-			HocPhan hp = dsDiem.get(i).getHocPhan();
-			switch(timKiem) {
+			HocPhan hp = ctdt.get(i).getHocPhan();
+			switch (timKiem) {
 			case "idHP":
-				if(hp.getIdHocPhan().toLowerCase().indexOf(giaTri) >= 0) {
+				if (hp.getIdHocPhan().toLowerCase().indexOf(giaTri) >= 0) {
 					data[index][0] = hp.getIdHocPhan();
 					data[index][1] = hp.getTenHP();
-					data[index][2] = dsDiem.get(i).getHocKy();
-					data[index][3] = hp.getSoTinChi()+"";
-					data[index][4] = dsDiem.get(i).getDiemChu();
-					double diem4 = dsDiem.get(i).getDiemThang4();
-					if(diem4 == 0.0) data[index][5] = "";
-					else data[index][5] = diem4 + "";
-					data[index][6] = hp.getIdNganh();
+					data[index][2] = ctdt.get(i).getKyHoc() + "";
+					data[index][3] = hp.getSoTinChi() + "";
+					if (sv instanceof SinhVienTinChi) {
+						data[index][4] = ctdt.get(i).getDiemChu();
+						double diem4 = ctdt.get(i).getDiemSo();
+						if (diem4 == 0.0)
+							data[index][5] = "";
+						else
+							data[index][5] = diem4 + "";
+						data[index][6] = hp.getIdNganh();
+					} else {
+						data[index][4] = ctdt.get(i).getDiemSo() + "";
+						data[index][5] = hp.getIdNganh();
+					}
 					index++;
 				}
 				break;
 			case "tenHP":
-				if(hp.getTenHP().toLowerCase().indexOf(giaTri) >= 0) {
+				if (hp.getTenHP().toLowerCase().indexOf(giaTri) >= 0) {
 					data[index][0] = hp.getIdHocPhan();
 					data[index][1] = hp.getTenHP();
-					data[index][2] = dsDiem.get(i).getHocKy();
-					data[index][3] = hp.getSoTinChi()+"";
-					data[index][4] = dsDiem.get(i).getDiemChu();
-					double diem4 = dsDiem.get(i).getDiemThang4();
-					if(diem4 == 0.0) data[index][5] = "";
-					else data[index][5] = diem4 + "";
-					data[index][6] = hp.getIdNganh();
+					data[index][2] = ctdt.get(i).getKyHoc() + "";
+					data[index][3] = hp.getSoTinChi() + "";
+					if (sv instanceof SinhVienTinChi) {
+						data[index][4] = ctdt.get(i).getDiemChu();
+						double diem4 = ctdt.get(i).getDiemSo();
+						if (diem4 == 0.0)
+							data[index][5] = "";
+						else
+							data[index][5] = diem4 + "";
+						data[index][6] = hp.getIdNganh();
+					} else {
+						data[index][4] = ctdt.get(i).getDiemSo() + "";
+						data[index][5] = hp.getIdNganh();
+					}
 					index++;
 				}
 				break;
 			case "hocKy":
-				if(Integer.parseInt(dsDiem.get(i).getHocKy()) == Integer.parseInt(giaTri)) {
+				if (ctdt.get(i).getKyHoc() == Integer.parseInt(giaTri)) {
 					data[index][0] = hp.getIdHocPhan();
 					data[index][1] = hp.getTenHP();
-					data[index][2] = dsDiem.get(i).getHocKy();
-					data[index][3] = hp.getSoTinChi()+"";
-					data[index][4] = dsDiem.get(i).getDiemChu();
-					double diem4 = dsDiem.get(i).getDiemThang4();
-					if(diem4 == 0.0) data[index][5] = "";
-					else data[index][5] = diem4 + "";
-					data[index][6] = hp.getIdNganh();
+					data[index][2] = ctdt.get(i).getKyHoc() + "";
+					data[index][3] = hp.getSoTinChi() + "";
+					if (sv instanceof SinhVienTinChi) {
+						data[index][4] = ctdt.get(i).getDiemChu();
+						double diem4 = ctdt.get(i).getDiemSo();
+						if (diem4 == 0.0)
+							data[index][5] = "";
+						else
+							data[index][5] = diem4 + "";
+						data[index][6] = hp.getIdNganh();
+					} else {
+						data[index][4] = ctdt.get(i).getDiemSo() + "";
+						data[index][5] = hp.getIdNganh();
+					}
 					index++;
 				}
 				break;
 			case "tinChi":
-				if(hp.getSoTinChi() == Integer.parseInt(giaTri)) {
+				if (hp.getSoTinChi() == Integer.parseInt(giaTri)) {
 					data[index][0] = hp.getIdHocPhan();
 					data[index][1] = hp.getTenHP();
-					data[index][2] = dsDiem.get(i).getHocKy();
-					data[index][3] = hp.getSoTinChi()+"";
-					data[index][4] = dsDiem.get(i).getDiemChu();
-					double diem4 = dsDiem.get(i).getDiemThang4();
-					if(diem4 == 0.0) data[index][5] = "";
-					else data[index][5] = diem4 + "";
-					data[index][6] = hp.getIdNganh();
+					data[index][2] = ctdt.get(i).getKyHoc() + "";
+					data[index][3] = hp.getSoTinChi() + "";
+					if (sv instanceof SinhVienTinChi) {
+						data[index][4] = ctdt.get(i).getDiemChu();
+						double diem4 = ctdt.get(i).getDiemSo();
+						if (diem4 == 0.0)
+							data[index][5] = "";
+						else
+							data[index][5] = diem4 + "";
+						data[index][6] = hp.getIdNganh();
+					} else {
+						data[index][4] = ctdt.get(i).getDiemSo() + "";
+						data[index][5] = hp.getIdNganh();
+					}
 					index++;
 				}
 				break;
 			case "diemChu":
-				if(dsDiem.get(i).getDiemChu().toLowerCase().indexOf(giaTri) >= 0) {
+				if (ctdt.get(i).getDiemChu().toLowerCase().indexOf(giaTri) >= 0) {
 					data[index][0] = hp.getIdHocPhan();
 					data[index][1] = hp.getTenHP();
-					data[index][2] = dsDiem.get(i).getHocKy();
-					data[index][3] = hp.getSoTinChi()+"";
-					data[index][4] = dsDiem.get(i).getDiemChu();
-					double diem4 = dsDiem.get(i).getDiemThang4();
-					if(diem4 == 0.0) data[index][5] = "";
-					else data[index][5] = diem4 + "";
+					data[index][2] = ctdt.get(i).getKyHoc() + "";
+					data[index][3] = hp.getSoTinChi() + "";
+					data[index][4] = ctdt.get(i).getDiemChu();
+					double diem4 = ctdt.get(i).getDiemSo();
+					if (diem4 == 0.0)
+						data[index][5] = "";
+					else
+						data[index][5] = diem4 + "";
 					data[index][6] = hp.getIdNganh();
 					index++;
 				}
 				break;
 			case "diem4":
-				if(dsDiem.get(i).getDiemThang4() == Double.parseDouble(giaTri)) {
+				if (ctdt.get(i).getDiemSo() == Double.parseDouble(giaTri)) {
 					data[index][0] = hp.getIdHocPhan();
 					data[index][1] = hp.getTenHP();
-					data[index][2] = dsDiem.get(i).getHocKy();
-					data[index][3] = hp.getSoTinChi()+"";
-					data[index][4] = dsDiem.get(i).getDiemChu();
-					double diem4 = dsDiem.get(i).getDiemThang4();
-					if(diem4 == 0.0) data[index][5] = "";
-					else data[index][5] = diem4 + "";
-					data[index][6] = hp.getIdNganh();
+					data[index][2] = ctdt.get(i).getKyHoc() + "";
+					data[index][3] = hp.getSoTinChi() + "";
+					if (sv instanceof SinhVienTinChi) {
+						data[index][4] = ctdt.get(i).getDiemChu();
+						double diem4 = ctdt.get(i).getDiemSo();
+						if (diem4 == 0.0)
+							data[index][5] = "";
+						else
+							data[index][5] = diem4 + "";
+						data[index][6] = hp.getIdNganh();
+					} else {
+						data[index][4] = ctdt.get(i).getDiemSo() + "";
+						data[index][5] = hp.getIdNganh();
+					}
 					index++;
 				}
 				break;
 			case "vienKhoa":
-				if(hp.getIdNganh().toLowerCase().indexOf(giaTri) >= 0) {
+				if (hp.getIdNganh().toLowerCase().indexOf(giaTri) >= 0) {
 					data[index][0] = hp.getIdHocPhan();
 					data[index][1] = hp.getTenHP();
-					data[index][2] = dsDiem.get(i).getHocKy();
-					data[index][3] = hp.getSoTinChi()+"";
-					data[index][4] = dsDiem.get(i).getDiemChu();
-					double diem4 = dsDiem.get(i).getDiemThang4();
-					if(diem4 == 0.0) data[index][5] = "";
-					else data[index][5] = diem4 + "";
-					data[index][6] = hp.getIdNganh();
+					data[index][2] = ctdt.get(i).getKyHoc() + "";
+					data[index][3] = hp.getSoTinChi() + "";
+					if (sv instanceof SinhVienTinChi) {
+						data[index][4] = ctdt.get(i).getDiemChu();
+						double diem4 = ctdt.get(i).getDiemSo();
+						if (diem4 == 0.0)
+							data[index][5] = "";
+						else
+							data[index][5] = diem4 + "";
+						data[index][6] = hp.getIdNganh();
+					} else {
+						data[index][4] = ctdt.get(i).getDiemSo() + "";
+						data[index][5] = hp.getIdNganh();
+					}
 					index++;
 				}
 				break;
-			case "":
-				{
-					data[index][0] = hp.getIdHocPhan();
-					data[index][1] = hp.getTenHP();
-					data[index][2] = dsDiem.get(i).getHocKy();
-					data[index][3] = hp.getSoTinChi()+"";
-					data[index][4] = dsDiem.get(i).getDiemChu();
-					double diem4 = dsDiem.get(i).getDiemThang4();
-					if(diem4 == 0.0) data[index][5] = "";
-					else data[index][5] = diem4 + "";
+			case "": {
+				data[index][0] = hp.getIdHocPhan();
+				data[index][1] = hp.getTenHP();
+				data[index][2] = ctdt.get(i).getKyHoc() + "";
+				data[index][3] = hp.getSoTinChi() + "";
+				if (sv instanceof SinhVienTinChi) {
+					data[index][4] = ctdt.get(i).getDiemChu();
+					double diem4 = ctdt.get(i).getDiemSo();
+					if (diem4 == 0.0)
+						data[index][5] = "";
+					else
+						data[index][5] = diem4 + "";
 					data[index][6] = hp.getIdNganh();
-					index++;
+				} else {
+					data[index][4] = ctdt.get(i).getDiemSo() + "";
+					data[index][5] = hp.getIdNganh();
 				}
+				index++;
+			}
 				break;
 			}
-			
+
 		}
-		
-		if(index < size) {
+
+		if (index < size) {
 			String[][] data1 = new String[index][7];
-			for(int i = 0; i < index; i++) {
+			for (int i = 0; i < index; i++) {
 				data1[i][0] = data[i][0];
 				data1[i][1] = data[i][1];
 				data1[i][2] = data[i][2];
@@ -270,10 +340,10 @@ public class PanelChuongTrinhDaoTaoSVView extends JPanel{
 			}
 			return data1;
 		}
-		
+
 		return data;
 	}
-	
+
 	public JTextField getTfIdSinhVien() {
 		return tfIdSinhVien;
 	}

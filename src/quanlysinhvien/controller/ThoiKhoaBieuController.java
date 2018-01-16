@@ -62,9 +62,7 @@ public class ThoiKhoaBieuController {
 		this.labStatus = tkb.getLabStatus();
 		this.tfHocKy = tkb.getTfHocKy();
 		this.btnTraCuu = tkb.getBtnTraCuu();
-		for(int i = 0; i < sv.getDsLopHPDangKy().size(); i++) {
-			dsLopHPDangKy.add(quanLy.getLopHocPhan(sv.getDsLopHPDangKy().get(i)));
-		}
+		this.dsLopHPDangKy = sv.getDsLopHPDangKy();
 		if (sv.getDsLopHPDangKy().size() != 0)
 			Collections.sort(dsLopHPDangKy, new SapXepTKB());
 
@@ -82,14 +80,8 @@ public class ThoiKhoaBieuController {
 					labStatus.setText("Sinh viên không có thời khóa biểu kì này");
 					return;
 				}
-				ArrayList<LopHocPhan> dsLopHP = new ArrayList<>();
-				for(int i = 0; i < sv.getDsLopHPDangKy().size(); i++) {
-					LopHocPhan lopHP = quanLy.getLopHocPhan(sv.getDsLopHPDangKy().get(i));
-					if(lopHP.getHocKy().equals(hocKy))
-						dsLopHP.add(lopHP);
-				}
-				if(dsLopHP.size() > 0) {
-					tkb.loadData(table, dsLopHP);
+				if(dsLopHPDangKy.size() > 0) {
+					tkb.loadData(table, dsLopHPDangKy);
 				}else
 					labStatus.setText("Sinh viên không có thời khóa biểu kì này");
 			}

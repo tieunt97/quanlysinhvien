@@ -14,8 +14,9 @@ public class SinhVien {
 	protected String diaChi;
 	protected double diemTB;
 	protected TaiKhoan taiKhoan;
+	protected ArrayList<ChuongTrinhDaoTao> ctdt;
 	protected ArrayList<DiemHocPhan> dsDiemHP;
-	protected ArrayList<String> dsLopHPDangKy;
+	protected ArrayList<LopHocPhan> dsLopHPDangKy;
 	protected ArrayList<DangKyHocPhan> dsHPDangKy;
 	
 	
@@ -35,13 +36,14 @@ public class SinhVien {
 		this.soDT = soDT;
 		this.diaChi = diaChi;
 		this.diemTB = diemTB;
+		this.ctdt = new ArrayList<>();
 		this.dsDiemHP = new ArrayList<>();
 		this.dsLopHPDangKy = new ArrayList<>();
 		this.dsHPDangKy = new ArrayList<>();
 	}
 
 	public SinhVien(String idSinhVien, String hoTen, String khoa, String tenLop, String ngaySinh, String gioiTinh, String email,
-			String soDT, String diaChi, double diemTB, ArrayList<DiemHocPhan> dsDiemHP, ArrayList<String> dsLopHPDangKy, ArrayList<DangKyHocPhan> dsHPDangKy) {
+			String soDT, String diaChi, double diemTB, ArrayList<DiemHocPhan> dsDiemHP, ArrayList<LopHocPhan> dsLopHPDangKy, ArrayList<DangKyHocPhan> dsHPDangKy, ArrayList<ChuongTrinhDaoTao> ctdt) {
 		this.idSinhVien = idSinhVien;
 		this.hoTen = hoTen;
 		this.khoa = khoa;
@@ -55,6 +57,48 @@ public class SinhVien {
 		this.dsDiemHP = dsDiemHP;
 		this.dsLopHPDangKy = dsLopHPDangKy;
 		this.dsHPDangKy = dsHPDangKy;
+		this.ctdt = ctdt;
+	}
+	
+	public ArrayList<DangKyHocPhan> getDSHPDangKy(String hocKy){
+		ArrayList<DangKyHocPhan> dsHPDangKy = new ArrayList<>();
+		for(int i = 0; i < this.dsHPDangKy.size(); i++) {
+			if(this.dsHPDangKy.get(i).getHocKy().equalsIgnoreCase(hocKy)) {
+				dsHPDangKy.add(this.dsHPDangKy.get(i));
+			}
+		}
+		
+		return dsHPDangKy;
+	}
+	
+	public ArrayList<LopHocPhan> getDSLopHPDangKy(String hocKy){
+		ArrayList<LopHocPhan> dsLopHP = new ArrayList<>();
+		for(int i = 0; i < dsLopHPDangKy.size(); i++) {
+			if(dsLopHPDangKy.get(i).getHocKy().equalsIgnoreCase(hocKy)) {
+				dsLopHP.add(dsLopHPDangKy.get(i));
+			}
+		}
+		return dsLopHP;
+	}
+	
+	public DangKyHocPhan getHPDangKy(String hocKy, String idHP) {
+		for(DangKyHocPhan dkHP: dsHPDangKy) {
+			if(dkHP.getHocKy().equalsIgnoreCase(hocKy) && dkHP.getHocPhan().getIdHocPhan().equalsIgnoreCase(idHP))
+				return dkHP;
+		}
+		
+		return null;
+	}
+	
+	public boolean xoaHPDangKy(String hocKy, String idHP) {
+		for(int i = 0; i < dsHPDangKy.size(); i++) {
+			if(hocKy.equalsIgnoreCase(dsHPDangKy.get(i).getHocKy()) && idHP.equalsIgnoreCase(dsHPDangKy.get(i).getHocPhan().getIdHocPhan())) {
+				dsHPDangKy.remove(i);
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	public String getIdSinhVien() {
@@ -145,11 +189,11 @@ public class SinhVien {
 		this.dsDiemHP = dsDiemHP;
 	}
 
-	public ArrayList<String> getDsLopHPDangKy() {
+	public ArrayList<LopHocPhan> getDsLopHPDangKy() {
 		return dsLopHPDangKy;
 	}
 
-	public void setDsLopHPDangKy(ArrayList<String> dsLopHPDangKy) {
+	public void setDsLopHPDangKy(ArrayList<LopHocPhan> dsLopHPDangKy) {
 		this.dsLopHPDangKy = dsLopHPDangKy;
 	}
 
@@ -167,6 +211,14 @@ public class SinhVien {
 
 	public void setTaiKhoan(TaiKhoan taiKhoan) {
 		this.taiKhoan = taiKhoan;
+	}
+
+	public ArrayList<ChuongTrinhDaoTao> getCtdt() {
+		return ctdt;
+	}
+
+	public void setCtdt(ArrayList<ChuongTrinhDaoTao> ctdt) {
+		this.ctdt = ctdt;
 	}
 	
 }

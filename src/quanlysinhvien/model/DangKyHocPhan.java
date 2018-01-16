@@ -10,6 +10,11 @@ public class DangKyHocPhan {
 		hocPhan = new HocPhan();
 	}
 	
+	public DangKyHocPhan(String hocKy, HocPhan hocPhan) {
+		this.hocKy = hocKy;
+		this.hocPhan = hocPhan;
+	}
+	
 	public DangKyHocPhan(String hocKy, HocPhan hocPhan, String ngayDangKy) {
 		this.hocKy = hocKy;
 		this.hocPhan = hocPhan;

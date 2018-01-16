@@ -20,7 +20,7 @@ public class XemDanhSachLopCNView extends JDialog{
 	private JTable table;
 	private String[] titleCols = {"Mã lớp", "Tên lớp", "Chủ nhiệm", "Mã Khoa/Viện"};
 //	private String[] titleCols = {"Mã lớp", "Tên lớp", "Chủ nhiệm", "Mã Khoa/Viện", "Tên Khoa/Viện"};
-	public XemDanhSachLopCNView(String idNganh, String tenNganh) {
+	public XemDanhSachLopCNView(String tenNganh) {
 		setSize(1000, 650);
 		setLocationRelativeTo(null);
 		setLayout(new BorderLayout(10, 10));
@@ -60,7 +60,6 @@ public class XemDanhSachLopCNView extends JDialog{
 		String[][] data = convertData(dsLopCN);
 		DefaultTableModel model = new DefaultTableModel(data, titleCols);
 		table.setModel(model);
-		table.getColumnModel().getColumn(4).setPreferredWidth(175);
 	}
 	
 	private String[][] convertData(ArrayList<LopChuyenNganh> dsLopCN) {

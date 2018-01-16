@@ -88,7 +88,7 @@ public class MainSinhVienTC extends JFrame implements ActionListener{
 		
 		mainPanel.add(danhMucHP = new PanelDanhMucHP(), "danhMucHP");
 		new DanhMucHPController(danhMucHP);
-		mainPanel.add(chuongTrinhDaoTaoSV = new PanelChuongTrinhDaoTaoSVView(), "chuongTrinhDaoTaoSV");
+		mainPanel.add(chuongTrinhDaoTaoSV = new PanelChuongTrinhDaoTaoSVView(svtc), "chuongTrinhDaoTaoSV");
 		new ChuongTrinhDaoTaoSVController(chuongTrinhDaoTaoSV, svtc);
 		
 		mainPanel.add(bangDiemCaNhan = new PanelBangDiemCaNhanView(), "bangDiemCaNhan");
@@ -97,9 +97,9 @@ public class MainSinhVienTC extends JFrame implements ActionListener{
 		new BangDiemHocPhanController(bangDiemHP, svtc);
 		
 		mainPanel.add(dangKyHP = new PanelDangKiHocPhanView(), "dangKyHP");
-		new DangKiHocPhanController(dangKyHP, svtc);
+		new DangKiHocPhanController(dangKyHP, quanLy, svtc);
 		mainPanel.add(dangKyLopHoc = new PanelDangKiLopHocView(), "dangKyLopHoc");
-		new DangKiLopHocController(dangKyLopHoc, svtc);
+		new DangKiLopHocController(dangKyLopHoc, quanLy, svtc);
 		mainPanel.add(dangKyTotNghiep = new PanelDangKiTotNghiepView(), "dangKyTN");
 		new DangKiTotNghiepController(dangKyTotNghiep, svtc);
 		

@@ -31,9 +31,9 @@ public class SinhVienTinChi extends SinhVien{
 	}
 	
 	public SinhVienTinChi(String idSinhVien, String hoTen, String khoa, String tenLop, String ngaySinh, String gioiTinh, String email,
-			String soDT, String diaChi, double diemTB, TaiKhoan taiKhoan, ArrayList<DiemHocPhan> dsDiemHP, ArrayList<String> dsLopHPDangKy, ArrayList<DangKyHocPhan> dsHPDangKy,
-			int soTCMax, int soTCQua, int soTCNo) {
-		super(idSinhVien, hoTen, khoa, tenLop, ngaySinh, gioiTinh, email, soDT, diaChi, diemTB, dsDiemHP, dsLopHPDangKy, dsHPDangKy);
+			String soDT, String diaChi, double diemTB, TaiKhoan taiKhoan, ArrayList<DiemHocPhan> dsDiemHP, ArrayList<LopHocPhan> dsLopHPDangKy, ArrayList<DangKyHocPhan> dsHPDangKy,
+			ArrayList<ChuongTrinhDaoTao> ctdt, int soTCMax, int soTCQua, int soTCNo) {
+		super(idSinhVien, hoTen, khoa, tenLop, ngaySinh, gioiTinh, email, soDT, diaChi, diemTB, dsDiemHP, dsLopHPDangKy, dsHPDangKy, ctdt);
 		this.taiKhoan = taiKhoan;
 		this.soTCMax = soTCMax;
 		this.soTCQua = soTCQua;

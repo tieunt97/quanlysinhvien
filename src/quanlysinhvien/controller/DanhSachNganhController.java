@@ -42,6 +42,7 @@ public class DanhSachNganhController {
 
     public DanhSachNganhController(PanelDanhSachNganhView danhSachNganh, QuanLy quanLy) {
         this.danhSachNganh = danhSachNganh;
+        this.quanLy = quanLy;
         this.fileName = "quanlysinhvien\\danhsachchuyennganh\\dsNganh.xlsx";
         this.table = danhSachNganh.getTable();
         this.btnThem = danhSachNganh.getBtnThem();
@@ -199,8 +200,8 @@ public class DanhSachNganhController {
                 }
                 String idKhoa_Vien = (String) table.getValueAt(row, 0);
                 String tenKhoa_Vien = (String) table.getValueAt(row, 1);
-                XemDanhSachLopCNView xemDSLopCN = new XemDanhSachLopCNView(idKhoa_Vien, tenKhoa_Vien);
-                new XemDSLopCNController(xemDSLopCN, quanLy);
+                XemDanhSachLopCNView xemDSLopCN = new XemDanhSachLopCNView(tenKhoa_Vien);
+                new XemDSLopCNController(xemDSLopCN, quanLy.getDSLopCN(idKhoa_Vien));
             }
         });
     }

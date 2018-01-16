@@ -91,18 +91,18 @@ public class MainSinhVienNC extends JFrame implements ActionListener{
 		
 		mainPanel.add(danhMucHP = new PanelDanhMucHP(), "danhMucHP");
 		new DanhMucHPController(danhMucHP);
-		mainPanel.add(chuongTrinhDaoTaoSV = new PanelChuongTrinhDaoTaoSVView(), "chuongTrinhDaoTaoSV");
+		mainPanel.add(chuongTrinhDaoTaoSV = new PanelChuongTrinhDaoTaoSVView(svnc), "chuongTrinhDaoTaoSV");
 		new ChuongTrinhDaoTaoSVController(chuongTrinhDaoTaoSV, svnc);
 		
-		mainPanel.add(bangDiemCaNhan = new PanelBangDiemCaNhanView(), "bangDiemCaNhan");
-		new BangDiemCaNhanController(bangDiemCaNhan, svnc);
+//		mainPanel.add(bangDiemCaNhan = new PanelBangDiemCaNhanView(), "bangDiemCaNhan");
+//		new BangDiemCaNhanController(bangDiemCaNhan, svnc);
 		mainPanel.add(bangDiemHP = new PanelBangDiemHocPhanView(), "bangDiemHP");
-		new BangDiemHocPhanController(bangDiemHP, svnc.getTaiKhoan(), "svnc");
+		new BangDiemHocPhanController(bangDiemHP, svnc);
 		
 		mainPanel.add(dangKyHocPhan = new PanelDangKiHocPhanView(), "DKHP");
-		new DangKiHocPhanController(dangKyHocPhan, svnc);
+		new DangKiHocPhanController(dangKyHocPhan, quanLy, svnc);
 		mainPanel.add(dangKyLopHoc = new PanelDangKiLopHocView(), "DKLH");
-		new DangKiLopHocController(dangKyLopHoc, svnc);
+		new DangKiLopHocController(dangKyLopHoc, quanLy, svnc);
 		mainPanel.add(dangKyTotNghiep = new PanelDangKiTotNghiepView(), "DKTN");
 		new DangKiTotNghiepController(dangKyTotNghiep, svnc);
 		
@@ -136,7 +136,7 @@ public class MainSinhVienNC extends JFrame implements ActionListener{
 		menuKeHoachHocTap.add(miTKB = createMenuItem("Xem thời khóa biểu"));
 		
 		menuBar.add(menuKetQuaHocTap = createJMenu("Kết quả học tập"));
-		menuKetQuaHocTap.add(miBangDiemCN = createMenuItem("Bảng điểm cá nhân"));
+//		menuKetQuaHocTap.add(miBangDiemCN = createMenuItem("Bảng điểm cá nhân"));
 		menuKetQuaHocTap.add(miBangDiemHP = createMenuItem("Bảng điểm học phần"));
 		
 		menuBar.add(menuDangKyHocTap = createJMenu("Đăng ký học tập"));

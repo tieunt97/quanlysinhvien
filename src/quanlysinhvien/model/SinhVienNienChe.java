@@ -28,9 +28,9 @@ public class SinhVienNienChe extends SinhVien{
 	}
 	
 	public SinhVienNienChe(String idSinhVien, String hoTen, String khoa, String tenLop, String ngaySinh, String gioiTinh, String email,
-			String soDT, String diaChi, double diemTB, ArrayList<DiemHocPhan> dsDiemHP, ArrayList<String> dsLopHPDangKy, ArrayList<DangKyHocPhan> dsHPDangKy,
-			TaiKhoan taiKhoan, int tongSoKy, ArrayList<HocPhan> dsHPNo) {
-		super(idSinhVien, hoTen, khoa, tenLop, ngaySinh, gioiTinh, email, soDT, diaChi, diemTB, dsDiemHP, dsLopHPDangKy, dsHPDangKy);
+			String soDT, String diaChi, double diemTB, ArrayList<DiemHocPhan> dsDiemHP, ArrayList<LopHocPhan> dsLopHPDangKy, ArrayList<DangKyHocPhan> dsHPDangKy,
+			ArrayList<ChuongTrinhDaoTao> ctdt, TaiKhoan taiKhoan, int tongSoKy, ArrayList<HocPhan> dsHPNo) {
+		super(idSinhVien, hoTen, khoa, tenLop, ngaySinh, gioiTinh, email, soDT, diaChi, diemTB, dsDiemHP, dsLopHPDangKy, dsHPDangKy, ctdt);
 		this.taiKhoan = taiKhoan;
 		this.tongSoKy = tongSoKy;
 		this.dsHocPhanNo = dsHPNo;
