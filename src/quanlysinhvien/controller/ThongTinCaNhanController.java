@@ -19,22 +19,20 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import quanlysinhvien.model.QuanLy;
 import quanlysinhvien.model.SinhVien;
 import quanlysinhvien.model.SinhVienTinChi;
-import quanlysinhvien.model.TaiKhoan;
 import quanlysinhvien.view.PanelThongTinCaNhanView;
 
 public class ThongTinCaNhanController {
-	private PanelThongTinCaNhanView thongTinCaNhan;
 	private JLabel gtIdSinhVien, gtHoTen, gtNgaySinh, gtLop;
 	private JTextField tfEmail, tfSoDT, tfDiaChi;
 	private JButton btnCapNhat;
 	private String fileName;
 	private SinhVien sv;
+	private Workbook workbook;
 
 	public ThongTinCaNhanController(PanelThongTinCaNhanView thongTinCaNhan, SinhVien sv) {
-		this.thongTinCaNhan = thongTinCaNhan;
+		this.sv = sv;
 		fileName = (sv instanceof SinhVienTinChi)?"quanlysinhvien\\sinhvientinchi\\dsSinhVienTC.xlsx":
 			"quanlysinhvien\\sinhviennienche\\dsSinhVienNC.xlsx";
 		this.gtIdSinhVien = thongTinCaNhan.getGtIdSinhVien();
@@ -79,13 +77,11 @@ public class ThongTinCaNhanController {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// TODO Auto-generated method stub
 				if(getCapNhat()) {
 					boolean ck = false;
 					try {
 						ck = updateSV(sv);
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					if (ck)
@@ -102,7 +98,7 @@ public class ThongTinCaNhanController {
 		boolean ck = false;
 		String id = gtIdSinhVien.getText();
 		FileInputStream fin = new FileInputStream(new File(fileName));
-		Workbook workbook = new XSSFWorkbook(fin);
+		workbook = new XSSFWorkbook(fin);
 		Sheet sheet = workbook.getSheetAt(0);
 		Iterator<Row> iterator = sheet.iterator();
 		Row nextRow;

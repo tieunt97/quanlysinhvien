@@ -20,6 +20,10 @@ import javax.swing.table.DefaultTableModel;
 import quanlysinhvien.model.LopChuyenNganh;
 
 public class PanelLopChuyenNganhView extends JPanel{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JTable table;
 	private JTextField tfIdNganh, tfTenLop, tfIdLopChuyenNganh, tfTenChuNhiem, tfTimKiem;
 	private JButton btnThem, btnSua, btnXoa, btnHuy, btnTimKiem, btnCapNhatSV;

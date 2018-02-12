@@ -13,9 +13,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 
 import quanlysinhvien.controller.DanhSachHPController;
@@ -34,7 +31,10 @@ import quanlysinhvien.view.PanelSinhVienNienCheView;
 import quanlysinhvien.view.PanelSinhVienTinChiView;
 
 public class MainQuanLy extends JFrame implements ActionListener{
-	private JMenuBar menuBar;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JMenu menuQuanLySV, menuQuanLyMonHoc, menuQuanLyNganh;
 	private JMenuItem miSVTinChi, miSVNienChe, miQuanLyHocPhan, miQuanlyLopHP, miQuanLyNganh, miQuanLyLopChuyenNganh;
 	private Container conter;
@@ -42,7 +42,6 @@ public class MainQuanLy extends JFrame implements ActionListener{
 	private CardLayout carLayout;
 	private JButton btnLogout;
 	
-	private PanelHeThongView trangChu;
 	private PanelSinhVienTinChiView SVTC;
 	private PanelSinhVienNienCheView SVNC;
 	
@@ -59,7 +58,7 @@ public class MainQuanLy extends JFrame implements ActionListener{
 		mainPanel = new JPanel();
 		mainPanel.setLayout(carLayout = new CardLayout());
 		
-		mainPanel.add(trangChu = new PanelHeThongView());
+		mainPanel.add(new PanelHeThongView());
 		this.quanLy = quanLy;
 		mainPanel.add(SVTC = new PanelSinhVienTinChiView(), "SVTC");
 		new SinhVienTinChiController(SVTC, quanLy);
@@ -119,7 +118,7 @@ public class MainQuanLy extends JFrame implements ActionListener{
 	private JPanel createHeaderPanel() {
 		JPanel panel = new JPanel(new GridLayout(2, 1));
 		panel.add(createPanelDangXuat());
-		panel.add(menuBar = createJMenuBar());
+		panel.add(createJMenuBar());
 		
 		return panel;
 	}
@@ -135,7 +134,6 @@ public class MainQuanLy extends JFrame implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
 		if(e.getSource() == miSVTinChi) {
 			carLayout.show(mainPanel, "SVTC");
 			return;

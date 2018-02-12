@@ -13,7 +13,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 import quanlysinhvien.controller.BangDiemCaNhanController;
@@ -27,9 +26,7 @@ import quanlysinhvien.controller.DoiMatKhauController;
 import quanlysinhvien.controller.ThoiKhoaBieuController;
 import quanlysinhvien.controller.ThongTinCaNhanController;
 import quanlysinhvien.model.QuanLy;
-import quanlysinhvien.model.SinhVien;
 import quanlysinhvien.model.SinhVienTinChi;
-import quanlysinhvien.model.TaiKhoan;
 import quanlysinhvien.view.PanelBangDiemCaNhanView;
 import quanlysinhvien.view.PanelBangDiemHocPhanView;
 import quanlysinhvien.view.PanelChuongTrinhDaoTaoSVView;
@@ -43,7 +40,10 @@ import quanlysinhvien.view.PanelTKBView;
 import quanlysinhvien.view.PanelThongTinCaNhanView;
 
 public class MainSinhVienTC extends JFrame implements ActionListener{
-	private JMenuBar menuBar;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JMenu menuTrangChu, menuThongTinCaNhan, menuChuongTrinhDaoTao, menuKeHoachHocTap, menuKetQuaHocTap, menuDangKyHocTap;
 	private JMenuItem miTrangChu, miTTCN, miDoiMK, miTKB, miBangDiemCN, miBangDiemHP, miDanhMucHocPhan, miChuongTrinhDaoTaoSV,
 		miDKHP, miDKLH, miDKTN;
@@ -51,8 +51,6 @@ public class MainSinhVienTC extends JFrame implements ActionListener{
 	private Container conter;
 	private JPanel mainPanel;
 	private JButton btnLogout;
-	
-	private PanelHeThongView heThong;
 	
 	private PanelDoiMatKhauView doiMatKhau;
 	private PanelThongTinCaNhanView thongTinCaNhan;
@@ -75,13 +73,13 @@ public class MainSinhVienTC extends JFrame implements ActionListener{
 		mainPanel = new JPanel();
 		mainPanel.setLayout(carLayout = new CardLayout());
 		
-		mainPanel.add(heThong = new PanelHeThongView(), "trangChu");
+		mainPanel.add(new PanelHeThongView(), "trangChu");
 		
 		mainPanel.add(doiMatKhau = new PanelDoiMatKhauView(), "doiMatKhau");
 		new DoiMatKhauController(doiMatKhau, svtc);
 		
 		mainPanel.add(tkb = new PanelTKBView(), "tkb");
-		new ThoiKhoaBieuController(tkb, svtc, quanLy);
+		new ThoiKhoaBieuController(tkb, svtc);
 		
 		mainPanel.add(thongTinCaNhan = new PanelThongTinCaNhanView(), "thongTinCaNhan");
 		new ThongTinCaNhanController(thongTinCaNhan, svtc);
@@ -158,7 +156,7 @@ public class MainSinhVienTC extends JFrame implements ActionListener{
 	private JPanel createHeaderPanel() {
 		JPanel panel = new JPanel(new GridLayout(2, 1));
 		panel.add(createPanelDangXuat());
-		panel.add(menuBar = createJMenuBar());
+		panel.add(createJMenuBar());
 		
 		return panel;
 	}

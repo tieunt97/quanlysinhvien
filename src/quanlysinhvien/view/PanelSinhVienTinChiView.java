@@ -23,6 +23,10 @@ import quanlysinhvien.model.SinhVien;
 import quanlysinhvien.model.SinhVienTinChi;
 
 public class PanelSinhVienTinChiView extends JPanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JTable table = new JTable();
 	private JButton btnThem, btnSua, btnXoa, btnHuy, btnTimKiem, btnCapNhatDiem;
 	private JComboBox<String> timKiemCB;

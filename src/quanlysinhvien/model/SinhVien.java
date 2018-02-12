@@ -60,15 +60,24 @@ public class SinhVien {
 		this.ctdt = ctdt;
 	}
 	
+	public boolean checkLopHP(String idLopHP) {
+		for(int i = 0; i < dsLopHPDangKy.size(); i++) {
+			if(dsLopHPDangKy.get(i).getIdLop().equalsIgnoreCase(idLopHP))
+				return true;
+		}
+		
+		return false;
+	}
+	
 	public ArrayList<DangKyHocPhan> getDSHPDangKy(String hocKy){
-		ArrayList<DangKyHocPhan> dsHPDangKy = new ArrayList<>();
-		for(int i = 0; i < this.dsHPDangKy.size(); i++) {
-			if(this.dsHPDangKy.get(i).getHocKy().equalsIgnoreCase(hocKy)) {
-				dsHPDangKy.add(this.dsHPDangKy.get(i));
+		ArrayList<DangKyHocPhan> dsHPDK = new ArrayList<>();
+		for(int i = 0; i < dsHPDangKy.size(); i++) {
+			if(dsHPDangKy.get(i).getHocKy().equalsIgnoreCase(hocKy)) {
+				dsHPDK.add(dsHPDangKy.get(i));
 			}
 		}
 		
-		return dsHPDangKy;
+		return dsHPDK;
 	}
 	
 	public ArrayList<LopHocPhan> getDSLopHPDangKy(String hocKy){

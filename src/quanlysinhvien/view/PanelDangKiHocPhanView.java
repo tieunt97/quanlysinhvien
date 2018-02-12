@@ -19,6 +19,10 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 public class PanelDangKiHocPhanView extends JPanel{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String titleCols[] = {"Mã HP", "Tên lớp", "Ngày đăng ký", "TT đăng ký", "Số TC", "Select"};
 	private String hkVals[] = {"20173", "20172", "20171"};
 	private JComboBox<String> hocKy;
@@ -134,7 +138,6 @@ public class PanelDangKiHocPhanView extends JPanel{
 //			DefaultTableModel tableModel = new DefaultTableModel() {
 //				@Override
 //				public Class<?> getColumnClass(int columnIndex) {
-//					// TODO Auto-generated method stub
 //					if (columnIndex == 5) {
 //						return Boolean.class;
 //					}
@@ -146,10 +149,10 @@ public class PanelDangKiHocPhanView extends JPanel{
 //			table.setModel(tableModel);		
 //		}});
 		
+		@SuppressWarnings("serial")
 		DefaultTableModel model = new DefaultTableModel() {
 			@Override
 			public Class<?> getColumnClass(int columnIndex) {
-				// TODO Auto-generated method stub
 				if (columnIndex == 5) {
 					return Boolean.class;
 				}

@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -43,11 +42,12 @@ public class LopHocPhanController {
     private PanelLopHocPhanView lopHocPhan;
     private String fileName;
     private QuanLy quanLy;
+	private Workbook workbook;
 
     public LopHocPhanController(PanelLopHocPhanView lopHocPhan, QuanLy quanLy) {
         this.lopHocPhan = lopHocPhan;
         this.quanLy = quanLy;
-        ArrayList<LopHocPhan> dsLopHP;
+//        ArrayList<LopHocPhan> dsLopHP;
         fileName = "quanlysinhvien\\danhsachhocphan\\lophocphan\\dsLopHP.xlsx";
         this.table = lopHocPhan.getTable();
         this.btnThem = lopHocPhan.getBtnThem();
@@ -78,7 +78,6 @@ public class LopHocPhanController {
         table.addMouseListener(new MouseAdapter() {
         	 @Override
              public void mousePressed(MouseEvent arg0) {
-                 // TODO Auto-generated method stub
                  int row = table.getSelectedRow();
                  if (row >= 0) {
                      hocKyCB.setSelectedItem(table.getValueAt(row, 0));
@@ -99,7 +98,6 @@ public class LopHocPhanController {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
                 LopHocPhan lopHP = getLopHocPhan();
                 if (lopHP != null) {
                     if (quanLy.themLopHocPhan(lopHP)) {
@@ -112,7 +110,6 @@ public class LopHocPhanController {
                             JOptionPane.showMessageDialog(null, "Thêm thành công");
                             cancel();
                         } catch (IOException e1) {
-                            // TODO Auto-generated catch block
                             System.out.println("Error insert: " + e1);
                         }
                     } else {
@@ -125,7 +122,6 @@ public class LopHocPhanController {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
                 int row = table.getSelectedRow();
                 if (row < 0) {
                     JOptionPane.showMessageDialog(null, "Cần chọn một hàng để sửa", "Error update", JOptionPane.ERROR_MESSAGE);
@@ -154,7 +150,6 @@ public class LopHocPhanController {
                         }
                         cancel();
                     } catch (IOException e1) {
-                        // TODO Auto-generated catch block
                         System.out.println("Error update: " + e1);
                     }
                 }
@@ -164,7 +159,6 @@ public class LopHocPhanController {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
                 int row = table.getSelectedRow();
                 if (row < 0) {
                     JOptionPane.showMessageDialog(null, "Cần chọn một hàng để xóa", "Error update", JOptionPane.ERROR_MESSAGE);
@@ -187,7 +181,6 @@ public class LopHocPhanController {
                                 cancel();
                                 return;
                             } catch (IOException e1) {
-                                // TODO Auto-generated catch block
                                 System.out.println("Error delete: " + e1);
                             }
                         } else {
@@ -201,7 +194,6 @@ public class LopHocPhanController {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
                 cancel();
                 lopHocPhan.loadData(table, quanLy.getDsLopHocPhan(), "", "");
             }
@@ -210,7 +202,6 @@ public class LopHocPhanController {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
                 String timKiem = timKiemCB.getSelectedItem().toString();
                 String giaTri = tfTimKiem.getText().trim().toLowerCase();
                 lopHocPhan.loadData(table, quanLy.getDsLopHocPhan(), timKiem, giaTri);
@@ -220,7 +211,6 @@ public class LopHocPhanController {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
                 int row = table.getSelectedRow();
                 if (row < 0) {
                     JOptionPane.showMessageDialog(null, "Cần chọn lớp học phần để cập nhật dssv", "Error", JOptionPane.ERROR_MESSAGE);
@@ -332,7 +322,6 @@ public class LopHocPhanController {
 
     //thêm lopHP vào file
     private void addLopHP(LopHocPhan lopHP, String fileName) throws IOException {
-        Workbook workbook = null;
         Sheet sheet = null;
         int lastRow = -1;
         try {
@@ -341,7 +330,6 @@ public class LopHocPhanController {
             sheet = workbook.getSheetAt(0);
             lastRow = sheet.getLastRowNum();
         } catch (Exception e) {
-            // TODO: handle exception
             workbook = new XSSFWorkbook();
             sheet = workbook.createSheet();
             System.out.println(e);
@@ -367,7 +355,7 @@ public class LopHocPhanController {
     private boolean updateLopHP(LopHocPhan lopHP, String fileName) throws IOException {
         boolean ck = false;
         FileInputStream fin = new FileInputStream(new File(fileName));
-        Workbook workbook = new XSSFWorkbook(fin);
+        workbook = new XSSFWorkbook(fin);
         Sheet sheet = workbook.getSheetAt(0);
         Iterator<Row> iterator = sheet.iterator();
 
@@ -416,7 +404,7 @@ public class LopHocPhanController {
     private boolean deleteLopHP(String idLopHP, String fileName) throws IOException {
         boolean ck = false;
         FileInputStream fin = new FileInputStream(new File(fileName));
-        Workbook workbook = new XSSFWorkbook(fin);
+        workbook = new XSSFWorkbook(fin);
         Sheet sheet = workbook.getSheetAt(0);
 
         Iterator<Row> iterator = sheet.iterator();

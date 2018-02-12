@@ -7,7 +7,6 @@ import java.awt.GridLayout;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -21,11 +20,14 @@ import javax.swing.table.DefaultTableModel;
 import quanlysinhvien.model.SinhVien;
 
 public class CapNhatSinhVienLCNView extends JDialog{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JTable table;
 	private JButton btnThem, btnXoa;
 	private JTextField tfIdSinhVien;
 	private String[] titleCols = {"Mã sinh viên", "Họ tên", "Khóa", "Tên lớp", "Ngày sinh", "Giới tính", "Email", "Địa chỉ"};
-	private String[] loaiSV = {"Sinh viên tín chỉ", "Sinh viên niên chế"};
 	
 	public CapNhatSinhVienLCNView(String idLop) {
 		setSize(950, 650);

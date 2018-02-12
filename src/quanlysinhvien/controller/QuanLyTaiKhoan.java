@@ -18,8 +18,9 @@ import quanlysinhvien.model.TaiKhoan;
 
 public class QuanLyTaiKhoan {
 	
+	private static Workbook workbook;
+
 	public static void addTaiKhoan(TaiKhoan tk) throws IOException {
-		Workbook workbook = null;
 		Sheet sheet = null;
 		int lastRow = -1;
 		try {
@@ -28,7 +29,6 @@ public class QuanLyTaiKhoan {
 			sheet = workbook.getSheetAt(0);
 			lastRow = sheet.getLastRowNum();
 		}catch (Exception e) {
-			// TODO: handle exception
 			workbook = new XSSFWorkbook();
 			sheet = workbook.createSheet();
 			System.out.println(e);
@@ -52,7 +52,7 @@ public class QuanLyTaiKhoan {
 	
 	public static void deleteTaiKhoan(String idTK) throws IOException {
 		FileInputStream fin = new FileInputStream(new File("quanlysinhvien\\dsTaiKhoan.xlsx"));
-		Workbook workbook = new XSSFWorkbook(fin);
+		workbook = new XSSFWorkbook(fin);
 		Sheet sheet = workbook.getSheetAt(0);
 		
 		Iterator<Row> iterator = sheet.iterator();

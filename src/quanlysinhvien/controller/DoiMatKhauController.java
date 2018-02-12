@@ -20,18 +20,16 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import quanlysinhvien.model.SinhVien;
-import quanlysinhvien.model.TaiKhoan;
 import quanlysinhvien.view.PanelDoiMatKhauView;
 
 public class DoiMatKhauController {
-	private PanelDoiMatKhauView doiMatKhau;
 	private JTextField tfTaiKhoan;
 	private JPasswordField pwMatKhauCu, pwMatKhauMoi, pwXacNhan;
 	private JButton btnThayDoi;
 	private SinhVien sv;
+	private Workbook workbook;
 	
 	public DoiMatKhauController(PanelDoiMatKhauView doiMatKhau, SinhVien sv) {
-		this.doiMatKhau = doiMatKhau;
 		this.tfTaiKhoan = doiMatKhau.getTfTaiKhoan();
 		tfTaiKhoan.setText(sv.getIdSinhVien());
 		tfTaiKhoan.setEnabled(false);
@@ -41,17 +39,18 @@ public class DoiMatKhauController {
 		this.btnThayDoi = doiMatKhau.getBtnThayDoi();
 		this.sv = sv;
 		
-		setAction(sv);
+		setAction();
 	}
 	
-	private void setAction(SinhVien sv) {
+	private void setAction() {
 		btnThayDoi.addActionListener(new ActionListener() {
 			
+			@SuppressWarnings("deprecation")
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String matKhauCu = pwMatKhauCu.getText().trim();
-				String matKhauMoi = pwMatKhauMoi.getText().trim();
-				String xacNhan  = pwXacNhan.getText().trim();
+				String matKhauCu = pwMatKhauCu.getText().trim().toUpperCase();
+				String matKhauMoi = pwMatKhauMoi.getText().trim().toUpperCase();
+				String xacNhan  = pwXacNhan.getText().trim().toUpperCase();
 				if(matKhauCu.equals(sv.getTaiKhoan().getMatKhau())) {
 					if(matKhauMoi.length() < 8) {
 						JOptionPane.showMessageDialog(null, "Mật khẩu mới tối thiểu 8 ký tự", "Warning", JOptionPane.WARNING_MESSAGE);
@@ -91,7 +90,7 @@ public class DoiMatKhauController {
 		String fileName = "quanlysinhvien\\dsTaiKhoan.xlsx";
 		boolean ck = false;
 		FileInputStream fin = new FileInputStream(new File(fileName));
-		Workbook workbook = new XSSFWorkbook(fin);
+		workbook = new XSSFWorkbook(fin);
 		Sheet sheet = workbook.getSheetAt(0);
 		Iterator<Row> iterator = sheet.iterator();
 		

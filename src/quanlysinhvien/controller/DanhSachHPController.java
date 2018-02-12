@@ -22,7 +22,6 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import quanlysinhvien.model.HocPhan;
@@ -35,9 +34,10 @@ public class DanhSachHPController {
     private JTable table;
     private JButton btnThem, btnSua, btnXoa, btnHuy, btnTimKiem;
     private JComboBox<String> timKiemCB;
-    private JTextField tfIdHocPhan, tfTenHP, tfSoTC, tfIdNganh, tfTrongSo, tfTimKiem, tfSoTCHocPhi;
+    private JTextField tfIdHocPhan, tfTenHP, tfSoTC, tfIdNganh, tfTrongSo, tfTimKiem, tfSoTCHocPhi, tfIdHPDK;
     private String fileName;
     private QuanLy quanLy;
+    private XSSFWorkbook workbook;
 
     public DanhSachHPController(PanelDanhSachHPView danhSachHP, QuanLy quanLy) {
         this.danhSachHP = danhSachHP;
@@ -55,6 +55,7 @@ public class DanhSachHPController {
         this.tfSoTCHocPhi = danhSachHP.getTfSoTCHocPhi();
         this.tfIdNganh = danhSachHP.getTfIdNganh();
         this.tfTrongSo = danhSachHP.getTfTrongSo();
+        this.tfIdHPDK = danhSachHP.getTfIdHPDK();
         this.tfTimKiem = danhSachHP.getTfTimKiem();
         this.timKiemCB = danhSachHP.getTimKiemCB();
         this.danhSachHP.loadData(table, quanLy.getDsHocPhan(), "", ""); //load danh sách học phần lên bảng
@@ -67,7 +68,6 @@ public class DanhSachHPController {
         table.addMouseListener(new MouseAdapter() {
         	 @Override
              public void mousePressed(MouseEvent e) {
-                 // TODO Auto-generated method stub
                  int row = table.getSelectedRow();
                  if (row >= 0) {
                      tfIdHocPhan.setText((String) table.getValueAt(row, 0));
@@ -77,6 +77,7 @@ public class DanhSachHPController {
                      tfSoTCHocPhi.setText((String) table.getValueAt(row, 3));
                      tfIdNganh.setText((String) table.getValueAt(row, 4));
                      tfTrongSo.setText((String) table.getValueAt(row, 5));
+                     tfIdHPDK.setText("");
                  }
              }
 		});
@@ -89,13 +90,12 @@ public class DanhSachHPController {
                     if (quanLy.themHocPhan(hp)) {
                     	//thêm học phần hp vào bảng
                     	((DefaultTableModel) table.getModel()).addRow(new Object[] {hp.getIdHocPhan(), hp.getTenHP(), hp.getSoTinChi() + "", 
-                    			hp.getSoTCHocPhi() + "", hp.getIdNganh(), hp.getTrongSo() + ""});
+                    			hp.getSoTCHocPhi() + "", hp.getIdNganh(), hp.getTrongSo() + "", (hp.getHocPhanDK() != null)?hp.getHocPhanDK().getIdHocPhan():"null"});
                         try {
                             addHP(hp, fileName);
                             JOptionPane.showMessageDialog(null, "Thêm thành công");
                             cancel();
                         } catch (IOException e1) {
-                            // TODO Auto-generated catch block
                             System.out.println("Error insert: " + e1);
                         }
                     } else {
@@ -131,7 +131,6 @@ public class DanhSachHPController {
                         }
                         cancel();
                     } catch (IOException e1) {
-                        // TODO Auto-generated catch block
                         System.out.println("Error update: " + e1);
                     }
                 }
@@ -142,7 +141,6 @@ public class DanhSachHPController {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
                 int row = table.getSelectedRow();
                 if (row < 0) {
                     JOptionPane.showMessageDialog(null, "Cần chọn một hàng để xóa", "Error delete",
@@ -183,7 +181,6 @@ public class DanhSachHPController {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
                 cancel();
                 danhSachHP.loadData(table, quanLy.getDsHocPhan(), "", "");
             }
@@ -193,7 +190,6 @@ public class DanhSachHPController {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
                 String timKiem = timKiemCB.getSelectedItem().toString();
                 String giaTri = tfTimKiem.getText().trim().toLowerCase();
                 danhSachHP.loadData(table, quanLy.getDsHocPhan(), timKiem, giaTri);
@@ -210,6 +206,7 @@ public class DanhSachHPController {
     	table.setValueAt(hp.getSoTCHocPhi() + "", row, 3);
     	table.setValueAt(hp.getIdNganh(), row, 4);
     	table.setValueAt(hp.getTrongSo() + "", row, 5);
+    	table.setValueAt(hp.getHocPhanDK() != null?hp.getHocPhanDK().getIdHocPhan():"null", row, 6);
     }
     
     //reset input
@@ -223,6 +220,7 @@ public class DanhSachHPController {
         tfSoTCHocPhi.setText("");
         tfTrongSo.setText("");
         tfTimKiem.setText("");
+        tfIdHPDK.setText("");
     }
 
     //lấy dữ liệu học phần từ input
@@ -230,6 +228,7 @@ public class DanhSachHPController {
         String idHocPhan = tfIdHocPhan.getText().trim().toUpperCase();
         String tenHP = tfTenHP.getText().trim();
         String idNganh = tfIdNganh.getText().trim().toUpperCase();
+        String idHPDK = tfIdHPDK.getText().trim().toUpperCase();
         double soTCHocPhi;
         int soTinChi;
         double trongSo;
@@ -250,9 +249,11 @@ public class DanhSachHPController {
                     JOptionPane.ERROR_MESSAGE);
             return null;
         }
-
-        HocPhan hp = new HocPhan(idHocPhan, tenHP, soTinChi, soTCHocPhi, idNganh, trongSo);
-        return hp;
+        HocPhan hpDK = quanLy.getHocPhan(idHPDK);
+        
+        if(hpDK == null) {
+        	return new HocPhan(idHocPhan, tenHP, soTinChi, soTCHocPhi, idNganh, trongSo);
+        }else return new HocPhan(idHocPhan, tenHP, soTinChi, soTCHocPhi, idNganh, trongSo, hpDK);
     }
 
     //tạo tiêu đề file danh sách học phần
@@ -286,6 +287,10 @@ public class DanhSachHPController {
         Cell cellTrongSo = row.createCell(6);
         cellTrongSo.setCellStyle(cellStyle);
         cellTrongSo.setCellValue("Trọng số");
+        
+        Cell cellIdHPDK = row.createCell(7);
+        cellIdHPDK.setCellStyle(cellStyle);
+        cellIdHPDK.setCellValue("Trọng số");
 
     }
 
@@ -303,20 +308,20 @@ public class DanhSachHPController {
         cell.setCellValue(hp.getIdNganh());
         cell = row.createCell(6);
         cell.setCellValue(hp.getTrongSo());
+        cell = row.createCell(7);
+        cell.setCellValue(hp.getHocPhanDK() != null?hp.getHocPhanDK().getIdHocPhan():"null");
     }
 
     //thêm học phần vào file dsHocPhan
     private void addHP(HocPhan hp, String fileName) throws IOException {
-        Workbook workbook = null;
         Sheet sheet = null;
         int lastRow = -1;
-        try {
+		try {
             FileInputStream inputStream = new FileInputStream(new File(fileName));
             workbook = new XSSFWorkbook(inputStream);
             sheet = workbook.getSheetAt(0);
             lastRow = sheet.getLastRowNum();
         } catch (Exception e) {
-            // TODO: handle exception
             workbook = new XSSFWorkbook();
             sheet = workbook.createSheet();
             System.out.println(e);
@@ -343,7 +348,7 @@ public class DanhSachHPController {
     private boolean updateHP(HocPhan hp, String fileName) throws IOException {
         boolean ck = false;
         FileInputStream fin = new FileInputStream(new File(fileName));
-        Workbook workbook = new XSSFWorkbook(fin);
+        workbook = new XSSFWorkbook(fin);
         Sheet sheet = workbook.getSheetAt(0);
         Iterator<Row> iterator = sheet.iterator();
 
@@ -366,6 +371,8 @@ public class DanhSachHPController {
                 cell.setCellValue(hp.getIdNganh());
                 cell = nextRow.createCell(6);
                 cell.setCellValue(hp.getTrongSo());
+                cell = nextRow.createCell(7);
+                cell.setCellValue(hp.getHocPhanDK() != null?hp.getHocPhanDK().getIdHocPhan():"null");
                 ck = true;
                 break;
             }
@@ -383,7 +390,7 @@ public class DanhSachHPController {
     private boolean deleteHP(HocPhan hp, String fileName) throws IOException {
         boolean ck = false;
         FileInputStream fin = new FileInputStream(new File(fileName));
-        Workbook workbook = new XSSFWorkbook(fin);
+        workbook = new XSSFWorkbook(fin);
         Sheet sheet = workbook.getSheetAt(0);
 
         Iterator<Row> iterator = sheet.iterator();

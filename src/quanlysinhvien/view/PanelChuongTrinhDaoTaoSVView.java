@@ -22,6 +22,10 @@ import quanlysinhvien.model.SinhVien;
 import quanlysinhvien.model.SinhVienTinChi;
 
 public class PanelChuongTrinhDaoTaoSVView extends JPanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JTextField tfIdSinhVien, tfIdHP, tfTenHP, tfKyHoc, tfTinChi, tfDiemChu, tfDiemSo, tfVien_Khoa;
 	private JTable table;
 	private String[] titleCols = { "Mã HP", "Tên HP", "Kỳ học", "Tín chỉ", "Điểm chữ", "Điểm số", "Viện/Khoa" };
@@ -126,6 +130,7 @@ public class PanelChuongTrinhDaoTaoSVView extends JPanel {
 
 	public void loadData(JTable table, String timKiem, String giaTri) {
 		SwingUtilities.invokeLater(new Runnable() {
+			@SuppressWarnings("serial")
 			public void run() {
 				String data[][] = convertData(timKiem, giaTri);
 				// Update the model here

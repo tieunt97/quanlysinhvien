@@ -8,6 +8,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class PanelHeThongView extends JPanel{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public PanelHeThongView() {
 		setLayout(new BorderLayout());
 		add(createMainPanel(),  BorderLayout.CENTER);

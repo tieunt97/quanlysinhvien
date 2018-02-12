@@ -20,7 +20,11 @@ import quanlysinhvien.model.DiemHocPhan;
 import quanlysinhvien.model.HocPhan;
 
 public class PanelBangDiemCaNhanView extends JPanel {
-	private JLabel gtIdSinhVien, gtHoTen, gtNgaySinh, gtLop, gtHeHoc, gtTrangThai;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JLabel gtIdSinhVien, gtHoTen, gtNgaySinh, gtLop;
 	private JTable tableDiem, tableKetQua;
 	private JTextField tfHocKy, tfIdHP, tfTenHP, tfTinChi, tfLopHoc, tfDiemQT, tfDiemThi, tfDiemChu;
 	private String[] titleCols1 = { "Học kỳ", "Mã HP", "Tên HP", "TC", "Lớp học", "Điểm QT", "Điểm thi", "Điểm chữ" };
@@ -136,6 +140,7 @@ public class PanelBangDiemCaNhanView extends JPanel {
 
 	public void loadData1(JTable table, ArrayList<DiemHocPhan> dsDiem, String timKiem, String giaTri) {
 		SwingUtilities.invokeLater(new Runnable() {
+			@SuppressWarnings("serial")
 			public void run() {
 				String data[][] = convertData1(dsDiem, timKiem, giaTri);
 				// Update the model here
@@ -381,8 +386,8 @@ public class PanelBangDiemCaNhanView extends JPanel {
 		panelR.add(gtHoTen = createLabel("", Font.BOLD, 14));
 		panelR.add(gtNgaySinh = createLabel("", Font.BOLD, 14));
 		panelR.add(gtLop = createLabel("", Font.BOLD, 14));
-		panelR.add(gtHeHoc = createLabel("Đại học", Font.BOLD, 14));
-		panelR.add(gtTrangThai = createLabel("Học", Font.BOLD, 14));
+		panelR.add(createLabel("Đại học", Font.BOLD, 14));
+		panelR.add(createLabel("Học", Font.BOLD, 14));
 		panel.add(panelR, BorderLayout.CENTER);
 
 		return panel;

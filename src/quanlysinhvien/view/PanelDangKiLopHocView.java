@@ -18,6 +18,10 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 public class PanelDangKiLopHocView extends JPanel{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JTextField tfDangKy;
 	private JButton btnDangKy, btnXoaDangKy, btnGuiDangKy;
 	private JTable tableDangKy, tableTKB;
@@ -150,13 +154,11 @@ public class PanelDangKiLopHocView extends JPanel{
 //			DefaultTableModel tableModel = new DefaultTableModel(data, titleCols) {
 //				@Override
 //				public boolean isCellEditable(int row, int column) {
-//					// TODO Auto-generated method stub
 //					return false;
 //				}
 //				
 //				@Override
 //				public Class<?> getColumnClass(int column) {
-//					// TODO Auto-generated method stub
 //					if(loaiTable ==1){
 //						if(column == 5){
 //							return Boolean.class;
@@ -168,10 +170,10 @@ public class PanelDangKiLopHocView extends JPanel{
 //			table.setModel(tableModel);
 //		}});
 		
+		@SuppressWarnings("serial")
 		DefaultTableModel model = new DefaultTableModel(){
 			@Override
 			public Class<?> getColumnClass(int column) {
-				// TODO Auto-generated method stub
 				if(loaiTable ==1){
 					if(column == 5){
 						return Boolean.class;

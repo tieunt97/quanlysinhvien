@@ -27,9 +27,16 @@ public class DangKyLopHoc {
 		return null;
 	}
 	
-	public boolean checkHocPhanDK(String idHP) {
+	public boolean checkTCMax(int soTCMax, int soTCHP) {
+		if(tongSoTC + soTCHP > soTCMax)
+			return true;
+		else return false;
+	}
+	
+	public boolean checkHocPhanDK(LopHocPhan lopHP) {
 		for(int i = 0; i < dsLopHP.size(); i++) {
-			if(dsLopHP.get(i).getHocPhan().getIdHocPhan().equalsIgnoreCase(idHP))
+			if(dsLopHP.get(i).getHocKy().equalsIgnoreCase(lopHP.getHocKy()) &&
+					dsLopHP.get(i).getHocPhan().getIdHocPhan().equalsIgnoreCase(lopHP.getHocPhan().getIdHocPhan()))
 				return true;
 		}
 		
@@ -38,30 +45,20 @@ public class DangKyLopHoc {
 	
 	public boolean themLopHP(LopHocPhan lopHP) {
 		for(int i = 0; i < dsLopHP.size(); i++) {
-			if(dsLopHP.get(i).getIdLop().equalsIgnoreCase(lopHP.getIdLop()))
+			if(dsLopHP.get(i).getHocKy().equalsIgnoreCase(lopHP.getHocKy()) &&
+					dsLopHP.get(i).getIdLop().equalsIgnoreCase(lopHP.getIdLop()))
 				return false;
 		}
 		
 		dsLopHP.add(lopHP);
+		tongSoTC += lopHP.getHocPhan().getSoTinChi();
 		return true;
-	}
-	
-	public boolean themLopHP(int soTCMax, LopHocPhan lopHocPhan) {
-		for(int i = 0; i < dsLopHP.size(); i++) {
-			if(dsLopHP.get(i).getIdLop().equalsIgnoreCase(lopHocPhan.getIdLop()))
-				return false;
-		}
-		if(tongSoTC + lopHocPhan.getHocPhan().getSoTinChi() > soTCMax)
-			return false;
-		else {
-			dsLopHP.add(lopHocPhan);
-			return true;
-		}
 	}
 	
 	public boolean xoaLopHP(String idLopHP) {
 		for(int i = 0; i < dsLopHP.size(); i++) {
 			if(dsLopHP.get(i).getHocPhan().getIdHocPhan().equalsIgnoreCase(idLopHP)) {
+				tongSoTC -= dsLopHP .get(i).getHocPhan().getSoTinChi();
 				dsLopHP.remove(i);
 				return true;
 			}

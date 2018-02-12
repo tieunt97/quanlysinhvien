@@ -20,6 +20,10 @@ import javax.swing.table.DefaultTableModel;
 import quanlysinhvien.model.HocPhan;
 
 public class PanelDanhMucHP extends JPanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JComboBox<String> khoaVienCB;
 	private JTextField tfTimIdHP, tfTimTenHP;
 	private String[] vals = {"All", "Viện CNTT-TT", "Viện cơ khí", "Khoa thể chất", "Viện điện"};
@@ -85,13 +89,13 @@ public class PanelDanhMucHP extends JPanel {
 	}
 	
 	public void loadData(JTable table, ArrayList<HocPhan> dsHocPhan, String timKiem, String giaTri) {
-		SwingUtilities.invokeLater(new Runnable(){public void run(){
+		SwingUtilities.invokeLater(new Runnable(){@SuppressWarnings("serial")
+		public void run(){
 			String data[][] = convertData(dsHocPhan, timKiem, giaTri);
 		    //Update the model here
 			DefaultTableModel tableModel = new DefaultTableModel(data, titleCols) {
 				@Override
 				public boolean isCellEditable(int row, int column) {
-					// TODO Auto-generated method stub
 					return false;
 				}
 			};

@@ -11,6 +11,10 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 public class PanelDangKiTotNghiepView extends JPanel{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JLabel labDiemTB, labTongSoTC, labSoTCNo, labTongSoKy, labDiemTB1, labHoTen, labHoTen1, labSoMonNo;
 	private JButton btnDangKy;
 	private JPanel panelSVTC, panelSVNC, panel;

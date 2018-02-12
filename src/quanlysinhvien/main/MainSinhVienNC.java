@@ -13,26 +13,19 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 
-import quanlysinhvien.controller.BangDiemCaNhanController;
 import quanlysinhvien.controller.BangDiemHocPhanController;
 import quanlysinhvien.controller.ChuongTrinhDaoTaoSVController;
 import quanlysinhvien.controller.DangKiHocPhanController;
 import quanlysinhvien.controller.DangKiLopHocController;
 import quanlysinhvien.controller.DangKiTotNghiepController;
 import quanlysinhvien.controller.DanhMucHPController;
-import quanlysinhvien.controller.DanhSachHPController;
 import quanlysinhvien.controller.DoiMatKhauController;
 import quanlysinhvien.controller.ThoiKhoaBieuController;
 import quanlysinhvien.controller.ThongTinCaNhanController;
 import quanlysinhvien.model.QuanLy;
 import quanlysinhvien.model.SinhVienNienChe;
-import quanlysinhvien.model.TaiKhoan;
-import quanlysinhvien.view.PanelBangDiemCaNhanView;
 import quanlysinhvien.view.PanelBangDiemHocPhanView;
 import quanlysinhvien.view.PanelChuongTrinhDaoTaoSVView;
 import quanlysinhvien.view.PanelDangKiHocPhanView;
@@ -45,19 +38,18 @@ import quanlysinhvien.view.PanelTKBView;
 import quanlysinhvien.view.PanelThongTinCaNhanView;
 
 public class MainSinhVienNC extends JFrame implements ActionListener{
-	private JMenuBar menuBar;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JMenu menuTrangChu, menuThongTinCaNhan, menuChuongTrinhDaoTao, menuKeHoachHocTap, menuKetQuaHocTap, menuDangKyHocTap;
 	private JMenuItem miTrangChu, miTTCN, miDoiMK, miTKB, miBangDiemCN, miBangDiemHP, miDanhMucHocPhan, miChuongTrinhDaoTaoSV,
 		miDKHP, miDKLH, miDKTN;
 	private CardLayout carLayout;
 	private Container conter;
-	private JPanel mainPanel, dangXuatPanel;
+	private JPanel mainPanel;
 	private JButton btnLogout;
 	
-	
-	
-	
-	private PanelHeThongView heThong;
 	
 	private PanelDoiMatKhauView doiMatKhau;
 	private PanelThongTinCaNhanView thongTinCaNhan;
@@ -68,7 +60,6 @@ public class MainSinhVienNC extends JFrame implements ActionListener{
 	private PanelTKBView tkb;
 	
 	private PanelBangDiemHocPhanView bangDiemHP;
-	private PanelBangDiemCaNhanView bangDiemCaNhan;
 	
 	private PanelDangKiHocPhanView dangKyHocPhan;
 	private PanelDangKiLopHocView dangKyLopHoc;
@@ -79,7 +70,7 @@ public class MainSinhVienNC extends JFrame implements ActionListener{
 		mainPanel = new JPanel();
 		mainPanel.setLayout(carLayout = new CardLayout());
 		
-		mainPanel.add(heThong = new PanelHeThongView(), "trangChu");
+		mainPanel.add(new PanelHeThongView(), "trangChu");
 		
 		mainPanel.add(doiMatKhau = new PanelDoiMatKhauView(), "doiMatKhau");
 		new DoiMatKhauController(doiMatKhau, svnc);
@@ -87,15 +78,13 @@ public class MainSinhVienNC extends JFrame implements ActionListener{
 		new ThongTinCaNhanController(thongTinCaNhan, svnc);
 		
 		mainPanel.add(tkb = new PanelTKBView(), "tkb");
-		new ThoiKhoaBieuController(tkb, svnc, quanLy);
+		new ThoiKhoaBieuController(tkb, svnc);
 		
 		mainPanel.add(danhMucHP = new PanelDanhMucHP(), "danhMucHP");
 		new DanhMucHPController(danhMucHP);
 		mainPanel.add(chuongTrinhDaoTaoSV = new PanelChuongTrinhDaoTaoSVView(svnc), "chuongTrinhDaoTaoSV");
 		new ChuongTrinhDaoTaoSVController(chuongTrinhDaoTaoSV, svnc);
 		
-//		mainPanel.add(bangDiemCaNhan = new PanelBangDiemCaNhanView(), "bangDiemCaNhan");
-//		new BangDiemCaNhanController(bangDiemCaNhan, svnc);
 		mainPanel.add(bangDiemHP = new PanelBangDiemHocPhanView(), "bangDiemHP");
 		new BangDiemHocPhanController(bangDiemHP, svnc);
 		
@@ -136,7 +125,6 @@ public class MainSinhVienNC extends JFrame implements ActionListener{
 		menuKeHoachHocTap.add(miTKB = createMenuItem("Xem thời khóa biểu"));
 		
 		menuBar.add(menuKetQuaHocTap = createJMenu("Kết quả học tập"));
-//		menuKetQuaHocTap.add(miBangDiemCN = createMenuItem("Bảng điểm cá nhân"));
 		menuKetQuaHocTap.add(miBangDiemHP = createMenuItem("Bảng điểm học phần"));
 		
 		menuBar.add(menuDangKyHocTap = createJMenu("Đăng ký học tập"));
@@ -161,7 +149,7 @@ public class MainSinhVienNC extends JFrame implements ActionListener{
 	private JPanel createHeaderPanel() {
 		JPanel panel = new JPanel(new GridLayout(2, 1));
 		panel.add(createPanelDangXuat());
-		panel.add(menuBar = createJMenuBar());
+		panel.add(createJMenuBar());
 		
 		return panel;
 	}
@@ -177,7 +165,6 @@ public class MainSinhVienNC extends JFrame implements ActionListener{
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
 		if(e.getSource() == miTrangChu) {
 			carLayout.show(mainPanel, "trangChu");
 			return;

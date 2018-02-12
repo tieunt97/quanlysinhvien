@@ -7,7 +7,6 @@ import java.awt.GridLayout;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -21,18 +20,25 @@ import javax.swing.table.DefaultTableModel;
 
 import quanlysinhvien.model.DiemHocPhan;
 import quanlysinhvien.model.HocPhan;
+import quanlysinhvien.model.SinhVien;
+import quanlysinhvien.model.SinhVienNienChe;
+import quanlysinhvien.model.SinhVienTinChi;
 
 public class CapNhatDiemSVView extends JDialog{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JTable table;
-	private JTextField tfIdHocPhan, tfIdLopHoc, tfDiemQT, tfDiemThi;
+	private JTextField tfIdLopHoc, tfDiemQT, tfDiemThi;
 	private JButton btnThem, btnSua, btnXoa, btnHuy;
-	private JComboBox<String> hocKyCB;
 	private String[] titleCols = {"Học kỳ", "Mã học phần", "Tên học phần", "Tín chỉ", "Lớp học", "Điểm QT", "Điểm thi", "Điểm chữ", "Điểm thang 4"};
-	private String[] hocKyVals = {"20172", "20171", "20163", "20162", "20161", "20153", "20152", "20151"};
-	private String idSV;
+	private String[] titleCols1 = {"Học kỳ", "Mã học phần", "Tên học phần", "Tín chỉ", "Lớp học", "Điểm QT", "Điểm thi", "Điểm TB"};
+	private SinhVien sv;
 	
-	public CapNhatDiemSVView(String idSV) {
-		this.idSV = idSV;
+	
+	public CapNhatDiemSVView(SinhVien sv) {
+		this.sv = sv;
 		setSize(950, 650);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -86,15 +92,8 @@ public class CapNhatDiemSVView extends JDialog{
 	private JPanel createInputLeft() {
 		JPanel panel = new JPanel(new BorderLayout(5, 5));
 		JPanel panelL = new JPanel(new GridLayout(3, 1, 5, 5));
-		panelL.add(new JLabel("Học kỳ:"));
-		panelL.add(new JLabel("Mã học phần:"));
 		panelL.add(new JLabel("Lớp học:"));
 		JPanel panelR = new JPanel(new GridLayout(3, 1, 5, 5));
-		JPanel panelHocKy = new JPanel(new GridLayout());
-		panelHocKy.add(hocKyCB = new JComboBox<>(hocKyVals));
-		panelHocKy.setBorder(new EmptyBorder(0, 0, 0, 120));
-		panelR.add(panelHocKy);
-		panelR.add(tfIdHocPhan = new JTextField());
 		panelR.add(tfIdLopHoc = new JTextField());
 		
 		panel.add(panelL, BorderLayout.WEST);
@@ -128,7 +127,7 @@ public class CapNhatDiemSVView extends JDialog{
 	}
 	
 	private JLabel createLabel() {
-		JLabel label = new JLabel("Bảng điểm sinh viên có mã SV: " + this.idSV);
+		JLabel label = new JLabel("Bảng điểm sinh viên có mã SV: " + sv.getIdSinhVien());
 		label.setFont(new Font("Calibri", Font.BOLD, 16));
 		label.setForeground(Color.yellow);
 		return label;
@@ -136,7 +135,9 @@ public class CapNhatDiemSVView extends JDialog{
 	
 	public void loadData(JTable table, ArrayList<DiemHocPhan> dsDiem) {
 		String[][] data = convertData(dsDiem);
-		DefaultTableModel model = new DefaultTableModel(data, titleCols);
+		DefaultTableModel model;
+		if(sv instanceof SinhVienTinChi) model = new DefaultTableModel(data, titleCols);
+		else model = new DefaultTableModel(data, titleCols1);
 		table.setModel(model);
 		table.getColumnModel().getColumn(2).setPreferredWidth(172);
 	}
@@ -153,8 +154,11 @@ public class CapNhatDiemSVView extends JDialog{
 			data[i][4] = dsDiem.get(i).getIdLopHoc();
 			data[i][5] = dsDiem.get(i).getDiemQT() + "";
 			data[i][6] = dsDiem.get(i).getDiemThi() + "";
-			data[i][7] = dsDiem.get(i).getDiemChu();
-			data[i][8] = dsDiem.get(i).getDiemThang4() + "";
+			if(sv instanceof SinhVienTinChi) {
+				data[i][7] = dsDiem.get(i).getDiemChu();
+				data[i][8] = dsDiem.get(i).getDiemThang4() + "";
+			}else if(sv instanceof SinhVienNienChe)
+				data[i][7] = dsDiem.get(i).getDiemThang10() + "";
 		}
 		
 		return data;
@@ -162,10 +166,6 @@ public class CapNhatDiemSVView extends JDialog{
 
 	public JTable getTable() {
 		return table;
-	}
-
-	public JTextField getTfIdHocPhan() {
-		return tfIdHocPhan;
 	}
 
 	public JTextField getTfIdLopHoc() {
@@ -196,8 +196,8 @@ public class CapNhatDiemSVView extends JDialog{
 		return btnHuy;
 	}
 
-	public JComboBox<String> getHocKyCB() {
-		return hocKyCB;
+	public void setTitleCols(String[] titleCols) {
+		this.titleCols = titleCols;
 	}
-	
+
 }

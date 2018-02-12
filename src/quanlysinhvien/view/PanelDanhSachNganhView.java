@@ -20,6 +20,10 @@ import javax.swing.table.DefaultTableModel;
 import quanlysinhvien.model.Khoa_Vien;
 
 public class PanelDanhSachNganhView extends JPanel{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JTable table;
 	private JTextField tfIdKhoa_Vien, tfTenKhoa_Vien, tfTimKiem;
 	private JButton btnThem, btnSua, btnXoa, btnTimKiem, btnHuy, btnXemDSNganh;

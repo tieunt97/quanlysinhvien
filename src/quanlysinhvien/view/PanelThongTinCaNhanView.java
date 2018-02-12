@@ -13,8 +13,11 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 public class PanelThongTinCaNhanView extends JPanel{
-	private JLabel lbIdSinhVien, lbHoTen, lbNgaySinh, lbLop, lbHeHoc, lbTrangThai;
-	private JLabel gtIdSinhVien, gtHoTen, gtNgaySinh, gtLop, gtHeHoc, gtTrangThai;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JLabel gtIdSinhVien, gtHoTen, gtNgaySinh, gtLop;
 	private JTextField tfEmail, tfSoDT, tfDiaChi;
 	private JButton btnCapNhat;
 	
@@ -48,19 +51,19 @@ public class PanelThongTinCaNhanView extends JPanel{
 		JPanel panel = new JPanel(new BorderLayout(10, 10));
 		JPanel panelL = new JPanel(new BorderLayout(20, 20));
 		JPanel panelBL = new JPanel(new GridLayout(7, 1, 10, 10));
-		panelBL.add(lbIdSinhVien = createLabel("Mã sinh viên:", 0));
-		panelBL.add(lbHoTen = createLabel("Họ tên SV:", 0));
-		panelBL.add(lbNgaySinh = createLabel("Ngày Sinh:", 0));
-		panelBL.add(lbLop = createLabel("Lớp:", 0));
-		panelBL.add(lbHeHoc = createLabel("Hệ học:", 0));
-		panelBL.add(lbTrangThai = createLabel("Trạng thái:", 0));
+		panelBL.add(createLabel("Mã sinh viên:", 0));
+		panelBL.add(createLabel("Họ tên SV:", 0));
+		panelBL.add(createLabel("Ngày Sinh:", 0));
+		panelBL.add(createLabel("Lớp:", 0));
+		panelBL.add(createLabel("Hệ học:", 0));
+		panelBL.add(createLabel("Trạng thái:", 0));
 		JPanel panelBR = new JPanel(new GridLayout(7, 1, 10, 10));
 		panelBR.add(gtIdSinhVien = createLabel("", 1));
 		panelBR.add(gtHoTen = createLabel("", 1));
 		panelBR.add(gtNgaySinh = createLabel("", 1));
 		panelBR.add(gtLop = createLabel("", 1));
-		panelBR.add(gtHeHoc = createLabel("Đại học", 1));
-		panelBR.add(gtTrangThai = createLabel("Học", 1));
+		panelBR.add(createLabel("Đại học", 1));
+		panelBR.add(createLabel("Học", 1));
 		
 		panelL.add(panelBL, BorderLayout.WEST);
 		panelL.add(panelBR, BorderLayout.CENTER);

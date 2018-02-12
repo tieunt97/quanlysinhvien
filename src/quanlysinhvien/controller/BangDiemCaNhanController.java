@@ -2,29 +2,16 @@ package quanlysinhvien.controller;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.table.TableColumn;
-
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import quanlysinhvien.model.DiemHocPhan;
-import quanlysinhvien.model.HocPhan;
 import quanlysinhvien.model.SinhVien;
-import quanlysinhvien.model.TaiKhoan;
 import quanlysinhvien.view.PanelBangDiemCaNhanView;
 
 //sắp xếp danh sách điểm 
@@ -32,7 +19,6 @@ class sapXepDiem implements Comparator<DiemHocPhan> {
 
 	@Override
 	public int compare(DiemHocPhan o1, DiemHocPhan o2) {
-		// TODO Auto-generated method stub
 		if (o1.getHocKy().compareTo(o2.getHocKy()) > 0)
 			return 1;
 		else if (o1.getHocKy().compareTo(o2.getHocKy()) < 0)
@@ -54,6 +40,7 @@ public class BangDiemCaNhanController {
 	public BangDiemCaNhanController(PanelBangDiemCaNhanView bangDiemCaNhan, SinhVien sv) {
 		this.bangDiemCaNhan = bangDiemCaNhan;
 		this.sv = sv;
+		dsDiem = sv.getDsDiemHP();
 		this.tableDiem = bangDiemCaNhan.getTableDiem();
 		this.tableKetQua = bangDiemCaNhan.getTableKetQua();
 		this.tfHocKy = bangDiemCaNhan.getTfHocKy();

@@ -39,6 +39,7 @@ public class DanhSachNganhController {
     private JComboBox<String> timKiemCB;
     private String fileName;
     private QuanLy quanLy;
+    private Workbook workbook;
 
     public DanhSachNganhController(PanelDanhSachNganhView danhSachNganh, QuanLy quanLy) {
         this.danhSachNganh = danhSachNganh;
@@ -240,7 +241,6 @@ public class DanhSachNganhController {
 
     //thêm khoa_vien vào file dsKhoaVien
     private void addKhoa_Vien(Khoa_Vien khoa_vien, String fileName) throws IOException {
-        Workbook workbook = null;
         Sheet sheet = null;
         int lastRow = -1;
         try {
@@ -275,7 +275,7 @@ public class DanhSachNganhController {
     private boolean updateKhoa_Vien(Khoa_Vien khoa_vien, String fileName) throws IOException {
         boolean ck = false;
         FileInputStream fin = new FileInputStream(new File(fileName));
-        Workbook workbook = new XSSFWorkbook(fin);
+        workbook = new XSSFWorkbook(fin);
         Sheet sheet = workbook.getSheetAt(0);
         Iterator<Row> iterator = sheet.iterator();
 
@@ -307,7 +307,7 @@ public class DanhSachNganhController {
     private boolean deleteKhoa_Vien(String idKhoa_Vien, String fileName) throws IOException {
         boolean ck = false;
         FileInputStream fin = new FileInputStream(new File(fileName));
-        Workbook workbook = new XSSFWorkbook(fin);
+        workbook = new XSSFWorkbook(fin);
         Sheet sheet = workbook.getSheetAt(0);
 
         Iterator<Row> iterator = sheet.iterator();

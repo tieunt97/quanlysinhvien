@@ -48,6 +48,7 @@ public class LoginController {
 	private JButton btnDangNhap, btnHuy, btnThoat, btnDangXuat;
 	private QuanLy quanLy;
 	private ArrayList<TaiKhoan> dsTaiKhoan;
+	private Workbook workbook;
 	public LoginController(LoginView login) {
 		loginView = login;
 		btnDangNhap = login.getBtnDangNhap();
@@ -58,7 +59,6 @@ public class LoginController {
 		try {
 			dsTaiKhoan = getAllTaiKhoan();
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		quanLy = new QuanLy();
@@ -66,47 +66,38 @@ public class LoginController {
 		try {
 			getAllDSHocPhan(quanLy.getDsHocPhan());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-//			e.printStackTrace();
 			System.out.println("Danh sách học phần trống: " + e);
 		}
 		//lấy danh sách lớp học phần
+		try {
+			getAllDSLopHP(quanLy);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 //		
 		//lấy danh sách sinh viên
 		try {
 			getDSSVTinChi(quanLy.getDsSinhVien());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-//			e.printStackTrace();
 			System.out.println("Danh sách sinh viên TC trống: " + e);
 		}
 		try {
 			getDSSVNienChe(quanLy.getDsSinhVien());
 		}catch (IOException e) {
-			// TODO: handle exception
 			System.out.println("Danh sách sinh viên NC trống: " + e);
 		}
 		//lấy danh sách lớp chuyên ngành
 		try {
 			getAllDSLopCN(quanLy);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		try {
 			getAllKhoa_Vien(quanLy);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		try {
-			getAllDSLopHP(quanLy);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-//		
 		setActions();
 	}
 	
@@ -115,11 +106,9 @@ public class LoginController {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 				try {
 					Login();
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
@@ -129,7 +118,6 @@ public class LoginController {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 				cancel();
 			}
 		});
@@ -138,7 +126,6 @@ public class LoginController {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 				System.exit(0);
 			}
 		});
@@ -149,7 +136,6 @@ public class LoginController {
 					try {
 						Login();
 					} catch (IOException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 				}
@@ -157,6 +143,7 @@ public class LoginController {
 		});
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void Login() throws IOException {
 		String taiKhoan = tfTaiKhoan.getText().trim();
 		String matKhau = pwMatKhau.getText().trim();
@@ -181,7 +168,6 @@ public class LoginController {
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					// TODO Auto-generated method stub
 					if(mainQL != null) {
 						mainQL.dispose();
 					}
@@ -207,6 +193,7 @@ public class LoginController {
 		pwMatKhau.setText("");
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void getDSSVTinChi(ArrayList<SinhVien> dsSinhVien) throws IOException{
 		FileInputStream inputStream = new FileInputStream(new File("quanlysinhvien/sinhvientinchi/dsSinhVienTC.xlsx"));
 
@@ -348,6 +335,7 @@ public class LoginController {
 		return null;
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void getDSSVNienChe(ArrayList<SinhVien> dsSinhVien) throws IOException{
 		FileInputStream inputStream = new FileInputStream(new File("quanlysinhvien/sinhviennienche/dsSinhVienNC.xlsx"));
 		
@@ -462,11 +450,12 @@ public class LoginController {
 		fin.close();
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void getDSHocPhanDangKy(SinhVien sv) throws IOException {
 		String fileName = (sv instanceof SinhVienTinChi)?"quanlysinhvien/sinhvientinchi/" + sv.getIdSinhVien() + "/dsHPDangKy.xlsx"
 				:"quanlysinhvien/sinhviennienche/" + sv.getIdSinhVien() + "/dsHPDangKy.xlsx";
 		FileInputStream fin = new FileInputStream(new File(fileName));
-		Workbook workbook = new XSSFWorkbook(fin);
+		workbook = new XSSFWorkbook(fin);
 		Sheet sheet = workbook.getSheetAt(0);
 		Iterator<Row> iterator = sheet.iterator();
 		Row nextRow;
@@ -495,7 +484,7 @@ public class LoginController {
 					return ;
 			}
 			if(dataHPDangKy.size() > 0) {
-				DangKyHocPhan dangKyHP = new DangKyHocPhan(dataHPDangKy.get(0), this.quanLy.getHocPhan(dataHPDangKy.get(1)), dataHPDangKy.get(7));
+				DangKyHocPhan dangKyHP = new DangKyHocPhan(dataHPDangKy.get(0), this.quanLy.getHocPhan(dataHPDangKy.get(1)), dataHPDangKy.get(2));
 				sv.getDsHPDangKy().add(dangKyHP);
 			}
 		}
@@ -504,6 +493,7 @@ public class LoginController {
 		fin.close();
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void getDSDiemHP(SinhVien sv) throws IOException{
 		String fileName = "";
 		String loaiSV = (sv instanceof SinhVienTinChi)?"svtc":"svnc"; 
@@ -513,7 +503,7 @@ public class LoginController {
 			fileName = "quanlysinhvien\\sinhviennienche\\" + sv.getIdSinhVien() + "\\diem.xlsx";
 		FileInputStream inputStream = new FileInputStream(new File(fileName));
 
-		Workbook workbook = new XSSFWorkbook(inputStream);
+		workbook = new XSSFWorkbook(inputStream);
 		Sheet firstSheet = workbook.getSheetAt(0);
 		Iterator<Row> iterator = firstSheet.iterator();
 
@@ -555,10 +545,11 @@ public class LoginController {
 		inputStream.close();
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void getAllDSLopHP(QuanLy quanLy) throws IOException {
 		FileInputStream inputStream = new FileInputStream(new File("quanlysinhvien/danhsachhocphan/lophocphan/dsLopHP.xlsx"));
 
-        Workbook workbook = new XSSFWorkbook(inputStream);
+        workbook = new XSSFWorkbook(inputStream);
         Sheet firstSheet = workbook.getSheetAt(0);
         Iterator<Row> iterator = firstSheet.iterator();
 
@@ -608,10 +599,11 @@ public class LoginController {
         inputStream.close();
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void getAllDSLopCN(QuanLy quanLy) throws IOException {
 		FileInputStream inputStream = new FileInputStream(new File("quanlysinhvien/danhsachchuyennganh/lopchuyennganh/dsLopCN.xlsx"));
 
-        Workbook workbook = new XSSFWorkbook(inputStream);
+        workbook = new XSSFWorkbook(inputStream);
         Sheet firstSheet = workbook.getSheetAt(0);
         Iterator<Row> iterator = firstSheet.iterator();
 
@@ -658,10 +650,11 @@ public class LoginController {
         inputStream.close();
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void getAllKhoa_Vien(QuanLy quanLy) throws IOException {
 		FileInputStream inputStream = new FileInputStream(new File("quanlysinhvien/danhsachchuyennganh/dsNganh.xlsx"));
 
-        Workbook workbook = new XSSFWorkbook(inputStream);
+        workbook = new XSSFWorkbook(inputStream);
         Sheet firstSheet = workbook.getSheetAt(0);
         Iterator<Row> iterator = firstSheet.iterator();
 
@@ -732,10 +725,11 @@ public class LoginController {
         return dsSV;
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void getAllDSHocPhan(ArrayList<HocPhan> dsHocPhan) throws IOException {
 		FileInputStream inputStream = new FileInputStream(new File("quanlysinhvien/danhsachhocphan/dsHocPhan.xlsx"));
 
-        Workbook workbook = new XSSFWorkbook(inputStream);
+        workbook = new XSSFWorkbook(inputStream);
         Sheet firstSheet = workbook.getSheetAt(0);
         Iterator<Row> iterator = firstSheet.iterator();
 
@@ -763,7 +757,13 @@ public class LoginController {
                 }
                 dataHP.add(data);
             }
-            HocPhan hp = new HocPhan(dataHP.get(0), dataHP.get(1), (int) (Double.parseDouble(dataHP.get(2))), (int) (Double.parseDouble(dataHP.get(3))), dataHP.get(4), Double.parseDouble(dataHP.get(5)));
+            HocPhan hp;
+            if(dataHP.get(6).equalsIgnoreCase("null")) {
+            	hp = new HocPhan(dataHP.get(0), dataHP.get(1), (int) (Double.parseDouble(dataHP.get(2))), (int) (Double.parseDouble(dataHP.get(3))), dataHP.get(4), Double.parseDouble(dataHP.get(5)));
+            }else {
+            	//TH học phần có học phần điều kiện
+            	hp = new HocPhan(dataHP.get(0), dataHP.get(1), (int) (Double.parseDouble(dataHP.get(2))), (int) (Double.parseDouble(dataHP.get(3))), dataHP.get(4), Double.parseDouble(dataHP.get(5)), quanLy.getHocPhan(dataHP.get(6)));
+            }
             dsHocPhan.add(hp);
         }
 

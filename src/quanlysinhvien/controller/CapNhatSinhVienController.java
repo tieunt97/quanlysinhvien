@@ -6,11 +6,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator;
 
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -41,6 +39,7 @@ public class CapNhatSinhVienController {
 	private LopHocPhan lopHP;
 	private String fileName;
 	private QuanLy quanLy;
+	private Workbook workbook;
 
 	public CapNhatSinhVienController(CapNhatSinhVienLCNView capNhatSV, LopChuyenNganh lopCN, LopHocPhan lopHP, QuanLy quanLy, String fileName) {
 		this.capNhatSV = capNhatSV;
@@ -70,7 +69,6 @@ public class CapNhatSinhVienController {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 				String idSV = tfIdSinhVien.getText().toUpperCase().trim();
 				if (idSV.equals("")) {
 					JOptionPane.showMessageDialog(null, "Mã sinh viên trống", "Error insert",
@@ -95,7 +93,6 @@ public class CapNhatSinhVienController {
 								//cập nhật lớp sinh viên
 								updateLopSV(idSV, lopCN.getTenLop(), sv instanceof SinhVienTinChi);
 							} catch (IOException e1) {
-								// TODO Auto-generated catch block
 								e1.printStackTrace();
 							}
 						 }else {
@@ -122,7 +119,6 @@ public class CapNhatSinhVienController {
 								//thêm sinh viên vào file dsSinhVien của lớp
 								addSV(sv, fileName);
 							} catch (IOException e2) {
-								// TODO Auto-generated catch block
 								e2.printStackTrace();
 							}
 							//thêm sinh viên vào bảng danh sách sinh viên của lớp
@@ -133,7 +129,6 @@ public class CapNhatSinhVienController {
 								try {
 									addLopTKB(sv, lopHP);		//thêm lớp vào tkb svnc
 								} catch (IOException e1) {
-									// TODO Auto-generated catch block
 									e1.printStackTrace();
 								}
 							JOptionPane.showMessageDialog(null, "Thêm thành công");
@@ -147,7 +142,6 @@ public class CapNhatSinhVienController {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 				int row = table.getSelectedRow();
 				if (row < 0) {
 					JOptionPane.showMessageDialog(null, "Cần chọn một hàng để xóa", "Error delete",
@@ -170,7 +164,6 @@ public class CapNhatSinhVienController {
 									if(!updateLopSV(id, "null", (sv instanceof SinhVienTinChi)?false:true))
 										updateLopSV(id, "null", true);
 								} catch (IOException e1) {
-									// TODO Auto-generated catch block
 									e1.printStackTrace();
 								}
 								//xóa sinh viên khỏi bảng
@@ -189,7 +182,6 @@ public class CapNhatSinhVienController {
 									deleteSV(id, fileName);
 									deleteLopTKB(sv, lopHP.getIdLop());
 								} catch (IOException e1) {
-									// TODO Auto-generated catch block
 									e1.printStackTrace();
 								}
 								//xóa sinh viên khỏi bảng
@@ -288,7 +280,6 @@ public class CapNhatSinhVienController {
 
 	//thêm sinh viên vào file dsSinhVien của lớp
 	private void addSV(SinhVien sv, String fileName) throws IOException {
-		Workbook workbook = null;
 		Sheet sheet = null;
 		int lastRow = -1;
 		try {
@@ -297,7 +288,6 @@ public class CapNhatSinhVienController {
 			sheet = workbook.getSheetAt(0);
 			lastRow = sheet.getLastRowNum();
 		} catch (Exception e) {
-			// TODO: handle exception
 			workbook = new XSSFWorkbook();
 			sheet = workbook.createSheet();
 			System.out.println(e);
@@ -323,7 +313,7 @@ public class CapNhatSinhVienController {
 	private boolean deleteSV(String idSinhVien, String fileName) throws IOException {
 		boolean ck = false;
 		FileInputStream fin = new FileInputStream(new File(fileName));
-		Workbook workbook = new XSSFWorkbook(fin);
+		workbook = new XSSFWorkbook(fin);
 		Sheet sheet = workbook.getSheetAt(0);
 
 		Iterator<Row> iterator = sheet.iterator();
@@ -371,7 +361,7 @@ public class CapNhatSinhVienController {
 		else
 			fileName = "quanlysinhvien\\sinhviennienche\\dsSinhVienNC.xlsx";
 		FileInputStream fin = new FileInputStream(new File(fileName));
-		Workbook workbook = new XSSFWorkbook(fin);
+		workbook = new XSSFWorkbook(fin);
 		Sheet sheet = workbook.getSheetAt(0);
 		Iterator<Row> iterator = sheet.iterator();
 
@@ -482,7 +472,6 @@ public class CapNhatSinhVienController {
 	private void addLopTKB(SinhVien sv, LopHocPhan lopHP) throws IOException {
 		String fileName = (sv instanceof SinhVienNienChe)?"quanlysinhvien\\sinhviennienche\\" + sv.getIdSinhVien() + "\\tkb.xlsx":
 			"quanlysinhvien\\sinhvientinchi\\" + sv.getIdSinhVien() + "\\tkb.xlsx";
-		Workbook workbook = null;
 		Sheet sheet = null;
 		int lastRow = -1;
 		try {
@@ -491,7 +480,6 @@ public class CapNhatSinhVienController {
 			sheet = workbook.getSheetAt(0);
 			lastRow = sheet.getLastRowNum();
 		} catch (Exception e) {
-			// TODO: handle exception
 			workbook = new XSSFWorkbook();
 			sheet = workbook.createSheet();
 			System.out.println(e);
@@ -519,7 +507,7 @@ public class CapNhatSinhVienController {
 		String fileName = (sv instanceof SinhVienNienChe)?"quanlysinhvien\\sinhviennienche\\" + sv.getIdSinhVien() + "\\tkb.xlsx":
 			"quanlysinhvien\\sinhvientinchi\\" + sv.getIdSinhVien() + "\\tkb.xlsx";
 		FileInputStream fin = new FileInputStream(new File(fileName));
-		Workbook workbook = new XSSFWorkbook(fin);
+		workbook = new XSSFWorkbook(fin);
 		Sheet sheet = workbook.getSheetAt(0);
 
 		Iterator<Row> iterator = sheet.iterator();

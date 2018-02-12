@@ -1,8 +1,6 @@
 package quanlysinhvien.view;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.EventQueue;
 import java.awt.Font;
 
 import javax.swing.ImageIcon;
@@ -18,6 +16,10 @@ import javax.swing.border.EmptyBorder;
 
 public class LoginView extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField tfTaiKhoan;
 	private JPasswordField pwMatKhau;

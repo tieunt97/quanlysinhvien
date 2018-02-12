@@ -20,11 +20,15 @@ import javax.swing.table.DefaultTableModel;
 import quanlysinhvien.model.HocPhan;
 
 public class PanelDanhSachHPView extends JPanel{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JTable table;
 	private JButton btnThem, btnSua, btnXoa, btnHuy, btnTimKiem;
 	private JComboBox<String> timKiemCB;
- 	private JTextField tfIdHocPhan, tfTenHP, tfSoTC, tfIdNganh, tfTrongSo, tfTimKiem, tfSoTCHocPhi;
-	private String[] titleCols = {"Mã học phần", "Tên học phần", "Số tín chỉ", "Số TC học phí", "Mã ngành", "Trọng số"};
+ 	private JTextField tfIdHocPhan, tfTenHP, tfSoTC, tfIdNganh, tfTrongSo, tfTimKiem, tfSoTCHocPhi, tfIdHPDK;
+	private String[] titleCols = {"Mã học phần", "Tên học phần", "Số tín chỉ", "Số TC học phí", "Mã ngành", "Trọng số", "Mã HPDK"};
 	private String[] timKiemVals = {"Mã học phần", "Tên học phần", "Mã ngành"};
 	
 	public PanelDanhSachHPView() {
@@ -120,11 +124,13 @@ public class PanelDanhSachHPView extends JPanel{
 		panelL.add(new JLabel("Mã học phần:"));
 		panelL.add(new JLabel("Tên học phần:"));
 		panelL.add(new JLabel("Số tín chỉ:"));
+		panelL.add(new JLabel("Mã HPDK:"));
 		
 		JPanel panelR = new JPanel(new GridLayout(4, 1, 5, 5));
 		panelR.add(tfIdHocPhan = new JTextField());
 		panelR.add(tfTenHP = new JTextField());
 		panelR.add(tfSoTC = new JTextField());
+		panelR.add(tfIdHPDK = new JTextField());
 		
 		panel.add(panelL, BorderLayout.WEST);
 		panel.add(panelR, BorderLayout.CENTER);
@@ -181,6 +187,7 @@ public class PanelDanhSachHPView extends JPanel{
 					data[index][3] = hp.getSoTCHocPhi() + "";
 					data[index][4] = hp.getIdNganh();
 					data[index][5] = hp.getTrongSo() + "";
+					data[index][6] = (hp.getHocPhanDK() != null)?hp.getHocPhanDK().getIdHocPhan():"null";
 					index++;
 				}
 				break;
@@ -192,6 +199,7 @@ public class PanelDanhSachHPView extends JPanel{
 					data[index][3] = hp.getSoTCHocPhi() + "";
 					data[index][4] = hp.getIdNganh();
 					data[index][5] = hp.getTrongSo() + "";
+					data[index][6] = (hp.getHocPhanDK() != null)?hp.getHocPhanDK().getIdHocPhan():"null";
 					index++;
 				}
 				break;
@@ -203,6 +211,7 @@ public class PanelDanhSachHPView extends JPanel{
 					data[index][3] = hp.getSoTCHocPhi() + "";
 					data[index][4] = hp.getIdNganh();
 					data[index][5] = hp.getTrongSo() + "";
+					data[index][6] = (hp.getHocPhanDK() != null)?hp.getHocPhanDK().getIdHocPhan():"null";
 					index++;
 				}
 				break;
@@ -213,6 +222,7 @@ public class PanelDanhSachHPView extends JPanel{
 				data[index][3] = hp.getSoTCHocPhi() + "";
 				data[index][4] = hp.getIdNganh();
 				data[index][5] = hp.getTrongSo() + "";
+				data[index][6] = (hp.getHocPhanDK() != null)?hp.getHocPhanDK().getIdHocPhan():"null";
 				index++; }
 				break;
 			}
@@ -281,6 +291,14 @@ public class PanelDanhSachHPView extends JPanel{
 
 	public JTextField getTfSoTCHocPhi() {
 		return tfSoTCHocPhi;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	public JTextField getTfIdHPDK() {
+		return tfIdHPDK;
 	}
 
 }

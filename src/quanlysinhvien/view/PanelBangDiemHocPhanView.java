@@ -23,6 +23,10 @@ import quanlysinhvien.model.SinhVienNienChe;
 import quanlysinhvien.model.SinhVienTinChi;
 
 public class PanelBangDiemHocPhanView extends JPanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JTextField tfIdSinhVien, tfHocKy, tfIdHP, tfTenHP, tfTinChi, tfDiemHP;
 	private String titleCols[] = { "Học kỳ", "Mã HP", "Tên HP", "TC", "Điểm học phần" };
 	private JLabel labSumHP, labSumTC;
@@ -112,6 +116,7 @@ public class PanelBangDiemHocPhanView extends JPanel {
 			public void run() {
 				String data[][] = convertData(sv, timKiem, giaTri);
 				// Update the model here
+				@SuppressWarnings("serial")
 				DefaultTableModel tableModel = new DefaultTableModel(data, titleCols) {
 					@Override
 					public boolean isCellEditable(int row, int column) {
@@ -201,6 +206,19 @@ public class PanelBangDiemHocPhanView extends JPanel {
 					data[index][4] = dsDiem.get(i).getDiemThang10() + "";
 					index++;
 				}
+			case "":
+			{
+				data[index][0] = dsDiem.get(i).getHocKy();
+				data[index][1] = hp.getIdHocPhan();
+				data[index][2] = hp.getTenHP();
+				data[index][3] = hp.getSoTinChi() + "";
+				if (sv instanceof SinhVienTinChi)
+					data[index][4] = dsDiem.get(i).getDiemChu();
+				else
+					data[index][4] = dsDiem.get(i).getDiemThang10() + "";
+				index++;
+			}
+				
 			}
 		}
 

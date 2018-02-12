@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -26,7 +25,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import quanlysinhvien.model.Khoa_Vien;
 
 import quanlysinhvien.model.LopChuyenNganh;
 import quanlysinhvien.model.QuanLy;
@@ -43,6 +41,7 @@ public class LopChuyenNganhController {
     private JComboBox<String> timKiemCB;
     private String fileName;
     private QuanLy quanLy;
+	private Workbook workbook;
 
     public LopChuyenNganhController(PanelLopChuyenNganhView lopChuyenNganh, QuanLy quanLy) {
         this.lopChuyenNganh = lopChuyenNganh;
@@ -71,7 +70,6 @@ public class LopChuyenNganhController {
         table.addMouseListener(new MouseAdapter() {
         	@Override
             public void mousePressed(MouseEvent e) {
-                // TODO Auto-generated method stub
                 int row = table.getSelectedRow();
                 if (row >= 0) {
                     tfIdLopChuyenNganh.setText((String) table.getValueAt(row, 0));
@@ -86,7 +84,6 @@ public class LopChuyenNganhController {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
                 LopChuyenNganh lopCN = getLopChuyenNganh();
                 if (lopCN != null) {
                     if (quanLy.themLopChuyenNganh(lopCN)) {
@@ -98,7 +95,6 @@ public class LopChuyenNganhController {
                             JOptionPane.showMessageDialog(null, "Thêm thành công");
                             cancel();
                         } catch (IOException e1) {
-                            // TODO Auto-generated catch block
                             System.out.println("Error insert: " + e1);
                         }
                     } else {
@@ -111,7 +107,6 @@ public class LopChuyenNganhController {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
                 int row = table.getSelectedRow();
                 if (row < 0) {
                     JOptionPane.showMessageDialog(null, "Cần chọn một hàng để sửa", "Error update", JOptionPane.ERROR_MESSAGE);
@@ -136,7 +131,6 @@ public class LopChuyenNganhController {
                         }
                         cancel();
                     } catch (IOException e1) {
-                        // TODO Auto-generated catch block
                         System.out.println("Error update: "+e1);
                     }
                 }
@@ -146,7 +140,6 @@ public class LopChuyenNganhController {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
                 int row = table.getSelectedRow();
                 if (row < 0) {
                     JOptionPane.showMessageDialog(null, "Cần chọn một hàng để xóa", "Error update", JOptionPane.ERROR_MESSAGE);
@@ -169,7 +162,6 @@ public class LopChuyenNganhController {
                                 cancel();
                                 return;
                             } catch (IOException e1) {
-                                // TODO Auto-generated catch block
                                 System.out.println("Error delete: " + e1);
                             }
                         } else {
@@ -183,7 +175,6 @@ public class LopChuyenNganhController {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
                 cancel();
                 lopChuyenNganh.loadData(table, quanLy.getDsLopChuyenNganh(), "", "");
             }
@@ -192,7 +183,6 @@ public class LopChuyenNganhController {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
                 String timKiem = timKiemCB.getSelectedItem().toString();
                 String giaTri = tfTimKiem.getText().trim().toLowerCase();
                 lopChuyenNganh.loadData(table, quanLy.getDsLopChuyenNganh(), timKiem, giaTri);
@@ -202,7 +192,6 @@ public class LopChuyenNganhController {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
                 int row = table.getSelectedRow();
                 if (row < 0) {
                     JOptionPane.showMessageDialog(null, "Cần chọn lớp học phần để cập nhật dssv", "Error", JOptionPane.ERROR_MESSAGE);
@@ -265,7 +254,6 @@ public class LopChuyenNganhController {
 
     //thêm lớp chuyên ngành vào file dsLopCN
     private void addLopCN(LopChuyenNganh lopCN, String fileName) throws IOException {
-        Workbook workbook = null;
         Sheet sheet = null;
         int lastRow = -1;
         try {
@@ -300,7 +288,7 @@ public class LopChuyenNganhController {
     private boolean updateLopCN(LopChuyenNganh lopCN, String fileName) throws IOException {
         boolean ck = false;
         FileInputStream fin = new FileInputStream(new File(fileName));
-        Workbook workbook = new XSSFWorkbook(fin);
+        workbook = new XSSFWorkbook(fin);
         Sheet sheet = workbook.getSheetAt(0);
         Iterator<Row> iterator = sheet.iterator();
 
@@ -337,7 +325,7 @@ public class LopChuyenNganhController {
     private boolean deleteLopCN(String idLopCN, String fileName) throws IOException {
         boolean ck = false;
         FileInputStream fin = new FileInputStream(new File(fileName));
-        Workbook workbook = new XSSFWorkbook(fin);
+        workbook = new XSSFWorkbook(fin);
         Sheet sheet = workbook.getSheetAt(0);
 
         Iterator<Row> iterator = sheet.iterator();
